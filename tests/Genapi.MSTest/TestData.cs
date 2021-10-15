@@ -10,10 +10,7 @@ namespace Tekcari.Genapi
 	{
 		static TestData()
 		{
-			Configuration = new ConfigurationBuilder()
-				.SetBasePath(AppContext.BaseDirectory)
-				.AddJsonFile("appsettings.json")
-				.Build();
+			
 		}
 
         internal static readonly IConfiguration Configuration;

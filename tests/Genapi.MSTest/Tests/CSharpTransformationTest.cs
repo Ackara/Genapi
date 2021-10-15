@@ -1,24 +1,31 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Shouldly;
 using System.Collections.Generic;
-using Tekcari.Genapi.Transformation;
 
 namespace Tekcari.Genapi.Tests
 {
 	[TestClass]
-	public class SerializationTest
+	public class CSharpTransformationTest
 	{
-		[DataTestMethod]
-		[DynamicData(nameof(GetSpecifications), DynamicDataSourceType.Method)]
-		public void Can_convert_file_to_openapi_spec_model(string filePath)
+		[TestMethod]
+		public void Can_write_csharp_method()
 		{
-			var document = DocumentLoader.Read(filePath);
-			document.ShouldNotBeNull();
+			// Arrange
+
+			var me = new Transformation.CSharp.CSharpMethod
+			{
+				Name = "GetItems",
+
+				Body = @""
+			};
+
+			// Act
+
+			// Assert
 		}
 
 		#region Backing Members
 
-		private static IEnumerable<object[]> GetSpecifications()
+		private static IEnumerable<object[]> GetDocuments()
 		{
 			foreach (var file in TestData.GetFilePaths("*.yml"))
 				yield return new object[] { file };

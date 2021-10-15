@@ -28,7 +28,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Genapi.CSharp\Genapi.CSharp.csproj" />
     <ProjectReference Include="..\..\src\Genapi\Genapi.csproj" />
   </ItemGroup>
+
+	<ItemGroup>
+		<Content Include="test-data\**">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
 </Project>
