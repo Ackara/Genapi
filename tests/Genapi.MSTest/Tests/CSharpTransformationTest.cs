@@ -11,17 +11,13 @@ namespace Tekcari.Genapi.Tests
 		{
 			// Arrange
 
-			var me = new Transformation.CSharp.CSharpMethod
-			{
-				Name = "GetItems",
-
-				Body = @""
-			};
+			
 
 			// Act
 
 			// Assert
 		}
+
 
 		#region Backing Members
 

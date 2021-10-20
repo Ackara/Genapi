@@ -18,9 +18,12 @@ namespace Tekcari.Genapi
 		public void Run(OpenApiDocument document, TranspilerSettings settings)
 		{
 			if (document == null) throw new ArgumentNullException(nameof(document));
-			
 
 
+			foreach (var item in document.Paths)
+			{
+				
+			}
 
 
 			throw new System.NotImplementedException();

@@ -11,15 +11,6 @@ namespace Tekcari.Genapi.Transformation.CSharp
 
 		public override Encoding Encoding { get; }
 
-		public void WriteMember(CSharpMethod method)
-		{
-			base.WriteIndent();
-			this.Write("public void name()");
-			this.WriteLine("{");
-
-
-
-			this.WriteLine("}");
-		}
+		
 	}
 }
