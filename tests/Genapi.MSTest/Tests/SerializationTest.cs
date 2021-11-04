@@ -14,24 +14,12 @@ namespace Tekcari.Genapi.Tests
 		{
 			var document = DocumentLoader.Read(filePath);
 			document.ShouldNotBeNull();
+			document.Paths.ShouldNotBeEmpty();
 		}
 
 		#region Backing Members
 
-		private static IEnumerable<object[]> GetSpecifications()
-		{
-			foreach (var file in TestData.GetFilePaths("*.yml"))
-				yield return new object[] { file };
-
-			foreach (var file in TestData.GetFilePaths("*.json"))
-				yield return new object[] { file };
-
-			var urls = new string[]
-			{
-				"https://raw.githubusercontent.com/plaid/plaid-openapi/master/2020-09-14.yml"
-			};
-			foreach (string u in urls) yield return new object[] { u };
-		}
+		private static IEnumerable<object[]> GetSpecifications() => TestData.GetSpecifications();
 
 		#endregion Backing Members
 	}

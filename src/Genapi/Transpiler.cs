@@ -19,12 +19,10 @@ namespace Tekcari.Genapi
 		{
 			if (document == null) throw new ArgumentNullException(nameof(document));
 
-
 			foreach (var item in document.Paths)
 			{
 				
 			}
-
 
 			throw new System.NotImplementedException();
 		}

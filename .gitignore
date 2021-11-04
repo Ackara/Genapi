@@ -351,6 +351,7 @@ MigrationBackup/
 .ionide/
 
 # Generated Files
+*.received.*
 
 # Sensitive Files
 [Ss]ecrets.json
