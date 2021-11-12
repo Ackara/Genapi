@@ -1,12 +1,28 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Tekcari.Genapi</RootNamespace>
-  </PropertyGroup>
+  
+<Version>0.0.3</Version>
+<AssemblyVersion>0.0.3</AssemblyVersion>
+<AssemblyFileVersion>0.0.3</AssemblyFileVersion>
+<PackageIcon>icon.png</PackageIcon>
+<RepositoryUrl>https://github.com//Genapi.git</RepositoryUrl>
+<PackageProjectUrl>https://github.com//Genapi</PackageProjectUrl>
+<PackageReleaseNotes>https://github.com//Genapi/blob/master/changelog.md</PackageReleaseNotes>
+<Copyright>Copyright 2021 , All Rights Reserved.</Copyright>
+<PackageLicenseFile>license.md</PackageLicenseFile>
+
+<Title>Genapi</Title>
+</PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Genapi\Genapi.csproj" />
   </ItemGroup>
+
+
+
+
 
 </Project>

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
@@ -6,7 +6,19 @@
 		<IsPackable>false</IsPackable>
 
 		<RootNamespace>Tekcari.Genapi</RootNamespace>
-	</PropertyGroup>
+	
+<Version>0.0.3</Version>
+<AssemblyVersion>0.0.3</AssemblyVersion>
+<AssemblyFileVersion>0.0.3</AssemblyFileVersion>
+<PackageIcon>icon.png</PackageIcon>
+<RepositoryUrl>https://github.com//Genapi.git</RepositoryUrl>
+<PackageProjectUrl>https://github.com//Genapi</PackageProjectUrl>
+<PackageReleaseNotes>https://github.com//Genapi/blob/master/changelog.md</PackageReleaseNotes>
+<Copyright>Copyright 2021 , All Rights Reserved.</Copyright>
+<PackageLicenseFile>license.md</PackageLicenseFile>
+
+<Title>Genapi</Title>
+</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="ApprovalTests" Version="5.7.1" />
@@ -38,4 +50,8 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
+
+
+
+
 </Project>

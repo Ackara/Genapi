@@ -1,17 +1,19 @@
 ﻿{
-    "version":  {
-                    "major":  0,
-                    "minor":  0,
-                    "patch":  0
-                },
-    "copyright":  "Copyright {year} {company}, All Rights Reserved.",
-    "license":  "license.md",
-    "website":  "https://github.com/{company}/{name}",
-    "repository":  "https://github.com/{company}/{name}.git",
-    "icon":  "icon.png",
-    "releaseNotes":  "https://github.com/{company}/{name}/blob/master/changelog.md",
-    "branchVersionMap":  {
-                             "master":  "C",
-                             "default":  "x.y.z-\\beta"
-                         }
+  "version": {
+    "major": 0,
+    "minor": 0,
+    "patch": 3
+  },
+  "name": "Genapi",
+  "author": "Ackara",
+  "copyright": "Copyright {year} {company}, All Rights Reserved.",
+  "license": "license.txt",
+  "website": "https://github.com/{company}/{name}",
+  "repository": "https://github.com/{company}/{name}.git",
+  "icon": "icon.png",
+  "releaseNotes": "https://github.com/{company}/{name}/blob/master/changelog.md",
+  "branchVersionMap": {
+    "master": "C",
+    "default": "x.y.z-\\beta"
+  }
 }

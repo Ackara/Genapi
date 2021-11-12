@@ -61,7 +61,7 @@ Task "Package-Solution" -alias "pack" -description "This task generates all depl
 	if (Test-Path $ArtifactsFolder) { Remove-Item $ArtifactsFolder -Recurse -Force; }
 	New-Item $ArtifactsFolder -ItemType Directory | Out-Null;
 	
-	$project = Join-Path $SolutionFolder "src/$SolutionName\*.*proj" | Get-Item;
+	$project = Join-Path $SolutionFolder "src/*.Targets/*.*proj" | Get-Item;
 	Write-Separator "dotnet pack $($project.BaseName)";
 	Exec { &dotnet pack $project.FullName --output $ArtifactsFolder --configuration $Configuration -p:EnvironmentName=$EnvironmentName; }
 }

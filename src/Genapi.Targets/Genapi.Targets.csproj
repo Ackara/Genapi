@@ -1,12 +1,47 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Tekcari.Genapi</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<RootNamespace>Tekcari.Genapi</RootNamespace>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Framework" Version="16.11.0" />
-  </ItemGroup>
+	<PropertyGroup>
+		<Title>Genapi</Title>
+		<Version>0.0.3</Version>
+		<AssemblyVersion>0.0.3</AssemblyVersion>
+		<AssemblyFileVersion>0.0.3</AssemblyFileVersion>
+		<PackageIcon>icon.png</PackageIcon>
+		<RepositoryUrl>https://github.com//Genapi.git</RepositoryUrl>
+		<PackageProjectUrl>https://github.com//Genapi</PackageProjectUrl>
+		<PackageReleaseNotes>https://github.com//Genapi/blob/master/changelog.md</PackageReleaseNotes>
+		<Copyright>Copyright 2021 , All Rights Reserved.</Copyright>
+		<PackageLicenseFile>license.txt</PackageLicenseFile>
+		<IsTool>true</IsTool>
+		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+	</PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Build.Framework" Version="16.11.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Genapi.CSharp\Genapi.CSharp.csproj" />
+	  <ProjectReference Include="..\Genapi\Genapi.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="..\..\$(PackageLicenseFile)">
+			<PackagePath></PackagePath>
+			<Visible>false</Visible>
+		</Content>
+
+		<Content Include="..\..\art\icon.png">
+			<PackagePath></PackagePath>
+			<Visible>false</Visible>
+		</Content>
+
+		<Content Include="nuget.targets">
+			<PackagePath>msbuild\$(AssemblyName).targets</PackagePath>
+		</Content>
+	</ItemGroup>
 </Project>
