@@ -14,6 +14,9 @@ namespace Tekcari.Genapi.Transformation.CSharp
 		public CSharpApiClientWriter()
 			: this(new MemoryStream(), default, default) { }
 
+		public CSharpApiClientWriter(TranspilerSettings settings)
+			: this(new MemoryStream(), default, settings) { }
+
 		public CSharpApiClientWriter(Stream stream)
 			: this(stream, default, default) { }
 

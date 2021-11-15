@@ -5,8 +5,8 @@
 		<GenerateApiOnBuild Condition="$(GenerateApiOnBuild)=''">false</GenerateApiOnBuild>
 	</PropertyGroup>
 
-	<Target Name="GenerateApiClient">
-		<Message Text="fff" />
+	<Target Name="Foo">
+		<Message Text="foo" />
 	</Target>
 
 	

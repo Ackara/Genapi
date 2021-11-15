@@ -107,6 +107,8 @@ namespace Tekcari.Genapi
 		public string tag { get; set; }
 
 	}
+
+
 	public partial class Error
 	{
 		[JsonPropertyName("code")]
@@ -116,6 +118,7 @@ namespace Tekcari.Genapi
 		public string message { get; set; }
 
 	}
+
 
 	/// <summary>
 	/// Represents an API server response.

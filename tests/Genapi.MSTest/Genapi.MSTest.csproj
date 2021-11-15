@@ -1,24 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
-
 		<IsPackable>false</IsPackable>
-
 		<RootNamespace>Tekcari.Genapi</RootNamespace>
-	
-<Version>0.0.3</Version>
-<AssemblyVersion>0.0.3</AssemblyVersion>
-<AssemblyFileVersion>0.0.3</AssemblyFileVersion>
-<PackageIcon>icon.png</PackageIcon>
-<RepositoryUrl>https://github.com//Genapi.git</RepositoryUrl>
-<PackageProjectUrl>https://github.com//Genapi</PackageProjectUrl>
-<PackageReleaseNotes>https://github.com//Genapi/blob/master/changelog.md</PackageReleaseNotes>
-<Copyright>Copyright 2021 , All Rights Reserved.</Copyright>
-<PackageLicenseFile>license.md</PackageLicenseFile>
+		<SolutionName>$(MSBuildProjectName.Substring(0, $(MSBuildProjectName.IndexOf('.'))))</SolutionName>
 
-<Title>Genapi</Title>
-</PropertyGroup>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Version>0.0.3</Version>
+		<Title>Genapi</Title>
+		<AssemblyVersion>0.0.3</AssemblyVersion>
+		<AssemblyFileVersion>0.0.3</AssemblyFileVersion>
+		<PackageIcon>icon.png</PackageIcon>
+		<RepositoryUrl>https://github.com//Genapi.git</RepositoryUrl>
+		<PackageProjectUrl>https://github.com//Genapi</PackageProjectUrl>
+		<PackageReleaseNotes>https://github.com//Genapi/blob/master/changelog.md</PackageReleaseNotes>
+		<Copyright>Copyright 2021 , All Rights Reserved.</Copyright>
+		<PackageLicenseFile>license.md</PackageLicenseFile>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="ApprovalTests" Version="5.7.1" />
@@ -49,9 +50,7 @@
 		<Content Include="test-data\**">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
+
+		<TestTarget Include="..\..\artifacts\*.nupkg" />
 	</ItemGroup>
-
-
-
-
 </Project>
