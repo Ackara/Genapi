@@ -1,13 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
 namespace Tekcari.Genapi.Extensions
 {
 	internal static class MappingExtensions
 	{
-		
+		public static string ToCSharpType(this string text)
+		{
+			if (string.IsNullOrEmpty(text)) return default;
+
+			switch (text.ToLowerInvariant())
+			{
+				case "integer": return "int";
+				case "boolean": return "bool";
+
+				default: return text;
+			}
+		}
 	}
 }

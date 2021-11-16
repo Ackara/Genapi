@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<Project>
+	<PropertyGroup>
+		<Title>Genapi</Title>
+		<Description><![CDATA[]]></Description>
+		
+		<Authors>Ackara</Authors>
+		<Company>Tekcari</Company>
+		
+
+		<Copyright>Copyright 2021 $(Company), All Rights Reserved.</Copyright>
+		<PackageLicenseFile>license.txt</PackageLicenseFile>
+		
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+
+		<PackageTags>swagger;OpenAPI;CodeGen;msbuild</PackageTags>
+		<RepositoryUrl>https://github.com/$(Company)/$(Title).git</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/$(Company)/$(Title)</PackageProjectUrl>
+		<PackageReleaseNotes>https://github.com/$(Company)/$(Title)/blob/master/changelog.md</PackageReleaseNotes>
+	</PropertyGroup>
+</Project>

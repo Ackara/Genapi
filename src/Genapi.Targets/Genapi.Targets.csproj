@@ -6,18 +6,12 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Title>Genapi</Title>
-		<Version>0.0.3</Version>
-		<AssemblyVersion>0.0.3</AssemblyVersion>
-		<AssemblyFileVersion>0.0.3</AssemblyFileVersion>
-		<PackageIcon>icon.png</PackageIcon>
-		<RepositoryUrl>https://github.com//Genapi.git</RepositoryUrl>
-		<PackageProjectUrl>https://github.com//Genapi</PackageProjectUrl>
-		<PackageReleaseNotes>https://github.com//Genapi/blob/master/changelog.md</PackageReleaseNotes>
-		<Copyright>Copyright 2021 , All Rights Reserved.</Copyright>
-		<PackageLicenseFile>license.txt</PackageLicenseFile>
-		<IsTool>true</IsTool>
+		<Version>0.0.4</Version>
+		<AssemblyVersion>0.0.4</AssemblyVersion>
+		<AssemblyFileVersion>0.0.4</AssemblyFileVersion>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+		<IsTool>true</IsTool>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -25,11 +19,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Genapi.CSharp\Genapi.CSharp.csproj" />
-	  <ProjectReference Include="..\Genapi\Genapi.csproj" />
+		<ProjectReference Include="..\Genapi\Genapi.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<Content Include="..\..\README.md">
+			<PackagePath></PackagePath>
+			<Visible>false</Visible>
+		</Content>
+
 		<Content Include="..\..\$(PackageLicenseFile)">
 			<PackagePath></PackagePath>
 			<Visible>false</Visible>
@@ -42,6 +40,11 @@
 
 		<Content Include="nuget.targets">
 			<PackagePath>msbuild\$(AssemblyName).targets</PackagePath>
+		</Content>
+
+		<Content Include="..\..\artifacts\temp\**" Condition="Exists('..\..\artifacts\temp\')">
+			<PackagePath>tools/$(TargetFramework)/</PackagePath>
+			<Visible>false</Visible>
 		</Content>
 	</ItemGroup>
 </Project>

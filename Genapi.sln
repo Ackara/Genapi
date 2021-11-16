@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{A0318956
 	ProjectSection(SolutionItems) = preProject
 		build.ps1 = build.ps1
 		commands.json = commands.json
+		Directory.Build.props = Directory.Build.props
 		build\manifest.json = build\manifest.json
 		build\tasks.psake.ps1 = build\tasks.psake.ps1
 	EndProjectSection
@@ -23,9 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genapi", "src\Genapi\Genapi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genapi.MSTest", "tests\Genapi.MSTest\Genapi.MSTest.csproj", "{26C4C4DC-3712-4A74-8533-A53A606B2EF5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genapi.CSharp", "src\Genapi.CSharp\Genapi.CSharp.csproj", "{62710065-553F-4C1E-AEF7-B47D1EDC5A1E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genapi.Targets", "src\Genapi.Targets\Genapi.Targets.csproj", "{EC9FD7DB-128E-40B6-9F1C-1A628F7EFC19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genapi.Targets", "src\Genapi.Targets\Genapi.Targets.csproj", "{EC9FD7DB-128E-40B6-9F1C-1A628F7EFC19}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +40,6 @@ Global
 		{26C4C4DC-3712-4A74-8533-A53A606B2EF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26C4C4DC-3712-4A74-8533-A53A606B2EF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26C4C4DC-3712-4A74-8533-A53A606B2EF5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{62710065-553F-4C1E-AEF7-B47D1EDC5A1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{62710065-553F-4C1E-AEF7-B47D1EDC5A1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{62710065-553F-4C1E-AEF7-B47D1EDC5A1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{62710065-553F-4C1E-AEF7-B47D1EDC5A1E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EC9FD7DB-128E-40B6-9F1C-1A628F7EFC19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EC9FD7DB-128E-40B6-9F1C-1A628F7EFC19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC9FD7DB-128E-40B6-9F1C-1A628F7EFC19}.Release|Any CPU.ActiveCfg = Release|Any CPU

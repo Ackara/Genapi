@@ -15,7 +15,6 @@ using Tekcari.Genapi.Transformation.CSharp;
 namespace Tekcari.Genapi.Tests
 {
 	[TestClass]
-	///[ApprovalTests.Reporters.UseReporter(typeof(ApprovalTests.Reporters.FileLauncherReporter))]
 	public class CSharpTransformationTest
 	{
 		[DataTestMethod]
@@ -108,7 +107,7 @@ namespace Tekcari.Genapi.Tests
 
 			// Act
 
-			sut.WriteResponseClass();
+			sut.WriteResponseClasses();
 			sut.Flush();
 			string code = Encoding.UTF8.GetString(output.ToArray());
 			code = AppendErrors(code);

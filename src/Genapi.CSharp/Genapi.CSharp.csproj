@@ -4,9 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Tekcari.Genapi</RootNamespace>
   
-<Version>0.0.3</Version>
-<AssemblyVersion>0.0.3</AssemblyVersion>
-<AssemblyFileVersion>0.0.3</AssemblyFileVersion>
+<Version>0.0.4</Version>
+<AssemblyVersion>0.0.4</AssemblyVersion>
+<AssemblyFileVersion>0.0.4</AssemblyFileVersion>
 <PackageIcon>icon.png</PackageIcon>
 <RepositoryUrl>https://github.com//Genapi.git</RepositoryUrl>
 <PackageProjectUrl>https://github.com//Genapi</PackageProjectUrl>

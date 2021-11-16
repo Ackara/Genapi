@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Genapi.Targets</id>
+    <version>0.0.3</version>
+    <title>Genapi</title>
+    <authors>Genapi.Targets</authors>
+    <license type="file">license.txt</license>
+    <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
+    <icon>icon.png</icon>
+    <projectUrl>https://github.com//Genapi</projectUrl>
+    <description>Package Description</description>
+    <releaseNotes>https://github.com//Genapi/blob/master/changelog.md</releaseNotes>
+    <copyright>Copyright 2021 , All Rights Reserved.</copyright>
+    <repository url="https://github.com//Genapi.git" />
+  </metadata>
+</package>

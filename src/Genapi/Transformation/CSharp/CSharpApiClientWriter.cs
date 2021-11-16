@@ -45,7 +45,16 @@ namespace Tekcari.Genapi.Transformation.CSharp
 			WriteLine();
 			WriteComponents(document.Components);
 			WriteLine();
-			WriteResponseClass();
+
+			PopIndent();
+			WriteLine("}");
+			WriteLine();
+
+			WriteLine($"namespace {nameof(Tekcari)}.{nameof(Genapi)}");
+			WriteLine("{");
+			PushIndent();
+
+			WriteResponseClasses();
 
 			PopIndent();
 			WriteLine("}");
@@ -165,7 +174,7 @@ namespace Tekcari.Genapi.Transformation.CSharp
 			}
 		}
 
-		internal void WriteResponseClass()
+		internal void WriteResponseClasses()
 		{
 			WriteXmlSummary("Represents an API server response.");
 			WriteLine("[System.Diagnostics.DebuggerDisplay(\"{GetDebuggerDisplay(),nq}\")]");
@@ -388,7 +397,8 @@ namespace Tekcari.Genapi.Transformation.CSharp
 
 		private OpenApiDocument _document;
 		private readonly TranspilerSettings _settings;
-		private const string RESPONSE_CLASS = "ApiResponse";
+		private const string INTERNAL_NAMESPACE = (nameof(Tekcari) + "." + nameof(Genapi));
+		private const string RESPONSE_CLASS = (INTERNAL_NAMESPACE + "." + "ApiResponse");
 
 		private string GetApiResponseType(OpenApiOperation operation)
 		{

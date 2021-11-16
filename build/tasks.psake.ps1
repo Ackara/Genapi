@@ -60,10 +60,28 @@ Task "Package-Solution" -alias "pack" -description "This task generates all depl
 -depends @("restore") -action {
 	if (Test-Path $ArtifactsFolder) { Remove-Item $ArtifactsFolder -Recurse -Force; }
 	New-Item $ArtifactsFolder -ItemType Directory | Out-Null;
+	$version = $ManifestFilePath | Select-NcrementVersionNumber;
 	
+	# ---- Create Package ----
+
+	$project = Join-Path $SolutionFolder "src/*.Targets/*.*proj" | Get-Item;
+	$package = Join-Path $ArtifactsFolder "temp";
+	Write-Separator "dotnet publish $($project.BaseName)";
+	Exec { &dotnet publish $project.FullName --output $package --configuration $Configuration -p:EnvironmentName=$EnvironmentName; }
+
 	$project = Join-Path $SolutionFolder "src/*.Targets/*.*proj" | Get-Item;
 	Write-Separator "dotnet pack $($project.BaseName)";
-	Exec { &dotnet pack $project.FullName --output $ArtifactsFolder --configuration $Configuration -p:EnvironmentName=$EnvironmentName; }
+	Exec { &dotnet pack $project.FullName --output $ArtifactsFolder --configuration $Configuration -p:Version=$version; }
+	if (Test-Path $package) { Remove-Item $package -Recurse -Force; }
+
+	# ---- Extract Package ----
+
+	$nupkg = Join-Path $ArtifactsFolder "*.nupkg" | Get-Item;
+	$zip = [System.IO.Path]::ChangeExtension($nupkg.FullName, ".zip");
+	Copy-Item $nupkg -Destination $zip;
+	$package = Join-Path $ArtifactsFolder "msbuild";
+	Expand-Archive -Path $zip -DestinationPath $package;
+	if (Test-Path $zip) { Remove-Item $zip; }
 }
 
 Task "Publish-NuGet-Packages" -alias "push-nuget" -description "This task publish all nuget packages to a nuget repository." `

@@ -1,6 +1,6 @@
 namespace Tekcari.Genapi.Transformation
 {
-	public enum NamingConvention
+	public enum Casing
 	{
 		None,
 		Pascal,
