@@ -28,6 +28,7 @@ namespace Tekcari.Genapi.Targets
 				ClientClassName = Path.GetFileNameWithoutExtension(destination)
 			};
 
+			WriteMessage($"Loading '{source}'");
 			OpenApiDocument document = Transformation.DocumentLoader.Read(source);
 
 			// STEP: Generate source code.
@@ -38,6 +39,7 @@ namespace Tekcari.Genapi.Targets
 				writer.Write(document);
 				writer.Flush();
 			}
+			WriteMessage($"Generated '{destination}'.");
 
 			return true;
 		}

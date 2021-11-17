@@ -1,0 +1,17 @@
+﻿﻿/// <summary>
+/// Add a new pet to the store.
+/// </summary>
+public async Task<> addPetAsync(Pet pet)
+{
+	var request = new HttpRequestMessage(HttpMethod.Post, GetEndpoint($"/pet"));
+	request.Content = ToJsonBody(pet);
+	HttpClient client = _factory.CreateClient();
+	using (HttpResponseMessage response = await client.SendAsync(request))
+	{
+		switch ((int)response.StatusCode)
+		{
+			case 405:
+				return new ApiResponse((int)response.StatusCode, response.ReasonPhrase);
+		}
+	}
+}

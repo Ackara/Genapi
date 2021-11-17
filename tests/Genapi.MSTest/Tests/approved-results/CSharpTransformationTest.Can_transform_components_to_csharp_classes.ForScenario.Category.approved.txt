@@ -1,1 +1,9 @@
-﻿
+﻿﻿public partial class Category
+{
+	[JsonPropertyName("id")]
+	public integer id { get; set; }
+
+	[JsonPropertyName("name")]
+	public string name { get; set; }
+
+}

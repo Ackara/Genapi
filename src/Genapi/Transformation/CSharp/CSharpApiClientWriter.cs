@@ -50,14 +50,7 @@ namespace Tekcari.Genapi.Transformation.CSharp
 			WriteLine("}");
 			WriteLine();
 
-			WriteLine($"namespace {nameof(Tekcari)}.{nameof(Genapi)}");
-			WriteLine("{");
-			PushIndent();
-
 			WriteResponseClasses();
-
-			PopIndent();
-			WriteLine("}");
 		}
 
 		public void Write(string className, OpenApiSchema classDeclaration)
@@ -90,6 +83,12 @@ namespace Tekcari.Genapi.Transformation.CSharp
 			PushIndent();
 
 			WriteLine($"var request = new HttpRequestMessage(HttpMethod.{method}, GetEndpoint($\"{GetPath(path, operation)}\"));");
+			if (operation.RequestBody.UnresolvedReference == false)
+			{
+				string paramName = operation.RequestBody?.Content?.FirstOrDefault().Value?.Schema?.Reference?.Id?.ToLowerInvariant();
+				WriteLine($"request.Content = ToJsonBody({paramName});");
+			}
+
 			WriteLine("HttpClient client = _factory.CreateClient();");
 			WriteLine("using (HttpResponseMessage response = await client.SendAsync(request))");
 			WriteLine("{");
@@ -176,6 +175,10 @@ namespace Tekcari.Genapi.Transformation.CSharp
 
 		internal void WriteResponseClasses()
 		{
+			WriteLine($"namespace {nameof(Tekcari)}.{nameof(Genapi)}");
+			WriteLine("{");
+			PushIndent();
+
 			WriteXmlSummary("Represents an API server response.");
 			WriteLine("[System.Diagnostics.DebuggerDisplay(\"{GetDebuggerDisplay(),nq}\")]");
 			WriteLine($"public readonly struct {RESPONSE_CLASS}");
@@ -306,6 +309,9 @@ namespace Tekcari.Genapi.Transformation.CSharp
 
 			PopIndent();
 			WriteLine("}");
+
+			PopIndent();
+			WriteLine("}");
 		}
 
 		protected void WriteXmlSummary(string text)
@@ -353,23 +359,31 @@ namespace Tekcari.Genapi.Transformation.CSharp
 			WriteLine();
 		}
 
-		private void WriteResponse(string content, OpenApiMediaType media)
+		private void WriteResponse(string mime, OpenApiMediaType media)
 		{
-			switch (content)
+			switch (mime)
 			{
+				case "application/xml":
 				case "application/json":
 					WriteJsonResponse(media);
 					break;
 
 				default:
-					WriteLine($"return new {RESPONSE_CLASS}((int)response.StatusCode, response.ReasonPhrase);");
+					string responseType = null;
+					if (media.Schema == null)
+					{
+						responseType = GetQualifiedType(media.Schema);
+						if (!string.IsNullOrEmpty(responseType)) responseType = string.Concat('<', responseType, '>');
+					}
+
+					WriteLine($"return new {RESPONSE_CLASS}{responseType}((int)response.StatusCode, response.ReasonPhrase);");
 					break;
 			}
 		}
 
 		private void WriteJsonResponse(OpenApiMediaType info)
 		{
-			string responseType = GetResponseType(info.Schema);
+			string responseType = GetQualifiedType(info.Schema);
 			WriteLine($"return new {RESPONSE_CLASS}<{responseType}>(JsonSerializer.Deserialize<{responseType}>(await response.Content.ReadAsStringAsync(), _serializerOptions), (int)response.StatusCode);");
 		}
 
@@ -387,6 +401,9 @@ namespace Tekcari.Genapi.Transformation.CSharp
 			WriteLine("private string GetEndpoint(string path) => string.Concat(_baseUrl, path);");
 			WriteLine();
 
+			WriteLine("private static HttpContent ToJsonBody(object model) => new StringContent(System.Text.Json.JsonSerializer.Serialize(model, _serializerOptions), System.Text.Encoding.UTF8, \"application/json\");");
+			WriteLine();
+
 			WriteLine("private static IHttpClientFactory GetHttpClientFactory() => new ServiceCollection().AddHttpClient().BuildServiceProvider().GetService<IHttpClientFactory>();");
 			WriteLine();
 
@@ -398,7 +415,7 @@ namespace Tekcari.Genapi.Transformation.CSharp
 		private OpenApiDocument _document;
 		private readonly TranspilerSettings _settings;
 		private const string INTERNAL_NAMESPACE = (nameof(Tekcari) + "." + nameof(Genapi));
-		private const string RESPONSE_CLASS = (INTERNAL_NAMESPACE + "." + "ApiResponse");
+		private const string RESPONSE_CLASS = "ApiResponse";
 
 		private string GetApiResponseType(OpenApiOperation operation)
 		{
@@ -407,9 +424,10 @@ namespace Tekcari.Genapi.Transformation.CSharp
 				{
 					switch (response.Value.Content?.FirstOrDefault().Key?.ToLowerInvariant())
 					{
+						case "application/xml":
 						case "application/json":
 							OpenApiMediaType media = response.Value.Content?.FirstOrDefault().Value;
-							return string.Concat(RESPONSE_CLASS, '<', GetResponseType(media.Schema), '>');
+							return string.Concat(RESPONSE_CLASS, '<', GetQualifiedType(media.Schema), '>');
 
 						default: return RESPONSE_CLASS;
 					}
@@ -418,7 +436,7 @@ namespace Tekcari.Genapi.Transformation.CSharp
 			return null;
 		}
 
-		private string GetResponseType(OpenApiSchema schema)
+		private string GetQualifiedType(OpenApiSchema schema)
 		{
 			if (string.Equals(schema.Type, "array", StringComparison.InvariantCultureIgnoreCase))
 			{
@@ -432,10 +450,17 @@ namespace Tekcari.Genapi.Transformation.CSharp
 
 		private string GetParameterList(OpenApiOperation operation)
 		{
+			var builder = new StringBuilder();
+			OpenApiSchema schema = operation.RequestBody?.Content?.FirstOrDefault().Value?.Schema;
+			string reference = GetQualifiedType(schema);
+			if (!string.IsNullOrEmpty(RESPONSE_CLASS)) builder.AppendFormat("{0} {1}", reference, schema.Reference.Id.ToLowerInvariant());
+			if (string.IsNullOrEmpty(reference)) builder.Append(", ");
+
 			var args = from x in operation.Parameters
 					   select $"{x.Schema.Type.ToCSharpType()} {GetParameterName(x.Name)}";
+			builder.Append(string.Join(", ", args));
 
-			return string.Join(", ", args);
+			return builder.ToString();
 		}
 
 		private string GetPath(string path, OpenApiOperation operation)

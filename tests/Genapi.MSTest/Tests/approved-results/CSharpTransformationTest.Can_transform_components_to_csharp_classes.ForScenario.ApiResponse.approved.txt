@@ -1,1 +1,12 @@
-﻿
+﻿﻿public partial class ApiResponse
+{
+	[JsonPropertyName("code")]
+	public integer code { get; set; }
+
+	[JsonPropertyName("type")]
+	public string type { get; set; }
+
+	[JsonPropertyName("message")]
+	public string message { get; set; }
+
+}

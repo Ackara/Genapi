@@ -10,8 +10,7 @@ namespace Tekcari.Genapi.Extensions
 			{
 				case "integer": return "int";
 				case "boolean": return "bool";
-
-				default: return text;
+				default: return "string";
 			}
 		}
 	}

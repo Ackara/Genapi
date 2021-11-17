@@ -73,8 +73,8 @@ namespace Tekcari.Genapi.Tests
 			Approvals.Verify(code);
 		}
 
-		[TestMethod]
-		[DynamicData(nameof(GetOperations), DynamicDataSourceType.Method)]
+		[DataTestMethod]
+		[DynamicData(nameof(GetOperations), DynamicDataSourceType.Method, DynamicDataDisplayName = nameof(GetTestDisplayName))]
 		public void Can_transform_operation_to_csharp_method(string path, OperationType method, OpenApiOperation endpoint, OpenApiDocument document)
 		{
 			// Arrange
@@ -144,8 +144,8 @@ namespace Tekcari.Genapi.Tests
 			{
 				OpenApiDocument document = DocumentLoader.Read(specificationFile);
 
-				foreach (var item in document.Paths.Take(1))
-					foreach (var method in item.Value.Operations.Take(2))
+				foreach (var item in document.Paths.Where(x=> x.Key == "/pet"))
+					foreach (var method in item.Value.Operations)
 					{
 						yield return new object[] { item.Key, method.Key, method.Value, document };
 					}
