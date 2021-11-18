@@ -421,9 +421,13 @@ namespace Tekcari.Genapi.Transformation.CSharp
 
 		private string GetEndpointResponseType(OpenApiOperation operation)
 		{
+			// STEP: Determine if the operation has a success response. If not return a plain response; otherwise...
+
 			OpenApiResponse response = operation.Responses.FirstOrDefault(x => x.Key.StartsWith("2")).Value;
 			if (response == default) return RESPONSE_CLASS;
-			
+
+			// STEP: Determine if the operation has a body. If so return the wrapped component; otherwise return plain response
+
 
 			//foreach (KeyValuePair<string, OpenApiResponse> response in operation.Responses.Where(x => x.Key.StartsWith("2")))
 				//if (int.TryParse(response.Key, out int code) && code >= 200 && code <= 299)
@@ -439,7 +443,7 @@ namespace Tekcari.Genapi.Transformation.CSharp
 					//}
 				//}
 
-			return null;
+			return RESPONSE_CLASS;
 		}
 
 		private string GetQualifiedType(OpenApiSchema schema)
