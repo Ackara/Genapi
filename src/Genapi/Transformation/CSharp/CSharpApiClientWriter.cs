@@ -78,7 +78,7 @@ namespace Tekcari.Genapi.Transformation.CSharp
 		public void Write(string path, OperationType method, OpenApiOperation operation)
 		{
 			WriteXmlDoc(operation);
-			WriteLine($"public async Task<{GetApiResponseType(operation)}> {GetMemberName(operation.OperationId)}Async({GetParameterList(operation)})");
+			WriteLine($"public async Task<{GetEndpointResponseType(operation)}> {GetMemberName(operation.OperationId)}Async({GetEndpointParameterList(operation)})");
 			WriteLine("{");
 			PushIndent();
 
@@ -101,7 +101,9 @@ namespace Tekcari.Genapi.Transformation.CSharp
 			foreach (KeyValuePair<string, OpenApiResponse> response in operation.Responses)
 			{
 				if (int.TryParse(response.Key, out int code))
+				{
 					WriteLine($"case {code}:");
+				}
 				else
 					WriteLine("default:");
 				PushIndent();
@@ -370,7 +372,7 @@ namespace Tekcari.Genapi.Transformation.CSharp
 
 				default:
 					string responseType = null;
-					if (media.Schema == null)
+					if (media?.Schema != null)
 					{
 						responseType = GetQualifiedType(media.Schema);
 						if (!string.IsNullOrEmpty(responseType)) responseType = string.Concat('<', responseType, '>');
@@ -417,21 +419,25 @@ namespace Tekcari.Genapi.Transformation.CSharp
 		private const string INTERNAL_NAMESPACE = (nameof(Tekcari) + "." + nameof(Genapi));
 		private const string RESPONSE_CLASS = "ApiResponse";
 
-		private string GetApiResponseType(OpenApiOperation operation)
+		private string GetEndpointResponseType(OpenApiOperation operation)
 		{
-			foreach (KeyValuePair<string, OpenApiResponse> response in operation.Responses)
-				if (int.TryParse(response.Key, out int code) && code >= 200 && code <= 299)
-				{
-					switch (response.Value.Content?.FirstOrDefault().Key?.ToLowerInvariant())
-					{
-						case "application/xml":
-						case "application/json":
-							OpenApiMediaType media = response.Value.Content?.FirstOrDefault().Value;
-							return string.Concat(RESPONSE_CLASS, '<', GetQualifiedType(media.Schema), '>');
+			OpenApiResponse response = operation.Responses.FirstOrDefault(x => x.Key.StartsWith("2")).Value;
+			if (response == default) return RESPONSE_CLASS;
+			
 
-						default: return RESPONSE_CLASS;
-					}
-				}
+			//foreach (KeyValuePair<string, OpenApiResponse> response in operation.Responses.Where(x => x.Key.StartsWith("2")))
+				//if (int.TryParse(response.Key, out int code) && code >= 200 && code <= 299)
+				//{
+					//switch (response.Value.Content?.FirstOrDefault().Key?.ToLowerInvariant())
+					//{
+						//case "application/xml":
+						//case "application/json":
+							//OpenApiMediaType media = response.Value.Content?.FirstOrDefault().Value;
+							//return string.Concat(RESPONSE_CLASS, '<', GetQualifiedType(media.Schema), '>');
+
+						//default: return RESPONSE_CLASS;
+					//}
+				//}
 
 			return null;
 		}
@@ -448,7 +454,7 @@ namespace Tekcari.Genapi.Transformation.CSharp
 			}
 		}
 
-		private string GetParameterList(OpenApiOperation operation)
+		private string GetEndpointParameterList(OpenApiOperation operation)
 		{
 			var builder = new StringBuilder();
 			OpenApiSchema schema = operation.RequestBody?.Content?.FirstOrDefault().Value?.Schema;
