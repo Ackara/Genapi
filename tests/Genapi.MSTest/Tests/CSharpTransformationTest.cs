@@ -15,6 +15,7 @@ using Tekcari.Genapi.Transformation.CSharp;
 namespace Tekcari.Genapi.Tests
 {
 	[TestClass]
+	[ApprovalTests.Reporters.UseReporter(typeof(ApprovalTests.Reporters.FileLauncherReporter))]
 	public class CSharpTransformationTest
 	{
 		[DataTestMethod]
