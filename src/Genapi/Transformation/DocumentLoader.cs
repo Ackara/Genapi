@@ -9,22 +9,42 @@ namespace Tekcari.Genapi.Transformation
 {
 	public class DocumentLoader
 	{
-		public static OpenApiDocument Read(string uri)
+		public static OpenApiDocument Load(string uri)
 		{
 			if (string.IsNullOrEmpty(uri)) throw new ArgumentNullException(nameof(uri));
-			bool network = Uri.IsWellFormedUriString(uri, UriKind.Absolute);
+			return Load(new Uri(uri));
+		}
 
-			if (network)
+		public static OpenApiDocument Load(Uri uri)
+		{
+			if (uri == null) throw new ArgumentNullException(nameof(uri));
+
+			switch (uri.Scheme.ToLowerInvariant())
 			{
-				return DownloadFile(uri);
+				case "http":
+				case "https":
+					return DownloadFile(uri.AbsoluteUri);
+
+				default:
+					using (Stream stream = File.OpenRead(uri.LocalPath))
+					{
+						return ReadFile(stream, null);
+					}
 			}
-			else
+		}
+
+		public static OpenApiDocument ReadFile(Stream stream, OpenApiReaderSettings settings)
+		{
+			if (stream == null) throw new ArgumentNullException(nameof(stream));
+			var reader = new OpenApiStreamReader(settings);
+			OpenApiDocument document = reader.Read(stream, out OpenApiDiagnostic diagnostic);
+
+			foreach (var error in diagnostic.Errors)
 			{
-				using (Stream stream = File.OpenRead(uri))
-				{
-					return Load(stream, null);
-				}
+				System.Diagnostics.Debug.WriteLine($"{error.Pointer}: {error.Message}");
 			}
+
+			return document;
 		}
 
 		public static OpenApiDocument DownloadFile(string url)
@@ -39,25 +59,11 @@ namespace Tekcari.Genapi.Transformation
 			{
 				if (response.IsSuccessStatusCode)
 				{
-					return Load(await response.Content.ReadAsStreamAsync(), null);
+					return ReadFile(await response.Content.ReadAsStreamAsync(), null);
 				}
 			}
 
 			return default;
-		}
-
-		public static OpenApiDocument Load(Stream stream, OpenApiReaderSettings settings)
-		{
-			if (stream == null) throw new ArgumentNullException(nameof(stream));
-			var reader = new OpenApiStreamReader(settings);
-			OpenApiDocument document = reader.Read(stream, out OpenApiDiagnostic diagnostic);
-
-			foreach (var error in diagnostic.Errors)
-			{
-				System.Diagnostics.Debug.WriteLine($"{error.Pointer}: {error.Message}");
-			}
-
-			return document;
 		}
 	}
 }

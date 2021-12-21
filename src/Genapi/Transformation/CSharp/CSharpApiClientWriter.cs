@@ -35,7 +35,7 @@ namespace Tekcari.Genapi.Transformation.CSharp
 			_document = document ?? throw new ArgumentNullException(nameof(document));
 
 			WriteUsingStatments();
-
+			
 			string defaultNS = string.Concat(nameof(Tekcari), '.', nameof(Genapi));
 			WriteLine($"namespace {_settings.Namespace ?? defaultNS}");
 			WriteLine("{");
@@ -49,7 +49,7 @@ namespace Tekcari.Genapi.Transformation.CSharp
 			PopIndent();
 			WriteLine("}");
 			WriteLine();
-
+			
 			WriteResponseClasses();
 		}
 

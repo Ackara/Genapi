@@ -29,7 +29,7 @@ namespace Tekcari.Genapi.Targets
 			};
 
 			WriteMessage($"Loading '{source}'");
-			OpenApiDocument document = Transformation.DocumentLoader.Read(source);
+			OpenApiDocument document = Transformation.DocumentLoader.Load(source);
 
 			// STEP: Generate source code.
 

@@ -1,0 +1,40 @@
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.IO" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ import namespace="System.Xml.XPath" #>
+<#@ import namespace="System.Globalization" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+namespace <#= Host.ResolveAssemblyReference("$(RootNamespace)") #>
+{
+	internal readonly struct <#= Path.GetFileNameWithoutExtension(Host.TemplateFile) #>
+	{
+		<#
+		foreach (string fileName in GetResourceFiles())
+		{
+			string memberName = fileName.Substring(0, fileName.IndexOf('.'));
+			memberName = System.Text.RegularExpressions.Regex.Replace(memberName, "(?i)[^A-Z0-9_]+", "");
+			WriteLine($"public const string {memberName} = \"{fileName}\";");
+		}
+		#>
+	}
+}
+<#+
+
+IEnumerable<string> GetResourceFiles()
+{
+	string folderPath = System.IO.Path.Combine(Host.ResolveAssemblyReference("$(MSBuildProjectDirectory)"), "Resources");
+	foreach (string path in System.IO.Directory.EnumerateFiles(folderPath))
+	{
+		yield return System.IO.Path.GetFileName(path);
+	}
+}
+
+#>

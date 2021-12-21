@@ -55,10 +55,6 @@
 		</Content>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Base\" />
-	</ItemGroup>
-
 	<Target Name="TestGenerator">
 		<ItemGroup>
 			<OpenSpec1 Include="test-data\petstore.json" />

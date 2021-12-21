@@ -1,7 +1,8 @@
-namespace Tekcari.Genapi
+namespace {{rootnamespace}}
 {
+	[System.Diagnostics.DebuggerDisplay("{" + nameof(Format) + "(),nq}")]
 	/// <summary>
-	/// Represents a response from API server.
+	/// Represents response from API server.
 	/// </summary>
 	public readonly struct Response
 	{
@@ -29,25 +30,25 @@ namespace Tekcari.Genapi
 		}
 
 		/// <summary>
-		/// Gets the status code.
+		/// Gets the HTTP status code.
 		/// </summary>
-		/// <value>The status code.</value>
+		/// <value>The HTTP status code.</value>
 		public int StatusCode { get; }
 
 		/// <summary>
-		/// Gets the message.
+		/// Gets the error message.
 		/// </summary>
 		/// <value>The message.</value>
 		public string Message { get; }
 
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Response"/> is succeeded.
+		/// Gets a value indicating whether the corresponding request is succeeded.
 		/// </summary>
 		/// <value><c>true</c> if succeeded; otherwise, <c>false</c>.</value>
 		public bool Succeeded { get; }
 
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Response"/> is failed.
+		/// Gets a value indicating whether the corresponding request is failed.
 		/// </summary>
 		/// <value><c>true</c> if failed; otherwise, <c>false</c>.</value>
 		public bool Failed
@@ -56,16 +57,14 @@ namespace Tekcari.Genapi
 		}
 
 		/// <summary>
-		/// Converts to string.
+		/// Convert the value of this instance to a <see cref="System.String"/>.
 		/// </summary>
 		/// <returns>
 		/// A <see cref="System.String" /> that represents this instance.
 		/// </returns>
-		public override string ToString() => Format(StatusCode, Message);
+		public override string ToString() => Message;
 
-		internal static bool IsGood(int code) => code >= 200 && code <= 299;
-
-		internal static string Format(int code, string message) => $"({code}): {message}".Trim(' ', ':');
+		internal string Format() => $"({StatusCode}): {Message}".Trim(' ', ':');
 
 		#region operators
 
@@ -74,16 +73,13 @@ namespace Tekcari.Genapi
 		#endregion operators
 	}
 
+	[System.Diagnostics.DebuggerDisplay("{" + nameof(Format) + "(),nq}")]
+	/// <summary>
+	/// Represents response data from API server.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
 	public readonly struct Response<T>
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Response{T}"/> struct.
-		/// </summary>
-		/// <param name="statusCode">The status code.</param>
-		/// <param name="message">The message.</param>
-		public Response(int statusCode, string message = default)
-			: this(default, Response.IsGood(statusCode), statusCode, message) { }
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Response{T}"/> struct.
 		/// </summary>
@@ -114,18 +110,42 @@ namespace Tekcari.Genapi
 		/// <value>The data.</value>
 		public T Data { get; }
 
+		/// <summary>
+		/// Gets the HTTP status code.
+		/// </summary>
+		/// <value>The HTTP status code.</value>
 		public int StatusCode { get; }
 
+		/// <summary>
+		/// Gets the error message.
+		/// </summary>
+		/// <value>The message.</value>
 		public string Message { get; }
 
+		/// <summary>
+		/// Gets a value indicating whether the corresponding request is succeeded.
+		/// </summary>
+		/// <value><c>true</c> if succeeded; otherwise, <c>false</c>.</value>
 		public bool Succeeded { get; }
 
+		/// <summary>
+		/// Gets a value indicating whether the corresponding request is failed.
+		/// </summary>
+		/// <value><c>true</c> if failed; otherwise, <c>false</c>.</value>
 		public bool Failed
 		{
 			get => Succeeded == false;
 		}
 
-		public override string ToString() => Response.Format(StatusCode, Message);
+		/// <summary>
+		/// Convert the value of this instance to a <see cref="System.String"/>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="System.String" /> that represents this instance.
+		/// </returns>
+		public override string ToString() => Message;
+
+		internal string Format() => $"({StatusCode}): {Message}".Trim(' ', ':');
 
 		#region operators
 

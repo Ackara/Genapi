@@ -14,7 +14,7 @@ using Tekcari.Genapi.Transformation.CSharp;
 
 namespace Tekcari.Genapi.Tests
 {
-	[TestClass]
+	//[TestClass]
 	[ApprovalTests.Reporters.UseReporter(typeof(ApprovalTests.Reporters.FileLauncherReporter))]
 	public class CSharpTransformationTest
 	{
@@ -27,7 +27,7 @@ namespace Tekcari.Genapi.Tests
 			string filePath = TestData.GetFilePath(pattern);
 			using var scenario = ApprovalTests.Namers.ApprovalResults.ForScenario(Path.GetFileName(filePath));
 
-			var document = DocumentLoader.Read(filePath);
+			var document = DocumentLoader.Load(filePath);
 
 			var settings = new TranspilerSettings
 			{
@@ -119,6 +119,12 @@ namespace Tekcari.Genapi.Tests
 			Approvals.Verify(code);
 		}
 
+		[TestMethod]
+		public void Foo()
+		{
+			var stream = ResourceLoader.GetStream(EmbeddedResourceName.Response);
+		}
+
 		#region Backing Members
 
 		private static int _counter = 0;
@@ -128,7 +134,7 @@ namespace Tekcari.Genapi.Tests
 			var filter = new Regex(".+", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 			foreach (string specificationFile in TestData.GetFilePaths("pet*.json"))
 			{
-				OpenApiDocument document = DocumentLoader.Read(specificationFile);
+				OpenApiDocument document = DocumentLoader.Load(specificationFile);
 				var testCases = from x in document.Components.Schemas
 								select x;
 
@@ -143,9 +149,9 @@ namespace Tekcari.Genapi.Tests
 		{
 			foreach (string specificationFile in TestData.GetFilePaths("pet*.json"))
 			{
-				OpenApiDocument document = DocumentLoader.Read(specificationFile);
+				OpenApiDocument document = DocumentLoader.Load(specificationFile);
 
-				foreach (var item in document.Paths.Where(x=> x.Key == "/pet"))
+				foreach (var item in document.Paths.Where(x => x.Key == "/pet"))
 					foreach (var method in item.Value.Operations)
 					{
 						yield return new object[] { item.Key, method.Key, method.Value, document };

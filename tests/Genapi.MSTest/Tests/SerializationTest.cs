@@ -13,16 +13,16 @@ namespace Tekcari.Genapi.Tests
 	{
 		[DataTestMethod]
 		[DynamicData(nameof(GetSpecifications), DynamicDataSourceType.Method, DynamicDataDisplayName = nameof(GetTestDisplayName))]
-		public void Can_convert_file_to_openapi_spec_model(string filePath)
+		public void Can_convert_file_to_openapi_spec_model(string uri)
 		{
-			var document = DocumentLoader.Read(filePath);
+			var document = DocumentLoader.Load(uri);
 			document.ShouldNotBeNull();
 			document.Paths.ShouldNotBeEmpty();
 		}
 
 		#region Backing Members
 
-		private static IEnumerable<object[]> GetSpecifications() => TestData.GetSpecifications();
+		private static IEnumerable<object[]> GetSpecifications() => TestData.GetSpecifications2();
 
 		public static string GetTestDisplayName(MethodInfo method, object[] args)
 		{
