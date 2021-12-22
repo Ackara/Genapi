@@ -1,4 +1,318 @@
-﻿== ApiResponse.cs
+﻿== ApiClient.cs
+==================================================
+
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Tekcari.eCommerce.Billing;
+using Tekcari.eCommerce.Data;
+
+namespace Tekcari.eCommerce
+{
+	public class Client
+	{
+		public Client(string baseUrl, IHttpClientFactory httpClientFactory = default)
+		{
+			if (string.IsNullOrEmpty(baseUrl)) throw new ArgumentNullException(nameof(baseUrl));
+
+			_baseUrl = baseUrl.Trim('/');
+			_httpClientFactory = httpClientFactory ?? GetHttpClientFactory() ?? throw new ArgumentNullException(nameof(httpClientFactory));
+		}
+		
+		/// <summary>Update an existing pet.</summary>
+		/// <remarks>Update an existing pet by Id.</remarks>
+		public Task<Response<Pet>> updatePetAsync(Pet pet)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Put, CreateUrl($"/pet"));
+			return SendRequestAsync<Pet>(request);
+		}
+
+		/// <summary>Add a new pet to the store.</summary>
+		/// <remarks>Add a new pet to the store.</remarks>
+		public Task<Response<Pet>> addPetAsync(Pet pet)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Post, CreateUrl($"/pet"));
+			return SendRequestAsync<Pet>(request);
+		}
+
+		/// <summary>Finds Pets by status.</summary>
+		/// <remarks>Multiple status values can be provided with comma separated strings.</remarks>
+		public Task<Response<Pet[]>> findPetsByStatusAsync(string status)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, CreateUrl($"/pet/findByStatus?status={status}"));
+			return SendRequestAsync<Pet[]>(request);
+		}
+
+		/// <summary>Finds Pets by tags.</summary>
+		/// <remarks>Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.</remarks>
+		public Task<Response<Pet[]>> findPetsByTagsAsync(string[] tags)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, CreateUrl($"/pet/findByTags?{GetQueryList("tags", tags)}"));
+			return SendRequestAsync<Pet[]>(request);
+		}
+
+		/// <summary>Find pet by ID.</summary>
+		/// <remarks>Returns a single pet.</remarks>
+		public Task<Response<Pet>> getPetByIdAsync(long petId)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, CreateUrl("/pet/{petId}"));
+			return SendRequestAsync<Pet>(request);
+		}
+
+		/// <summary>Updates a pet in the store with form data.</summary>
+		/// <remarks></remarks>
+		public Task<Response> updatePetWithFormAsync(
+		)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Post, CreateUrl("/pet/{petId}"));
+			return SendRequestAsync(request);
+		}
+
+		/// <summary>Deletes a pet.</summary>
+		/// <remarks></remarks>
+		public Task<Response> deletePetAsync(
+		)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Delete, CreateUrl("/pet/{petId}"));
+			return SendRequestAsync(request);
+		}
+
+		/// <summary>uploads an image.</summary>
+		/// <remarks></remarks>
+		public Task<Response<ApiResponse>> uploadFileAsync(
+		)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Post, CreateUrl("/pet/{petId}/uploadImage"));
+			return SendRequestAsync<ApiResponse>(request);
+		}
+
+		/// <summary>Returns pet inventories by status.</summary>
+		/// <remarks>Returns a map of status codes to quantities.</remarks>
+		public Task<Response<string>> getInventoryAsync(
+		)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, CreateUrl("/store/inventory"));
+			return SendRequestAsync<string>(request);
+		}
+
+		/// <summary>Place an order for a pet.</summary>
+		/// <remarks>Place a new order in the store.</remarks>
+		public Task<Response<Order>> placeOrderAsync(
+		)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Post, CreateUrl("/store/order"));
+			return SendRequestAsync<Order>(request);
+		}
+
+		/// <summary>Find purchase order by ID.</summary>
+		/// <remarks>For valid response try integer IDs with value <= 5 or > 10. Other values will generated exceptions.</remarks>
+		public Task<Response<Order>> getOrderByIdAsync(
+		)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, CreateUrl("/store/order/{orderId}"));
+			return SendRequestAsync<Order>(request);
+		}
+
+		/// <summary>Delete purchase order by ID.</summary>
+		/// <remarks>For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors.</remarks>
+		public Task<Response> deleteOrderAsync(
+		)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Delete, CreateUrl("/store/order/{orderId}"));
+			return SendRequestAsync(request);
+		}
+
+		/// <summary>Create user.</summary>
+		/// <remarks>This can only be done by the logged in user.</remarks>
+		public Task<Response> createUserAsync(
+		)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Post, CreateUrl("/user"));
+			return SendRequestAsync(request);
+		}
+
+		/// <summary>Creates list of users with given input array.</summary>
+		/// <remarks>Creates list of users with given input array.</remarks>
+		public Task<Response<User>> createUsersWithListInputAsync(
+		)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Post, CreateUrl("/user/createWithList"));
+			return SendRequestAsync<User>(request);
+		}
+
+		/// <summary>Logs user into the system.</summary>
+		/// <remarks></remarks>
+		public Task<Response<string>> loginUserAsync(
+		)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, CreateUrl("/user/login"));
+			return SendRequestAsync<string>(request);
+		}
+
+		/// <summary>Logs out current logged in user session.</summary>
+		/// <remarks></remarks>
+		public Task<Response> logoutUserAsync(
+		)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, CreateUrl("/user/logout"));
+			return SendRequestAsync(request);
+		}
+
+		/// <summary>Get user by user name.</summary>
+		public Task<Response<User>> getUserByNameAsync(
+		)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, CreateUrl("/user/{username}"));
+			return SendRequestAsync<User>(request);
+		}
+
+		/// <summary>Update user.</summary>
+		/// <remarks>This can only be done by the logged in user.</remarks>
+		public Task<Response> updateUserAsync(
+		)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Put, CreateUrl("/user/{username}"));
+			return SendRequestAsync(request);
+		}
+
+		/// <summary>Delete user.</summary>
+		/// <remarks>This can only be done by the logged in user.</remarks>
+		public Task<Response> deleteUserAsync(
+		)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Delete, CreateUrl("/user/{username}"));
+			return SendRequestAsync(request);
+		}
+
+
+		internal async Task<Response> SendRequestAsync(HttpRequestMessage request)
+		{
+			SetHeaders(request);
+#if DEBUG
+			PrintToDebugWindow(request);
+#endif
+			HttpClient client = _httpClientFactory.CreateClient();
+			using (HttpResponseMessage response = await client.SendAsync(request))
+			{
+#if DEBUG
+				PrintToDebugWindow(response);
+#endif
+				if (response.IsSuccessStatusCode)
+				{
+					return new Response((int)response.StatusCode, response.ReasonPhrase);
+				}
+				else
+				{
+					System.IO.Stream json = await response.Content.ReadAsStreamAsync();
+					if (json.Length == 0) return new Response((int)response.StatusCode, response.ReasonPhrase);
+					else
+					{
+						Fault error = await JsonSerializer.DeserializeAsync<Fault>(json, _serializerOptions);
+						return new Response(error.Code, error.Message);
+					}
+				}
+			}
+		}
+
+		internal async Task<Response<T>> SendRequestAsync<T>(HttpRequestMessage request)
+		{
+			SetHeaders(request);
+#if DEBUG
+			PrintToDebugWindow(request);
+#endif
+			HttpClient client = _httpClientFactory.CreateClient();
+			using (HttpResponseMessage response = await client.SendAsync(request))
+			{
+#if DEBUG
+				PrintToDebugWindow(response);
+#endif
+				string json = await response.Content.ReadAsStringAsync();
+				if (string.IsNullOrEmpty(json)) return new Response<T>(default, (int)response.StatusCode, response.ReasonPhrase);
+
+				if (response.IsSuccessStatusCode)
+				{
+					return new Response<T>(
+						JsonSerializer.Deserialize<T>(json, _serializerOptions),
+						(int)response.StatusCode,
+						response.ReasonPhrase
+						);
+				}
+				else
+				{
+					Fault fault = JsonSerializer.Deserialize<Fault>(json, _serializerOptions);
+					return new Response<T>(
+						default,
+						(int)response.StatusCode,
+						fault.Message);
+				}
+			}
+		}
+
+		internal void SetHeaders(HttpRequestMessage request)
+		{
+		}
+
+		internal StringContent ToJson(object obj)
+		{
+			string json = System.Text.Json.JsonSerializer.Serialize(obj, _serializerOptions);
+			return new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+		}
+
+		#region Backing Members
+
+		private readonly string _baseUrl;
+		private readonly IHttpClientFactory _httpClientFactory;
+		private readonly JsonSerializerOptions _serializerOptions = Configuration.GlobalSettings.GetSerializerOptions();
+
+
+		private static string GetBaseUrl(Environment environment)
+		{
+			return environment switch
+			{
+				Environment.Production => "http://api.ackeem.dotnetcloud.co.uk",
+				_ => "http://localhost.com/"
+			};
+		}
+
+		private Response BadRequest(string paramName) => new Response(401, $"'{paramName}' cannot be null or empty.");
+
+		private Response<T> BadRequest<T>(string paramName) => new Response<T>(default, 401, $"'{paramName}' cannot be null or empty.");
+
+		private void PrintToDebugWindow(HttpRequestMessage message)
+		{
+#if DEBUG
+			System.Diagnostics.Debug.Write("===== HTTP Request ");
+			System.Diagnostics.Debug.WriteLine(string.Concat(Enumerable.Repeat('=', 50)));
+			System.Diagnostics.Debug.WriteLine($"{message.Method.Method}: {message.RequestUri}");
+			System.Diagnostics.Debug.WriteLine(message.Content?.ReadAsStringAsync().Result);
+			System.Diagnostics.Debug.WriteLine(string.Empty);
+#endif
+		}
+
+		private void PrintToDebugWindow(HttpResponseMessage message)
+		{
+#if DEBUG
+			System.Diagnostics.Debug.Write($"===== HTTP Response ({(int)message.StatusCode}) ");
+			System.Diagnostics.Debug.WriteLine(string.Concat(Enumerable.Repeat('=', 50)));
+			System.Diagnostics.Debug.WriteLine($"{message.RequestMessage.Method.Method}: {message.RequestMessage.RequestUri}");
+			System.Diagnostics.Debug.WriteLine($"Status: {message.ReasonPhrase} ({(int)message.StatusCode})");
+			System.Diagnostics.Debug.WriteLine(message.Content?.ReadAsStringAsync().Result);
+			System.Diagnostics.Debug.WriteLine(string.Empty);
+#endif
+		}
+
+		private static IHttpClientFactory GetHttpClientFactory() => new ServiceCollection().AddHttpClient().BuildServiceProvider().GetService<IHttpClientFactory>();
+
+		#endregion Backing Members
+	}
+}
+
+
+== ApiResponse.cs
 ==================================================
 
 public class ApiResponse

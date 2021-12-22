@@ -21,7 +21,7 @@
 	<ItemGroup>
 	  <Compile Remove="Resources\*.cs" />
 		
-		<EmbeddedResource Include="Resources\*.liquid.*">
+		<EmbeddedResource Include="Resources\**\*.liquid.*">
 			<CopyToOutputDirectory>true</CopyToOutputDirectory>
 		</EmbeddedResource>
 	

@@ -19,7 +19,6 @@ namespace Tekcari.Genapi.Tests
 		{
 			// Arrange
 
-			DotLiquid.Template.RegisterFilter(typeof(CsharpFilters));
 			using var scenario = ApprovalTests.Namers.ApprovalResults.ForScenario(Path.GetFileName(specificationFilePath));
 
 			var sut = new CsharpClientGenerator();
