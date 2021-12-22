@@ -15,25 +15,25 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Resources\*.cs" />
-		
+		<Compile Remove="Resources\*.cs" />
+
 		<EmbeddedResource Include="Resources\**\*.liquid.*">
 			<CopyToOutputDirectory>true</CopyToOutputDirectory>
 		</EmbeddedResource>
-	
-	  <None Update="Transformation\EmbeddedResourceName.tt">
-	    <Generator>TextTemplatingFileGenerator</Generator>
-	    <LastGenOutput>EmbeddedResourceName.cs</LastGenOutput>
-	  </None>
-	
-	  <Compile Update="Transformation\EmbeddedResourceName.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>EmbeddedResourceName.tt</DependentUpon>
-	  </Compile>
+
+		<Compile Update="EmbeddedResourceName.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>EmbeddedResourceName.tt</DependentUpon>
+		</Compile>
+
+		<None Update="EmbeddedResourceName.tt">
+			<Generator>TextTemplatingFileGenerator</Generator>
+			<LastGenOutput>EmbeddedResourceName.cs</LastGenOutput>
+		</None>
 	</ItemGroup>
 </Project>

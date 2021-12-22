@@ -10,9 +10,13 @@ namespace Tekcari.Genapi.Generators.Csharp
 	public class CsharpClientGenerator : IGenerator<CsharpClientGeneratorSettings>
 	{
 		public CsharpClientGenerator()
+			: this(new CsharpTypeAdapter()) { }
+
+		public CsharpClientGenerator(ITypeNameAdapter<CsharpClientGeneratorSettings> typeNameAdapter)
 		{
 			DotLiquid.Template.RegisterFilter(typeof(CsharpFilters));
 			DotLiquid.Template.RegisterFilter(typeof(CustomFilters));
+			_mapper = typeNameAdapter ?? throw new ArgumentNullException(nameof(typeNameAdapter));
 		}
 
 		public FileResult[] Generate(OpenApiDocument document, CsharpClientGeneratorSettings settings)
@@ -20,7 +24,7 @@ namespace Tekcari.Genapi.Generators.Csharp
 			_document = document ?? throw new ArgumentNullException(nameof(document));
 			_settings = settings;
 
-			BuildTemplateModel();
+			BuildGlobalModel();
 			GenerateSupportClasses();
 			GenerateComponents();
 			GenerateClientClass();
@@ -28,11 +32,13 @@ namespace Tekcari.Genapi.Generators.Csharp
 			return _fileList.ToArray();
 		}
 
-		// ==================== Write Files ==================== //
+		// ==================== INTERNAL MEMBERS ==================== //
 
-		private void BuildTemplateModel()
+		private void BuildGlobalModel()
 		{
-			_globalModel.Add("rootnamespace", _settings.RootNameSpace);
+			_globalModel.Add("rootnamespace", _settings.RootNamespace);
+			_globalModel.Add("client_class_name", _settings.ClientClassName);
+			_globalModel.Add("base_url", _settings.BaseUrl);
 		}
 
 		private void GenerateSupportClasses()
@@ -53,8 +59,28 @@ namespace Tekcari.Genapi.Generators.Csharp
 					DotLiquid.Hash model = DotLiquid.Hash.FromAnonymousObject(FromSchemaToModel(schema.Key, schema.Value));
 					model.Merge(_globalModel);
 
-					_fileList.Add(new FileResult($"{MemberName(schema.Key)}.cs", template.Render(model)));
+					_fileList.Add(new FileResult($"{CsharpFilters.SafeName(schema.Key)}.cs", template.Render(model)?.Trim()));
 				}
+		}
+
+		private void GenerateClientClass()
+		{
+			DotLiquid.Template template = CreateTemplate(EmbeddedResourceName.httpClient);
+			var endpoints = new List<object>();
+			var model = new DotLiquid.Hash();
+
+			foreach (KeyValuePair<string, OpenApiPathItem> path in _document.Paths)
+				foreach (KeyValuePair<OperationType, OpenApiOperation> operation in path.Value.Operations)
+				{
+					object endpoint = DotLiquid.Hash.FromAnonymousObject(GetEndpointModel(path.Key, operation.Key, operation.Value));
+					endpoints.Add(endpoint);
+				}
+
+			model.Add("endpoints", endpoints);
+			model.Merge(_globalModel);
+
+			string content = template.Render(model);
+			_fileList.Add(new FileResult($"{_settings.ClientClassName}.cs", content));
 		}
 
 		private object FromSchemaToModel(string className, OpenApiSchema schema)
@@ -79,110 +105,117 @@ namespace Tekcari.Genapi.Generators.Csharp
 			};
 		}
 
-		private void GenerateClientClass()
+		private object GetEndpointModel(string path, OperationType method, OpenApiOperation operation)
 		{
-			DotLiquid.Template template = CreateTemplate(EmbeddedResourceName.httpClient);
-			var endpoints = new List<object>();
-			var model = new DotLiquid.Hash();
+			List<object> parameters = GetEndpointParameterList(operation);
+			string returnType = GetEndpointReturnType(operation);
+			string url = ExpandEndpointPath(operation, path);
 
-			foreach (KeyValuePair<string, OpenApiPathItem> path in _document.Paths)
-				foreach (KeyValuePair<OperationType, OpenApiOperation> operation in path.Value.Operations)
-				{
-					object endpoint = DotLiquid.Hash.FromAnonymousObject(FromOperationToModel(path.Key, operation.Key, operation.Value));
-					endpoints.Add(endpoint);
-				}
-
-			model.Add("endpoints", endpoints);
-			model.Merge(_globalModel);
-
-			string content = template.Render(model);
-			_fileList.Add(new FileResult($"{_settings.ClientClassName}.cs", content));
+			return new
+			{
+				path = url,
+				method = Enum.GetName(typeof(OperationType), method),
+				operationName = operation.OperationId,
+				summary = NullIfWhitespace(operation.Summary),
+				remarks = NullIfWhitespace(operation.Description),
+				returnType,
+				parameters
+			};
 		}
 
-		private object FromOperationToModel(string path, OperationType method, OpenApiOperation operation)
+		private List<object> GetEndpointParameterList(OpenApiOperation operation)
 		{
-			static bool isArrary(OpenApiSchema x) => string.Equals(x.Type, "array", StringComparison.InvariantCultureIgnoreCase);
-			var url = new StringBuilder(path);
-
-			// STEP: Determine the endpoint response type.
-
-			object successResponse = null;
+			static string safeName(string x) => CustomFilters.CamelCase(CsharpFilters.SafeName(x));
 			var parameters = new List<object>();
 
+			if (operation.RequestBody != null)
+			{
+				KeyValuePair<string, OpenApiMediaType> first = operation.RequestBody.Content.FirstOrDefault();
+				string mimeType = first.Key.ToLowerInvariant();
+				OpenApiMediaType mediaType = first.Value;
+				string name, kind = "body", type = _mapper.Map(mediaType.Schema, _settings);
+
+				switch (mimeType)
+				{
+					case "application/xml":
+					case "application/json":
+					case "application/x-www-form-urlencoded":
+						name = safeName(type);
+						parameters.Add(new { kind, type, name, value = $"{type} {name}", mimeType });
+						break;
+
+					case "application/octet-stream":
+						name = operation.Parameters.Any(x => x.Name == "data") ? "data1" : "data";
+						parameters.Add(new { kind, type, name, value = $"{type} {name}", mimeType });
+						break;
+				}
+			}
+
+			string lastItem = operation.Parameters?.LastOrDefault()?.Name;
+			foreach (OpenApiParameter arg in operation.Parameters.OrderByDescending(x => x.Required))
+			{
+				parameters.Add(GetEndpointParameter(arg, arg.Name == lastItem));
+			}
+
+			return parameters;
+		}
+
+		private static string ExpandEndpointPath(OpenApiOperation operation, string path)
+		{
+			var url = new StringBuilder(path);
+
+			if (operation.Parameters.Any(x => x.In == ParameterLocation.Query))
+				url.Append('?');
+
+			var queryValues = from x in operation.Parameters
+							  where x.In == ParameterLocation.Query && !IsArrary(x.Schema)
+							  select $"{x.Name}={{{x.Name}}}";
+			if (queryValues.Any())
+				url.Append(string.Join("&", queryValues));
+
+			queryValues = from x in operation.Parameters
+						  where x.In == ParameterLocation.Query && IsArrary(x.Schema)
+						  select $"{{GetQueryList(\"{x.Name}\", {x.Name})}}";
+			if (queryValues.Any())
+				url.Append(string.Join("&", queryValues));
+
+			return url.ToString();
+		}
+
+		private object GetEndpointParameter(OpenApiParameter parameter, bool islastItem)
+		{
+			static bool isArrary(OpenApiSchema x) => string.Equals(x.Type, "array", StringComparison.InvariantCultureIgnoreCase);
+
+			string name = parameter.Name;
+			string type = _mapper.Map(parameter.Schema, _settings);
+			string value = $"{type} {name}";
+			string kind = Enum.GetName(typeof(ParameterLocation), parameter.In);
+
+			if (islastItem && isArrary(parameter.Schema) && parameter.Required == false) value = string.Concat("params ", value);
+			else if (parameter.Required == false) value = string.Concat(value, " = default");
+
+			return new { name, type, value, kind, description = NullIfWhitespace(parameter.Description) };
+		}
+
+		private string GetEndpointReturnType(OpenApiOperation operation)
+		{
 			foreach (KeyValuePair<string, OpenApiResponse> response in operation.Responses)
 				if (int.TryParse(response.Key, out int code))
 				{
 					if (code >= 200 && code <= 299)
 					{
-						successResponse = FromResponseToModel(code, response.Value);
+						OpenApiMediaType mediaType = response.Value.Content.FirstOrDefault().Value;
+						return _mapper.Map(mediaType.Schema, _settings);
 					}
 				}
 
-			// STEP: Determine the endpoint parameter list.
-
-			if (operation.RequestBody != null)
-			{
-				OpenApiMediaType mediaType = operation.RequestBody.Content.FirstOrDefault().Value;
-				string type = _mapper.Map(mediaType.Schema, _settings);
-				parameters.Add(new { type, name = CustomFilters.CamelCase(type), usage = "body" });
-			}
-
-			foreach (OpenApiParameter arg in operation.Parameters.OrderBy(x => x.In))
-			{
-				string type = _mapper.Map(arg.Schema, _settings);
-				parameters.Add(new { type, name = arg.Name, usage = Enum.GetName(typeof(ParameterLocation), arg.In) });
-			}
-
-			// STEP: Ensure endpoint path has parameters.
-
-			var routeValues = from x in operation.Parameters
-							  where x.In == ParameterLocation.Path
-							  select CustomFilters.CamelCase(x.Name);
-			path = string.Concat(path, string.Join("/", routeValues));
-
-			if (operation.Parameters.Any(x => x.In == ParameterLocation.Query))
-				path = string.Concat(path, "?");
-
-			var queryValues = from x in operation.Parameters
-							  where x.In == ParameterLocation.Query && !isArrary(x.Schema)
-							  select $"{x.Name}={{{CustomFilters.CamelCase(x.Name)}}}";
-			//path = string.Concat(path, string.Join("&", queryValues));
-
-			queryValues = from x in operation.Parameters
-						  where x.In == ParameterLocation.Query && isArrary(x.Schema)
-						  select $"{{GetQueryList(\"{x.Name}\", {CustomFilters.CamelCase(x.Name)})}}";
-			//path = string.Concat(path, string.Join("&", queryValues));
-
-			// STEP: Build model for endpoint method.
-
-			return new
-			{
-				path,
-				method = Enum.GetName(typeof(OperationType), method),
-				operationName = operation.OperationId,
-				summary = operation.Summary,
-				remarks = operation.Description,
-				success = successResponse,
-				parameters
-			};
-		}
-
-		private object FromResponseToModel(int status, OpenApiResponse response)
-		{
-			OpenApiMediaType mediaType = response.Content.FirstOrDefault().Value;
-			string type = _mapper.Map(mediaType.Schema, _settings);
-
-			return new
-			{
-				statusCode = Convert.ToString(status),
-				type
-			};
+			return null;
 		}
 
 		#region Backing Members
 
 		private readonly DotLiquid.Hash _globalModel = new DotLiquid.Hash();
-		private readonly CsharpTypeAdapter _mapper = new CsharpTypeAdapter();
+		private readonly ITypeNameAdapter<CsharpClientGeneratorSettings> _mapper = new CsharpTypeAdapter();
 
 		private OpenApiDocument _document;
 		private CsharpClientGeneratorSettings _settings;
@@ -190,7 +223,9 @@ namespace Tekcari.Genapi.Generators.Csharp
 
 		private DotLiquid.Template CreateTemplate(string fileName) => DotLiquid.Template.Parse(ResourceLoader.GetContent(fileName));
 
-		private string MemberName(string text) => text;
+		private static bool IsArrary(OpenApiSchema x) => string.Equals(x.Type, "array", StringComparison.InvariantCultureIgnoreCase);
+
+		private static string NullIfWhitespace(string x) => string.IsNullOrWhiteSpace(x) ? null : x;
 
 		#endregion Backing Members
 	}

@@ -4,19 +4,19 @@ namespace Tekcari.Genapi.Generators.Csharp
 	{
 		public CsharpClientGeneratorSettings()
 		{
-			RootNameSpace = string.Concat(nameof(Tekcari), '.', nameof(Genapi));
+			RootNamespace = string.Concat(nameof(Tekcari), '.', nameof(Genapi));
+			ClientClassName = "GeneratedClient";
 			CollectionTypeFormat = "{0}[]";
-			ClientClassName = "ApiClient";
 		}
 
-		public string RootNameSpace { get; set; }
+		public string OutputFolder { get; set; }
+
+		public string RootNamespace { get; set; }
 
 		public string ClientClassName { get; set; }
 
-		public string BaseUrl { get; set; }
-
 		public string CollectionTypeFormat { get; set; }
 
-		public string OutputFolder { get; set; }
+		public string BaseUrl { get; set; }
 	}
 }

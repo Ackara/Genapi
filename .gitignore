@@ -352,6 +352,7 @@ MigrationBackup/
 
 # Generated Files
 *.received.*
+GeneratedClient.cs
 
 # Sensitive Files
 [Ss]ecrets.json

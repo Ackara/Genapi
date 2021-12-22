@@ -66,6 +66,8 @@ namespace {{rootnamespace}}
 
 		internal string Format() => $"({StatusCode}): {Message}".Trim(' ', ':');
 
+		internal static bool IsGood(int code) => code >= 200 && code < 300;
+
 		#region operators
 
 		public static implicit operator bool(Response x) => x.Succeeded;

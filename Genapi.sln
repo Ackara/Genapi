@@ -26,6 +26,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genapi.MSTest", "tests\Gena
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genapi.Targets", "src\Genapi.Targets\Genapi.Targets.csproj", "{EC9FD7DB-128E-40B6-9F1C-1A628F7EFC19}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genapi.Example", "tests\Genapi.Example\Genapi.Example.csproj", "{B289145D-4A58-4F6C-A671-F57979440DAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{EC9FD7DB-128E-40B6-9F1C-1A628F7EFC19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC9FD7DB-128E-40B6-9F1C-1A628F7EFC19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC9FD7DB-128E-40B6-9F1C-1A628F7EFC19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B289145D-4A58-4F6C-A671-F57979440DAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B289145D-4A58-4F6C-A671-F57979440DAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B289145D-4A58-4F6C-A671-F57979440DAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B289145D-4A58-4F6C-A671-F57979440DAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

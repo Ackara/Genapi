@@ -2,7 +2,7 @@ using Microsoft.OpenApi.Models;
 
 namespace Tekcari.Genapi.Generators.Csharp
 {
-	public class CsharpTypeAdapter
+	public class CsharpTypeAdapter : ITypeNameAdapter, ITypeNameAdapter<CsharpClientGeneratorSettings>
 	{
 		public string Map(OpenApiSchema typeInfo, CsharpClientGeneratorSettings settings)
 		{
@@ -24,11 +24,14 @@ namespace Tekcari.Genapi.Generators.Csharp
 				case "int64": return "long";
 				case "int32": return "int";
 				case "boolean": return "bool";
+				case "binary": return "byte[]";
 				case "date-time": return nameof(System.DateTime);
 
 				case "integer": return "int";
 				default: return "string";
 			}
 		}
+
+		string ITypeNameAdapter.Map(OpenApiSchema typeInfo, IGeneratorSettings settings) => Map(typeInfo, (settings is CsharpClientGeneratorSettings ? (CsharpClientGeneratorSettings)settings : new CsharpClientGeneratorSettings()));
 	}
 }

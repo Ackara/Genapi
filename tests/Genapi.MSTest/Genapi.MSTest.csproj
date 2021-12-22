@@ -53,15 +53,5 @@
 		<Content Include="test-data\**">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-	</ItemGroup>
-
-	<Target Name="TestGenerator">
-		<ItemGroup>
-			<OpenSpec1 Include="test-data\petstore.json" />
-		</ItemGroup>
-
-		<GenerateCsharpApiClient SourceFile="@(OpenSpec1)" DestinationFile="GeneratedClient.cs" Namespace="GeneratedCode" />
-	</Target>
-
-	<Import Project="..\..\artifacts\msbuild\msbuild\Genapi.Targets.targets" Condition="Exists('..\..\artifacts\msbuild\msbuild\Genapi.Targets.targets')" />
+	</ItemGroup>	
 </Project>

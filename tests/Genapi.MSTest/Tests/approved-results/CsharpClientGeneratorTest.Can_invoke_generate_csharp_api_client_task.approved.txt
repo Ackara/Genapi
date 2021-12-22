@@ -1,0 +1,648 @@
+﻿using System.Threading.Tasks;
+using System.Text.Json;
+using System.Net.Http;
+using System.Linq;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json.Serialization;
+using System;
+
+namespace Tekcari.Genapi
+{
+	[System.Diagnostics.DebuggerDisplay("{" + nameof(Format) + "(),nq}")]
+	/// <summary>
+	/// Represents response from API server.
+	/// </summary>
+	public readonly struct Response
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Response"/> struct.
+		/// </summary>
+		/// <param name="statusCode">The status code.</param>
+		/// <param name="message">The message.</param>
+		public Response(int statusCode, string message = default)
+			: this(IsGood(statusCode), statusCode, message)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Response"/> struct.
+		/// </summary>
+		/// <param name="success">if set to <c>true</c> [success].</param>
+		/// <param name="statusCode">The status code.</param>
+		/// <param name="message">The message.</param>
+		public Response(bool success, int statusCode, string message)
+		{
+			Message = message;
+			Succeeded = success;
+			StatusCode = statusCode;
+		}
+
+		/// <summary>
+		/// Gets the HTTP status code.
+		/// </summary>
+		/// <value>The HTTP status code.</value>
+		public int StatusCode { get; }
+
+		/// <summary>
+		/// Gets the error message.
+		/// </summary>
+		/// <value>The message.</value>
+		public string Message { get; }
+
+		/// <summary>
+		/// Gets a value indicating whether the corresponding request is succeeded.
+		/// </summary>
+		/// <value><c>true</c> if succeeded; otherwise, <c>false</c>.</value>
+		public bool Succeeded { get; }
+
+		/// <summary>
+		/// Gets a value indicating whether the corresponding request is failed.
+		/// </summary>
+		/// <value><c>true</c> if failed; otherwise, <c>false</c>.</value>
+		public bool Failed
+		{
+			get => Succeeded == false;
+		}
+
+		/// <summary>
+		/// Convert the value of this instance to a <see cref="System.String"/>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="System.String" /> that represents this instance.
+		/// </returns>
+		public override string ToString() => Message;
+
+		internal string Format() => $"({StatusCode}): {Message}".Trim(' ', ':');
+
+		internal static bool IsGood(int code) => code >= 200 && code < 300;
+
+		#region operators
+
+		public static implicit operator bool(Response x) => x.Succeeded;
+
+		#endregion operators
+	}
+
+	[System.Diagnostics.DebuggerDisplay("{" + nameof(Format) + "(),nq}")]
+	/// <summary>
+	/// Represents response data from API server.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	public readonly struct Response<T>
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Response{T}"/> struct.
+		/// </summary>
+		/// <param name="data">The data.</param>
+		/// <param name="statusCode">The status code.</param>
+		/// <param name="message">The message.</param>
+		public Response(T data, int statusCode = 200, string message = default)
+			: this(data, Response.IsGood(statusCode), statusCode, message) { }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Response{T}"/> struct.
+		/// </summary>
+		/// <param name="data">The data.</param>
+		/// <param name="success">if set to <c>true</c> [success].</param>
+		/// <param name="status">The status.</param>
+		/// <param name="message">The message.</param>
+		public Response(T data, bool success, int status, string message)
+		{
+			Data = data;
+			Succeeded = success;
+			StatusCode = status;
+			Message = message;
+		}
+
+		/// <summary>
+		/// Gets the data.
+		/// </summary>
+		/// <value>The data.</value>
+		public T Data { get; }
+
+		/// <summary>
+		/// Gets the HTTP status code.
+		/// </summary>
+		/// <value>The HTTP status code.</value>
+		public int StatusCode { get; }
+
+		/// <summary>
+		/// Gets the error message.
+		/// </summary>
+		/// <value>The message.</value>
+		public string Message { get; }
+
+		/// <summary>
+		/// Gets a value indicating whether the corresponding request is succeeded.
+		/// </summary>
+		/// <value><c>true</c> if succeeded; otherwise, <c>false</c>.</value>
+		public bool Succeeded { get; }
+
+		/// <summary>
+		/// Gets a value indicating whether the corresponding request is failed.
+		/// </summary>
+		/// <value><c>true</c> if failed; otherwise, <c>false</c>.</value>
+		public bool Failed
+		{
+			get => Succeeded == false;
+		}
+
+		/// <summary>
+		/// Convert the value of this instance to a <see cref="System.String"/>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="System.String" /> that represents this instance.
+		/// </returns>
+		public override string ToString() => Message;
+
+		internal string Format() => $"({StatusCode}): {Message}".Trim(' ', ':');
+
+		#region operators
+
+		public static implicit operator T(Response<T> x) => x.Data;
+
+		public static explicit operator bool(Response<T> x) => x.Succeeded;
+
+		public static implicit operator Response(Response<T> x) => new Response(x.Succeeded, x.StatusCode, x.Message);
+
+		#endregion operators
+	}
+}
+
+
+
+namespace Tekcari.Genapi
+{
+	public class Order
+	{
+			[JsonPropertyName("id")]
+		public long id { get; set; }
+	
+		[JsonPropertyName("petId")]
+		public long petId { get; set; }
+	
+		[JsonPropertyName("quantity")]
+		public int quantity { get; set; }
+	
+		[JsonPropertyName("shipDate")]
+		public DateTime shipDate { get; set; }
+	
+		/// <summary>Order Status</summary>
+		[JsonPropertyName("status")]
+		public string status { get; set; }
+	
+		[JsonPropertyName("complete")]
+		public bool complete { get; set; }
+	
+	}
+}
+
+
+
+namespace Tekcari.Genapi
+{
+	public class Customer
+	{
+			[JsonPropertyName("id")]
+		public long id { get; set; }
+	
+		[JsonPropertyName("username")]
+		public string username { get; set; }
+	
+		[JsonPropertyName("address")]
+		public Address[] address { get; set; }
+	
+	}
+}
+
+
+
+namespace Tekcari.Genapi
+{
+	public class Address
+	{
+			[JsonPropertyName("street")]
+		public string street { get; set; }
+	
+		[JsonPropertyName("city")]
+		public string city { get; set; }
+	
+		[JsonPropertyName("state")]
+		public string state { get; set; }
+	
+		[JsonPropertyName("zip")]
+		public string zip { get; set; }
+	
+	}
+}
+
+
+
+namespace Tekcari.Genapi
+{
+	public class Category
+	{
+			[JsonPropertyName("id")]
+		public long id { get; set; }
+	
+		[JsonPropertyName("name")]
+		public string name { get; set; }
+	
+	}
+}
+
+
+
+namespace Tekcari.Genapi
+{
+	public class User
+	{
+			[JsonPropertyName("id")]
+		public long id { get; set; }
+	
+		[JsonPropertyName("username")]
+		public string username { get; set; }
+	
+		[JsonPropertyName("firstName")]
+		public string firstName { get; set; }
+	
+		[JsonPropertyName("lastName")]
+		public string lastName { get; set; }
+	
+		[JsonPropertyName("email")]
+		public string email { get; set; }
+	
+		[JsonPropertyName("password")]
+		public string password { get; set; }
+	
+		[JsonPropertyName("phone")]
+		public string phone { get; set; }
+	
+		/// <summary>User Status</summary>
+		[JsonPropertyName("userStatus")]
+		public int userStatus { get; set; }
+	
+	}
+}
+
+
+
+namespace Tekcari.Genapi
+{
+	public class Tag
+	{
+			[JsonPropertyName("id")]
+		public long id { get; set; }
+	
+		[JsonPropertyName("name")]
+		public string name { get; set; }
+	
+	}
+}
+
+
+
+namespace Tekcari.Genapi
+{
+	public class Pet
+	{
+			[JsonPropertyName("id")]
+		public long id { get; set; }
+	
+		[JsonPropertyName("name")]
+		public string name { get; set; }
+	
+		[JsonPropertyName("category")]
+		public Category category { get; set; }
+	
+		[JsonPropertyName("photoUrls")]
+		public string[] photoUrls { get; set; }
+	
+		[JsonPropertyName("tags")]
+		public Tag[] tags { get; set; }
+	
+		/// <summary>pet status in the store</summary>
+		[JsonPropertyName("status")]
+		public string status { get; set; }
+	
+	}
+}
+
+
+
+namespace Tekcari.Genapi
+{
+	public class ApiResponse
+	{
+			[JsonPropertyName("code")]
+		public int code { get; set; }
+	
+		[JsonPropertyName("type")]
+		public string type { get; set; }
+	
+		[JsonPropertyName("message")]
+		public string message { get; set; }
+	
+	}
+}
+
+
+
+
+
+
+
+
+namespace Tekcari.Genapi
+{
+	public partial class GeneratedClient
+	{
+		public GeneratedClient (string baseUrl, IHttpClientFactory httpClientFactory = default)
+		{
+			if (string.IsNullOrEmpty(baseUrl)) throw new ArgumentNullException(nameof(baseUrl));
+
+			_baseUrl = baseUrl.Trim('/');
+			_httpClientFactory = httpClientFactory ?? GetHttpClientFactory() ?? throw new ArgumentNullException(nameof(httpClientFactory));
+			Initialize();
+		}
+		
+		/// <summary>Update an existing pet.</summary>
+		/// <remarks>Update an existing pet by Id.</remarks>
+		/// <param name="pet"></param>
+		public Task<Response<Pet>> updatePetAsync(Pet pet)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Put, Url($"/pet"));
+			request.Content = ToJson(pet);
+			return SendRequestAsync<Pet>(request);
+		}
+
+		/// <summary>Add a new pet to the store.</summary>
+		/// <remarks>Add a new pet to the store.</remarks>
+		/// <param name="pet"></param>
+		public Task<Response<Pet>> addPetAsync(Pet pet)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Post, Url($"/pet"));
+			request.Content = ToJson(pet);
+			return SendRequestAsync<Pet>(request);
+		}
+
+		/// <summary>Finds Pets by status.</summary>
+		/// <remarks>Multiple status values can be provided with comma separated strings.</remarks>
+		/// <param name="status">Status values that need to be considered for filter.</param>
+		public Task<Response<Pet[]>> findPetsByStatusAsync(string status = default)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/pet/findByStatus?status={status}"));
+			return SendRequestAsync<Pet[]>(request);
+		}
+
+		/// <summary>Finds Pets by tags.</summary>
+		/// <remarks>Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.</remarks>
+		/// <param name="tags">Tags to filter by.</param>
+		public Task<Response<Pet[]>> findPetsByTagsAsync(params string[] tags)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/pet/findByTags?{GetQueryList("tags", tags)}"));
+			return SendRequestAsync<Pet[]>(request);
+		}
+
+		/// <summary>Find pet by ID.</summary>
+		/// <remarks>Returns a single pet.</remarks>
+		/// <param name="petId">ID of pet to return.</param>
+		public Task<Response<Pet>> getPetByIdAsync(long petId)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/pet/{petId}"));
+			return SendRequestAsync<Pet>(request);
+		}
+
+		/// <summary>Updates a pet in the store with form data.</summary>
+		/// <param name="petId">ID of pet that needs to be updated.</param>
+		/// <param name="name">Name of pet that needs to be updated.</param>
+		/// <param name="status">Status of pet that needs to be updated.</param>
+		public Task<Response> updatePetWithFormAsync(long petId, string name = default, string status = default)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Post, Url($"/pet/{petId}?name={name}&status={status}"));
+			return SendRequestAsync(request);
+		}
+
+		/// <summary>Deletes a pet.</summary>
+		/// <param name="petId">Pet id to delete.</param>
+		/// <param name="api_key"></param>
+		public Task<Response> deletePetAsync(long petId, string api_key = default)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Delete, Url($"/pet/{petId}"));
+			request.Headers.Add("api_key", api_key);
+			return SendRequestAsync(request);
+		}
+
+		/// <summary>uploads an image.</summary>
+		/// <param name="data"></param>
+		/// <param name="petId">ID of pet to update.</param>
+		/// <param name="additionalMetadata">Additional Metadata.</param>
+		public Task<Response<ApiResponse>> uploadFileAsync(byte[] data, long petId, string additionalMetadata = default)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Post, Url($"/pet/{petId}/uploadImage?additionalMetadata={additionalMetadata}"));
+			return SendRequestAsync<ApiResponse>(request);
+		}
+
+		/// <summary>Returns pet inventories by status.</summary>
+		/// <remarks>Returns a map of status codes to quantities.</remarks>
+		public Task<Response<string>> getInventoryAsync()
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/store/inventory"));
+			return SendRequestAsync<string>(request);
+		}
+
+		/// <summary>Place an order for a pet.</summary>
+		/// <remarks>Place a new order in the store.</remarks>
+		/// <param name="order"></param>
+		public Task<Response<Order>> placeOrderAsync(Order order)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Post, Url($"/store/order"));
+			request.Content = ToJson(order);
+			return SendRequestAsync<Order>(request);
+		}
+
+		/// <summary>Find purchase order by ID.</summary>
+		/// <remarks>For valid response try integer IDs with value <= 5 or > 10. Other values will generated exceptions.</remarks>
+		/// <param name="orderId">ID of order that needs to be fetched.</param>
+		public Task<Response<Order>> getOrderByIdAsync(long orderId)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/store/order/{orderId}"));
+			return SendRequestAsync<Order>(request);
+		}
+
+		/// <summary>Delete purchase order by ID.</summary>
+		/// <remarks>For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors.</remarks>
+		/// <param name="orderId">ID of the order that needs to be deleted.</param>
+		public Task<Response> deleteOrderAsync(long orderId)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Delete, Url($"/store/order/{orderId}"));
+			return SendRequestAsync(request);
+		}
+
+		/// <summary>Create user.</summary>
+		/// <remarks>This can only be done by the logged in user.</remarks>
+		/// <param name="user"></param>
+		public Task<Response> createUserAsync(User user)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Post, Url($"/user"));
+			request.Content = ToJson(user);
+			return SendRequestAsync(request);
+		}
+
+		/// <summary>Creates list of users with given input array.</summary>
+		/// <remarks>Creates list of users with given input array.</remarks>
+		/// <param name="user"></param>
+		public Task<Response<User>> createUsersWithListInputAsync(User[] user)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Post, Url($"/user/createWithList"));
+			request.Content = ToJson(user);
+			return SendRequestAsync<User>(request);
+		}
+
+		/// <summary>Logs user into the system.</summary>
+		/// <param name="username">The user name for login.</param>
+		/// <param name="password">The password for login in clear text.</param>
+		public Task<Response<string>> loginUserAsync(string username = default, string password = default)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/user/login?username={username}&password={password}"));
+			return SendRequestAsync<string>(request);
+		}
+
+		/// <summary>Logs out current logged in user session.</summary>
+		public Task<Response> logoutUserAsync()
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/user/logout"));
+			return SendRequestAsync(request);
+		}
+
+		/// <summary>Get user by user name.</summary>
+		/// <param name="username">The name that needs to be fetched. Use user1 for testing. .</param>
+		public Task<Response<User>> getUserByNameAsync(string username)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/user/{username}"));
+			return SendRequestAsync<User>(request);
+		}
+
+		/// <summary>Update user.</summary>
+		/// <remarks>This can only be done by the logged in user.</remarks>
+		/// <param name="user"></param>
+		/// <param name="username">name that need to be deleted.</param>
+		public Task<Response> updateUserAsync(User user, string username)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Put, Url($"/user/{username}"));
+			request.Content = ToJson(user);
+			return SendRequestAsync(request);
+		}
+
+		/// <summary>Delete user.</summary>
+		/// <remarks>This can only be done by the logged in user.</remarks>
+		/// <param name="username">The name that needs to be deleted.</param>
+		public Task<Response> deleteUserAsync(string username)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Delete, Url($"/user/{username}"));
+			return SendRequestAsync(request);
+		}
+
+
+		internal async Task<Response> SendRequestAsync(HttpRequestMessage request)
+		{
+#if DEBUG
+			PrintToDebugWindow(request);
+#endif
+			HttpClient client = _httpClientFactory.CreateClient();
+			using (HttpResponseMessage response = await client.SendAsync(request))
+			{
+#if DEBUG
+				PrintToDebugWindow(response);
+#endif
+				if (response.IsSuccessStatusCode)
+				{
+					return new Response((int)response.StatusCode, response.ReasonPhrase);
+				}
+				else
+				{
+					System.IO.Stream json = await response.Content.ReadAsStreamAsync();
+					if (json.Length == 0) return new Response((int)response.StatusCode, response.ReasonPhrase);
+					else
+					{
+						return new Response((int)response.StatusCode, response.ReasonPhrase);
+					}
+				}
+			}
+		}
+
+		internal async Task<Response<T>> SendRequestAsync<T>(HttpRequestMessage request)
+		{
+#if DEBUG
+			PrintToDebugWindow(request);
+#endif
+			HttpClient client = _httpClientFactory.CreateClient();
+			using (HttpResponseMessage response = await client.SendAsync(request))
+			{
+#if DEBUG
+				PrintToDebugWindow(response);
+#endif
+				string json = await response.Content.ReadAsStringAsync();
+				if (string.IsNullOrEmpty(json)) return new Response<T>(default, (int)response.StatusCode, response.ReasonPhrase);
+
+				if (response.IsSuccessStatusCode)
+				{
+					return new Response<T>(
+						JsonSerializer.Deserialize<T>(json, _serializerOptions),
+						(int)response.StatusCode,
+						response.ReasonPhrase
+						);
+				}
+				else
+				{
+					return new Response<T>(default, (int)response.StatusCode, response.ReasonPhrase);
+				}
+			}
+		}
+
+		internal StringContent ToJson(object obj)
+		{
+			string json = System.Text.Json.JsonSerializer.Serialize(obj, _serializerOptions);
+			return new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+		}
+
+		partial void Initialize();
+
+		#region Backing Members
+
+		private readonly string _baseUrl;
+		private readonly IHttpClientFactory _httpClientFactory;
+		private JsonSerializerOptions _serializerOptions = null;
+
+		private string Url(string path) => string.Concat(_baseUrl, path);
+		private static IHttpClientFactory GetHttpClientFactory() => new ServiceCollection().AddHttpClient().BuildServiceProvider().GetService<IHttpClientFactory>();
+
+		private static string GetQueryList(string name, object[] args) => string.Join("&", from x in args select $"{name}={args}");
+
+		private void PrintToDebugWindow(HttpRequestMessage message)
+		{
+#if DEBUG
+			System.Diagnostics.Debug.Write("===== HTTP Request ");
+			System.Diagnostics.Debug.WriteLine(string.Concat(Enumerable.Repeat('=', 50)));
+			System.Diagnostics.Debug.WriteLine($"{message.Method.Method}: {message.RequestUri}");
+			System.Diagnostics.Debug.WriteLine(message.Content?.ReadAsStringAsync().Result);
+			System.Diagnostics.Debug.WriteLine(string.Empty);
+#endif
+		}
+
+		private void PrintToDebugWindow(HttpResponseMessage message)
+		{
+#if DEBUG
+			System.Diagnostics.Debug.Write($"===== HTTP Response ({(int)message.StatusCode}) ");
+			System.Diagnostics.Debug.WriteLine(string.Concat(Enumerable.Repeat('=', 50)));
+			System.Diagnostics.Debug.WriteLine($"{message.RequestMessage.Method.Method}: {message.RequestMessage.RequestUri}");
+			System.Diagnostics.Debug.WriteLine($"Status: {message.ReasonPhrase} ({(int)message.StatusCode})");
+			System.Diagnostics.Debug.WriteLine(message.Content?.ReadAsStringAsync().Result);
+			System.Diagnostics.Debug.WriteLine(string.Empty);
+#endif
+		}
+
+		#endregion Backing Members
+	}
+}

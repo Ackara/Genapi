@@ -1,6 +1,9 @@
 using Microsoft.Build.Framework;
 using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Tekcari.Genapi.Generators;
 
 namespace Tekcari.Genapi.Targets
 {
@@ -12,35 +15,41 @@ namespace Tekcari.Genapi.Targets
 		[Required]
 		public ITaskItem DestinationFile { get; set; }
 
-		public string Namespace { get; set; }
+		public string RootNamespace { get; set; }
 
 		public bool Execute()
 		{
-			// STEP: De-serialize Open API specification.
+			// STEP: De-serialize arguments.
 
 			string source = SourceFile.GetMetadata("FullPath");
 			string destination = DestinationFile.GetMetadata("FullPath");
 
-			var settings = new TranspilerSettings
+			var settings = new Generators.Csharp.CsharpClientGeneratorSettings
 			{
-				Namespace = Namespace,
-				OutputFile = destination,
+				OutputFolder = Path.GetDirectoryName(destination),
 				ClientClassName = Path.GetFileNameWithoutExtension(destination)
 			};
 
-			WriteMessage($"Loading '{source}'");
+			if (!string.IsNullOrEmpty(RootNamespace)) settings.RootNamespace = RootNamespace;
+			if (!Directory.Exists(settings.OutputFolder)) Directory.CreateDirectory(settings.OutputFolder);
+
+			WriteMessage($"input: '{source}'.");
 			OpenApiDocument document = Transformation.DocumentLoader.Load(source);
 
 			// STEP: Generate source code.
 
-			using (var outStream = new FileStream(destination, FileMode.Create, FileAccess.Write, FileShare.Read))
-			{
-				var writer = new Transformation.CSharp.CSharpApiClientWriter(outStream, settings);
-				writer.Write(document);
-				writer.Flush();
-			}
-			WriteMessage($"Generated '{destination}'.");
+			var generator = new Generators.Csharp.CsharpClientGenerator();
+			IEnumerable<FileResult> files = generator.Generate(document, settings);
+			foreach (FileResult file in files) WriteMessage($"output: '{file.Name}'");
 
+			byte[] data = Generators.Csharp.CsharpGenerator.Merge(files.ToArray());
+			using (var fileStrem = new FileStream(destination, FileMode.Create, FileAccess.Write, FileShare.Read))
+			{
+				fileStrem.Write(data, 0, data.Length);
+				fileStrem.Flush();
+			}
+
+			WriteMessage($"Generated '{destination}'.", MessageImportance.High);
 			return true;
 		}
 
@@ -52,7 +61,7 @@ namespace Tekcari.Genapi.Targets
 
 		private void WriteMessage(string message, MessageImportance severity = MessageImportance.Normal)
 		{
-			BuildEngine.LogMessageEvent(new BuildMessageEventArgs(
+			BuildEngine?.LogMessageEvent(new BuildMessageEventArgs(
 				message,
 				null,
 				nameof(GenerateCsharpApiClient),

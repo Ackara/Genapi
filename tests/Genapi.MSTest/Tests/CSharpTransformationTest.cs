@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -119,10 +120,15 @@ namespace Tekcari.Genapi.Tests
 			Approvals.Verify(code);
 		}
 
+
+
 		[TestMethod]
 		public void Foo()
 		{
 			var stream = ResourceLoader.GetStream(EmbeddedResourceName.Response);
+			var req = new HttpRequestMessage();
+			req.Headers.Add("", "");
+			req.Content = null;
 		}
 
 		#region Backing Members

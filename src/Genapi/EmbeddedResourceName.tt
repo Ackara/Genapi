@@ -17,12 +17,14 @@ namespace <#= Host.ResolveAssemblyReference("$(RootNamespace)") #>
 	internal readonly struct <#= Path.GetFileNameWithoutExtension(Host.TemplateFile) #>
 	{
 		<#
+		PushIndent("\t\t");
 		foreach (string fileName in GetResourceFiles())
 		{
 			string memberName = fileName.Substring(0, fileName.IndexOf('.'));
 			memberName = System.Text.RegularExpressions.Regex.Replace(memberName, "(?i)[^A-Z0-9_]+", "");
 			WriteLine($"public const string {memberName} = \"{fileName}\";");
 		}
+		PopIndent();
 		#>
 	}
 }
