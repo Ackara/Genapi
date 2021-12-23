@@ -1,0 +1,217 @@
+﻿== Order.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public class Order
+	{
+		[JsonPropertyName("id")]
+		public long id { get; set; }
+	
+		[JsonPropertyName("petId")]
+		public long petId { get; set; }
+	
+		[JsonPropertyName("quantity")]
+		public int quantity { get; set; }
+	
+		[JsonPropertyName("shipDate")]
+		public DateTime shipDate { get; set; }
+	
+		/// <summary>Order Status</summary>
+		[JsonPropertyName("status")]
+		public string status { get; set; }
+	
+		[JsonPropertyName("complete")]
+		public bool complete { get; set; }
+	
+	}
+}
+
+
+== Customer.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public class Customer
+	{
+		[JsonPropertyName("id")]
+		public long id { get; set; }
+	
+		[JsonPropertyName("username")]
+		public string username { get; set; }
+	
+		[JsonPropertyName("address")]
+		public Address[] address { get; set; }
+	
+	}
+}
+
+
+== Address.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public class Address
+	{
+		[JsonPropertyName("street")]
+		public string street { get; set; }
+	
+		[JsonPropertyName("city")]
+		public string city { get; set; }
+	
+		[JsonPropertyName("state")]
+		public string state { get; set; }
+	
+		[JsonPropertyName("zip")]
+		public string zip { get; set; }
+	
+	}
+}
+
+
+== Category.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public class Category
+	{
+		[JsonPropertyName("id")]
+		public long id { get; set; }
+	
+		[JsonPropertyName("name")]
+		public string name { get; set; }
+	
+	}
+}
+
+
+== User.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public class User
+	{
+		[JsonPropertyName("id")]
+		public long id { get; set; }
+	
+		[JsonPropertyName("username")]
+		public string username { get; set; }
+	
+		[JsonPropertyName("firstName")]
+		public string firstName { get; set; }
+	
+		[JsonPropertyName("lastName")]
+		public string lastName { get; set; }
+	
+		[JsonPropertyName("email")]
+		public string email { get; set; }
+	
+		[JsonPropertyName("password")]
+		public string password { get; set; }
+	
+		[JsonPropertyName("phone")]
+		public string phone { get; set; }
+	
+		/// <summary>User Status</summary>
+		[JsonPropertyName("userStatus")]
+		public int userStatus { get; set; }
+	
+	}
+}
+
+
+== Tag.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public class Tag
+	{
+		[JsonPropertyName("id")]
+		public long id { get; set; }
+	
+		[JsonPropertyName("name")]
+		public string name { get; set; }
+	
+	}
+}
+
+
+== Pet.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public class Pet
+	{
+		[JsonPropertyName("id")]
+		public long id { get; set; }
+	
+		[JsonPropertyName("name")]
+		public string name { get; set; }
+	
+		[JsonPropertyName("category")]
+		public Category category { get; set; }
+	
+		[JsonPropertyName("photoUrls")]
+		public string[] photoUrls { get; set; }
+	
+		[JsonPropertyName("tags")]
+		public Tag[] tags { get; set; }
+	
+		/// <summary>pet status in the store</summary>
+		[JsonPropertyName("status")]
+		public string status { get; set; }
+	
+	}
+}
+
+
+== ApiResponse.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public class ApiResponse
+	{
+		[JsonPropertyName("code")]
+		public int code { get; set; }
+	
+		[JsonPropertyName("type")]
+		public string type { get; set; }
+	
+		[JsonPropertyName("message")]
+		public string message { get; set; }
+	
+	}
+}
+
+
