@@ -2,7 +2,7 @@ using Microsoft.OpenApi.Models;
 
 namespace Tekcari.Genapi.Generators.Csharp
 {
-	public class CsharpTypeAdapter : ITypeNameAdapter, ITypeNameAdapter<CsharpClientGeneratorSettings>
+	public class CsharpTypeAdapter : ITypeNameAdapter<CsharpClientGeneratorSettings>, ITypeNameAdapter<CsharpClientTestSuiteGeneratorSettings>
 	{
 		public string Map(OpenApiSchema typeInfo, CsharpClientGeneratorSettings settings)
 		{
@@ -15,6 +15,14 @@ namespace Tekcari.Genapi.Generators.Csharp
 					return string.Format(settings.CollectionTypeFormat, typeInfo.Items.Reference.Id);
 			else
 				return Map(typeInfo.Type, typeInfo.Format);
+		}
+
+		public string Map(OpenApiSchema typeInfo, CsharpClientTestSuiteGeneratorSettings settings)
+		{
+			return Map(typeInfo, new CsharpClientGeneratorSettings
+			{
+				CollectionTypeFormat = settings.CollectionTypeFormat
+			});
 		}
 
 		public string Map(string typeName, string format)
@@ -31,7 +39,5 @@ namespace Tekcari.Genapi.Generators.Csharp
 				default: return "string";
 			}
 		}
-
-		string ITypeNameAdapter.Map(OpenApiSchema typeInfo, IGeneratorSettings settings) => Map(typeInfo, (settings is CsharpClientGeneratorSettings ? (CsharpClientGeneratorSettings)settings : new CsharpClientGeneratorSettings()));
 	}
 }

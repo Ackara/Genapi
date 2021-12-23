@@ -42,7 +42,7 @@ namespace Tekcari.Genapi.Targets
 			IEnumerable<FileResult> files = generator.Generate(document, settings);
 			foreach (FileResult file in files) WriteMessage($"output: '{file.Name}'");
 
-			byte[] data = Generators.Csharp.CsharpGenerator.Merge(files.ToArray());
+			byte[] data = Generators.Csharp.CsharpGenerator.Merge(files.Reverse());
 			using (var fileStrem = new FileStream(destination, FileMode.Create, FileAccess.Write, FileShare.Read))
 			{
 				fileStrem.Write(data, 0, data.Length);

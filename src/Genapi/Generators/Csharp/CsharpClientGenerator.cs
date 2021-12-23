@@ -10,14 +10,18 @@ namespace Tekcari.Genapi.Generators.Csharp
 	public class CsharpClientGenerator : IGenerator<CsharpClientGeneratorSettings>
 	{
 		public CsharpClientGenerator()
-			: this(new CsharpTypeAdapter()) { }
+			: this(new CsharpClientGeneratorSettings(), new CsharpTypeAdapter()) { }
 
-		public CsharpClientGenerator(ITypeNameAdapter<CsharpClientGeneratorSettings> typeNameAdapter)
+		public CsharpClientGenerator(CsharpClientGeneratorSettings settings, ITypeNameAdapter<CsharpClientGeneratorSettings> typeNameAdapter)
 		{
+			_settings = settings ?? throw new ArgumentNullException(nameof(settings));
+			_mapper = typeNameAdapter ?? throw new ArgumentNullException(nameof(typeNameAdapter));
+
 			DotLiquid.Template.RegisterFilter(typeof(CsharpFilters));
 			DotLiquid.Template.RegisterFilter(typeof(CustomFilters));
-			_mapper = typeNameAdapter ?? throw new ArgumentNullException(nameof(typeNameAdapter));
 		}
+
+		public FileResult[] Generate(OpenApiDocument document) => Generate(document, _settings);
 
 		public FileResult[] Generate(OpenApiDocument document, CsharpClientGeneratorSettings settings)
 		{
@@ -34,6 +38,28 @@ namespace Tekcari.Genapi.Generators.Csharp
 
 		// ==================== INTERNAL MEMBERS ==================== //
 
+		private static string ExpandEndpointPath(OpenApiOperation operation, string path)
+		{
+			var url = new StringBuilder(path);
+
+			if (operation.Parameters.Any(x => x.In == ParameterLocation.Query))
+				url.Append('?');
+
+			var queryValues = from x in operation.Parameters
+							  where x.In == ParameterLocation.Query && !IsArrary(x.Schema)
+							  select $"{x.Name}={{{x.Name}}}";
+			if (queryValues.Any())
+				url.Append(string.Join("&", queryValues));
+
+			queryValues = from x in operation.Parameters
+						  where x.In == ParameterLocation.Query && IsArrary(x.Schema)
+						  select $"{{GetQueryList(\"{x.Name}\", {x.Name})}}";
+			if (queryValues.Any())
+				url.Append(string.Join("&", queryValues));
+
+			return url.ToString();
+		}
+
 		private void BuildGlobalModel()
 		{
 			_globalModel.Add("rootnamespace", _settings.RootNamespace);
@@ -46,7 +72,7 @@ namespace Tekcari.Genapi.Generators.Csharp
 			var template = CreateTemplate(EmbeddedResourceName.Response);
 			string content = template.Render(_globalModel);
 
-			_fileList.Add(new FileResult("Response.cs", content));
+			_fileList.Add(new FileResult("Response.cs", content, "native"));
 		}
 
 		private void GenerateComponents()
@@ -56,10 +82,10 @@ namespace Tekcari.Genapi.Generators.Csharp
 			foreach (KeyValuePair<string, OpenApiSchema> schema in _document.Components.Schemas)
 				if (string.Equals(schema.Value.Type, "object", StringComparison.InvariantCultureIgnoreCase))
 				{
-					DotLiquid.Hash model = DotLiquid.Hash.FromAnonymousObject(FromSchemaToModel(schema.Key, schema.Value));
+					DotLiquid.Hash model = DotLiquid.Hash.FromAnonymousObject(GetApiEntity(schema.Key, schema.Value));
 					model.Merge(_globalModel);
 
-					_fileList.Add(new FileResult($"{CsharpFilters.SafeName(schema.Key)}.cs", template.Render(model)?.Trim()));
+					_fileList.Add(new FileResult($"{CsharpFilters.SafeName(schema.Key)}.cs", template.Render(model)?.Trim(), "component"));
 				}
 		}
 
@@ -80,27 +106,27 @@ namespace Tekcari.Genapi.Generators.Csharp
 			model.Merge(_globalModel);
 
 			string content = template.Render(model);
-			_fileList.Add(new FileResult($"{_settings.ClientClassName}.cs", content));
+			_fileList.Add(new FileResult($"{_settings.ClientClassName}.cs", content, "client"));
 		}
 
-		private object FromSchemaToModel(string className, OpenApiSchema schema)
+		private object GetApiEntity(string className, OpenApiSchema schema)
 		{
 			var properties = new List<object>();
 			foreach (KeyValuePair<string, OpenApiSchema> member in schema.Properties)
 			{
-				properties.Add(FromPropertyToModel(member.Key, member.Value));
+				properties.Add(GetEntityProperty(member.Key, member.Value));
 			}
 
 			return new { className, properties };
 		}
 
-		private object FromPropertyToModel(string propertyName, OpenApiSchema schema)
+		private object GetEntityProperty(string propertyName, OpenApiSchema schema)
 		{
 			return new
 			{
 				name = propertyName,
 				type = _mapper.Map(schema, _settings),
-				summary = schema.Description,
+				summary = NullIfWhitespace(schema.Description),
 				example = schema.Example
 			};
 		}
@@ -160,28 +186,6 @@ namespace Tekcari.Genapi.Generators.Csharp
 			return parameters;
 		}
 
-		private static string ExpandEndpointPath(OpenApiOperation operation, string path)
-		{
-			var url = new StringBuilder(path);
-
-			if (operation.Parameters.Any(x => x.In == ParameterLocation.Query))
-				url.Append('?');
-
-			var queryValues = from x in operation.Parameters
-							  where x.In == ParameterLocation.Query && !IsArrary(x.Schema)
-							  select $"{x.Name}={{{x.Name}}}";
-			if (queryValues.Any())
-				url.Append(string.Join("&", queryValues));
-
-			queryValues = from x in operation.Parameters
-						  where x.In == ParameterLocation.Query && IsArrary(x.Schema)
-						  select $"{{GetQueryList(\"{x.Name}\", {x.Name})}}";
-			if (queryValues.Any())
-				url.Append(string.Join("&", queryValues));
-
-			return url.ToString();
-		}
-
 		private object GetEndpointParameter(OpenApiParameter parameter, bool islastItem)
 		{
 			static bool isArrary(OpenApiSchema x) => string.Equals(x.Type, "array", StringComparison.InvariantCultureIgnoreCase);
@@ -221,11 +225,11 @@ namespace Tekcari.Genapi.Generators.Csharp
 		private CsharpClientGeneratorSettings _settings;
 		private ICollection<FileResult> _fileList = new List<FileResult>();
 
-		private DotLiquid.Template CreateTemplate(string fileName) => DotLiquid.Template.Parse(ResourceLoader.GetContent(fileName));
-
 		private static bool IsArrary(OpenApiSchema x) => string.Equals(x.Type, "array", StringComparison.InvariantCultureIgnoreCase);
 
 		private static string NullIfWhitespace(string x) => string.IsNullOrWhiteSpace(x) ? null : x;
+
+		private DotLiquid.Template CreateTemplate(string fileName) => DotLiquid.Template.Parse(ResourceLoader.GetContent(fileName));
 
 		#endregion Backing Members
 	}

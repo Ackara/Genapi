@@ -2,12 +2,14 @@ using ApprovalTests;
 using Microsoft.Build.Framework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Tekcari.Genapi.Generators;
 using Tekcari.Genapi.Generators.Csharp;
 using Tekcari.Genapi.Transformation;
 using Telerik.JustMock;
@@ -18,44 +20,32 @@ namespace Tekcari.Genapi.Tests
 	[TestClass]
 	public class CsharpClientGeneratorTest
 	{
-		[DataTestMethod]
+		[TestMethod]
 		[DynamicData(nameof(GetClientGenerationCases), DynamicDataSourceType.Method)]
-		public void Can_generate_csharp_api_client(string specificationFilePath)
+		public void Can_generate_csharp_api_client_support_classes(string documentPath)
 		{
-			// Arrange
+			RunGeneratorTest(new CsharpClientGenerator(), documentPath, (x) => x.Tag == "native");
+		}
 
-			using var scenario = ApprovalTests.Namers.ApprovalResults.ForScenario(Path.GetFileName(specificationFilePath));
+		[TestMethod]
+		[DynamicData(nameof(GetClientGenerationCases), DynamicDataSourceType.Method)]
+		public void Can_generate_csharp_api_client_components(string documentPath)
+		{
+			RunGeneratorTest(new CsharpClientGenerator(), documentPath, (x) => x.Tag == "component");
+		}
 
-			var sut = new CsharpClientGenerator();
-			var spec = DocumentLoader.Load(specificationFilePath);
+		[TestMethod]
+		[DynamicData(nameof(GetClientGenerationCases), DynamicDataSourceType.Method)]
+		public void Can_generate_csharp_api_client_endpoints(string documentPath)
+		{
+			RunGeneratorTest(new CsharpClientGenerator(), documentPath, (x) => x.Tag == "client");
+		}
 
-			string defaultResultFolder = Path.Combine(Path.GetTempPath());
-			var settings = new CsharpClientGeneratorSettings
-			{
-				OutputFolder = defaultResultFolder
-			};
-
-			// Act
-
-			var fileList = sut.Generate(spec, settings);
-
-			var builder = new StringBuilder();
-			foreach (var file in fileList.Reverse())
-			{
-				builder.Append("== ");
-				builder.AppendLine(file.Name);
-				builder.AppendLine(string.Concat(Enumerable.Repeat('=', 50)));
-				builder.AppendLine();
-
-				AppendErrors(builder, file.Content);
-				builder.AppendLine(file.Content);
-				builder.AppendLine().AppendLine();
-			}
-
-			// Assert
-
-			fileList.ShouldNotBeEmpty();
-			Approvals.Verify(builder);
+		[TestMethod]
+		[DynamicData(nameof(GetClientGenerationCases), DynamicDataSourceType.Method)]
+		public void Can_generate_csharp_api_client_test_suite(string documentPath)
+		{
+			RunGeneratorTest(new CsharpClientTestSuiteGenerator(), documentPath);
 		}
 
 		[TestMethod]
@@ -151,7 +141,43 @@ namespace bar
 			json.ShouldNotBeNullOrEmpty();
 		}
 
+		internal static void RunGeneratorTest(IGenerator generator, string documentPath, Func<FileResult, bool> filter = default)
+		{
+			var scenario = ApprovalTests.Namers.ApprovalResults.ForScenario(Path.GetFileName(documentPath));
+			if (filter == default) filter = (x) => !string.IsNullOrEmpty(x.Name);
+
+			var spec = DocumentLoader.Load(documentPath);
+			var fileList = generator.Generate(spec);
+			var generatedCode = MergeAndAnalyze(fileList.Where(filter));
+
+			fileList.ShouldNotBeEmpty();
+			Approvals.Verify(generatedCode);
+		}
+
 		#region Backing Members
+
+		public static IEnumerable<object[]> GetClientGenerationCases()
+		{
+			yield return new object[] { TestData.GetFilePath("petstore.json") };
+			//yield return new object[] { TestData.GetFilePath("plaid.yml") };
+		}
+
+		internal static string MergeAndAnalyze(IEnumerable<FileResult> fileList)
+		{
+			var builder = new StringBuilder();
+			foreach (var file in fileList)
+			{
+				builder.Append("== ");
+				builder.AppendLine(file.Name);
+				builder.AppendLine(string.Concat(Enumerable.Repeat('=', 50)));
+				builder.AppendLine();
+
+				AppendErrors(builder, file.Content);
+				builder.AppendLine(file.Content);
+				builder.AppendLine().AppendLine();
+			}
+			return builder.ToString();
+		}
 
 		private static void AppendErrors(StringBuilder builder, string csharp, params string[] ignore)
 		{
@@ -179,12 +205,6 @@ namespace bar
 					.AppendLine()
 					.AppendLine();
 			}
-		}
-
-		public static IEnumerable<object[]> GetClientGenerationCases()
-		{
-			yield return new object[] { TestData.GetFilePath("petstore.json") };
-			//yield return new object[] { TestData.GetFilePath("plaid.yml") };
 		}
 
 		#endregion Backing Members

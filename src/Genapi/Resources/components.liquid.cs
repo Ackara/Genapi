@@ -5,7 +5,7 @@ namespace {{rootnamespace}}
 {
 	public class {{className}}
 	{
-	{% for member in properties -%}
+	{%- for member in properties -%}
 	{%- if member.summary -%}
 		/// <summary>{{member.summary}}</summary>
 	{%- endif -%}

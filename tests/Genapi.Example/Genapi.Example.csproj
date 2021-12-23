@@ -30,11 +30,11 @@
 		<ProjectReference Include="..\..\src\Genapi\Genapi.csproj" />
 	</ItemGroup>
 
-	<Target Name="TransformOpenApiSpecification">
+	<Target Name="TransformOpenApiSpecification" BeforeTargets="PreBuildEvent">
 		<ItemGroup>
 			<OpenSpec1 Include="..\*.MSTest\*\specs\petstore.json" />
 		</ItemGroup>
-
+		
 		<GenerateCsharpApiClient SourceFile="@(OpenSpec1)" DestinationFile="GeneratedClient.cs" RootNamespace="GeneratedCode" />
 	</Target>
 

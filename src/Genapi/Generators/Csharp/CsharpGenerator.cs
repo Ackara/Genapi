@@ -18,7 +18,7 @@ namespace Tekcari.Genapi.Generators.Csharp
 			usings = statements.Distinct().ToArray();
 		}
 
-		public static byte[] Merge(params FileResult[] files)
+		public static byte[] Merge(IEnumerable<FileResult> files)
 		{
 			var usings = new List<string>();
 			var builder = new StringBuilder();
