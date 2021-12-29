@@ -1,20 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
 		<IsPackable>false</IsPackable>
-	
-<Version>0.0.6</Version>
-<AssemblyVersion>0.0.6</AssemblyVersion>
-<AssemblyFileVersion>0.0.6</AssemblyFileVersion>
-</PropertyGroup>
+
+		<Version>0.0.8</Version>
+		<AssemblyVersion>0.0.8</AssemblyVersion>
+		<AssemblyFileVersion>0.0.8</AssemblyFileVersion>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="ApprovalTests" Version="5.7.1" />
 		<PackageReference Include="AutoBogus.Conventions" Version="2.13.1" />
 		<PackageReference Include="Cecrets" Version="1.1.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="JustMock" Version="2021.3.1110.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
@@ -38,12 +38,14 @@
 		<ItemGroup>
 			<OpenSpec1 Include="..\*.MSTest\*\specs\petstore.json" />
 		</ItemGroup>
-		
+
 		<GenerateCsharpApiClient SourceFile="@(OpenSpec1)" DestinationFile="GeneratedClient.cs" RootNamespace="GeneratedCode" />
-		<GenerateCsharpApiClientTestSuite SourceFile="@(OpenSpec1)" DestinationFile="Tests\GeneratedClientTest.cs" ServiceUrl="https://petstore3.swagger.io/api/v3" RootNamespace="GeneratedCode" ClientClassName="GeneratedClient" />
+		<GenerateCsharpApiClientTestSuite SourceFile="@(OpenSpec1)"
+																			DestinationFile="Tests\GeneratedClientTest.cs"
+																			ServiceUrl="https://petstore3.swagger.io/api/v3"
+																			RootNamespace="GeneratedCode"
+																			ClientClassName="GeneratedClient" />
 	</Target>
 
-	<Import Project="..\..\artifacts\msbuild\msbuild\Genapi.Targets.targets" Condition="Exists('..\..\artifacts\msbuild\msbuild\Genapi.Targets.targets')" />
-
-
+	<Import Project="..\..\artifacts\msbuild\msbuild\Gapi.Targets.targets" Condition="Exists('..\..\artifacts\msbuild\msbuild\Gapi.Targets.targets')" />
 </Project>
