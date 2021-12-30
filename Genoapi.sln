@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31424.327
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".misc", ".misc", "{E144D6DD-64F9-4329-A75C-3256D8C86289}"
 	ProjectSection(SolutionItems) = preProject
@@ -20,13 +20,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{A0318956
 		build\tasks.psake.ps1 = build\tasks.psake.ps1
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapi", "src\Gapi\Gapi.csproj", "{5B365207-963E-46AD-B8A0-C3B034F93B89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genoapi", "src\Genoapi\Genoapi.csproj", "{5B365207-963E-46AD-B8A0-C3B034F93B89}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapi.MSTest", "tests\Gapi.MSTest\Gapi.MSTest.csproj", "{26C4C4DC-3712-4A74-8533-A53A606B2EF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genoapi.MSTest", "tests\Genoapi.MSTest\Genoapi.MSTest.csproj", "{26C4C4DC-3712-4A74-8533-A53A606B2EF5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapi.Targets", "src\Gapi.Targets\Gapi.Targets.csproj", "{EC9FD7DB-128E-40B6-9F1C-1A628F7EFC19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genoapi.MSBuild", "src\Genoapi.MSBuild\Genoapi.MSBuild.csproj", "{EC9FD7DB-128E-40B6-9F1C-1A628F7EFC19}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapi.Example", "tests\Gapi.Example\Gapi.Example.csproj", "{B289145D-4A58-4F6C-A671-F57979440DAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genoapi.Example", "tests\Genoapi.Example\Genoapi.Example.csproj", "{B289145D-4A58-4F6C-A671-F57979440DAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

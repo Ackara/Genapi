@@ -177,7 +177,7 @@ namespace bar
 
 		public static IEnumerable<object[]> GetClientGeneratorCases()
 		{
-			yield return new object[] { @"C:\Users\abaker\Projects\eCommerce\src\eCommerce.ASP\openapi.json", "https://petstore3.swagger.io/api/v3" };
+			yield return new object[] { TestData.GetFilePath("openapi.json"), "" };
 			//yield return new object[] { TestData.GetFilePath("petstore.json"), "https://petstore3.swagger.io/api/v3" };
 			//yield return new object[] { TestData.GetFilePath("plaid.yml") };
 		}

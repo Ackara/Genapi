@@ -6,9 +6,9 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.0.8</Version>
-		<AssemblyVersion>0.0.8</AssemblyVersion>
-		<AssemblyFileVersion>0.0.8</AssemblyFileVersion>
+		<Version>0.0.9</Version>
+		<AssemblyVersion>0.0.9</AssemblyVersion>
+		<AssemblyFileVersion>0.0.9</AssemblyFileVersion>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
 		<IsTool>true</IsTool>
@@ -19,7 +19,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Gapi\Gapi.csproj" />
+		<ProjectReference Include="..\Genoapi\Genoapi.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -39,7 +39,7 @@
 		</Content>
 
 		<Content Include="nuget.targets">
-			<PackagePath>msbuild\$(AssemblyName).targets</PackagePath>
+			<PackagePath>build\$(AssemblyName).targets</PackagePath>
 		</Content>
 
 		<Content Include="..\..\artifacts\temp\**" Condition="Exists('..\..\artifacts\temp\')">

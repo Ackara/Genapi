@@ -212,7 +212,8 @@ namespace Tekcari.Gapi.Generators.Csharp
 					if (code >= 200 && code <= 299)
 					{
 						OpenApiMediaType mediaType = response.Value.Content.FirstOrDefault().Value;
-						return _mapper.Map(mediaType.Schema, _settings);
+						if (mediaType == null) return string.Empty;
+						else return _mapper.Map(mediaType.Schema, _settings);
 					}
 				}
 

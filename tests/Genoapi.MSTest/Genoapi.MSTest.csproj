@@ -8,10 +8,10 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.0.8</Version>
+		<Version>0.0.9</Version>
 		<Title>Genapi</Title>
-		<AssemblyVersion>0.0.8</AssemblyVersion>
-		<AssemblyFileVersion>0.0.8</AssemblyFileVersion>
+		<AssemblyVersion>0.0.9</AssemblyVersion>
+		<AssemblyFileVersion>0.0.9</AssemblyFileVersion>
 		<PackageIcon>icon.png</PackageIcon>
 		<RepositoryUrl>https://github.com//Genapi.git</RepositoryUrl>
 		<PackageProjectUrl>https://github.com//Genapi</PackageProjectUrl>
@@ -45,13 +45,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\Gapi.Targets\Gapi.Targets.csproj" />
-		<ProjectReference Include="..\..\src\Gapi\Gapi.csproj" />
+		<ProjectReference Include="..\..\src\Genoapi.MSBuild\Genoapi.MSBuild.csproj" />
+		<ProjectReference Include="..\..\src\Genoapi\Genoapi.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Content Include="test-data\**">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-	</ItemGroup>	
+	</ItemGroup>
 </Project>

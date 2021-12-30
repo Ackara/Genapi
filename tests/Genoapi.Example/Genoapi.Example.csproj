@@ -4,9 +4,9 @@
 		<TargetFramework>net5.0</TargetFramework>
 		<IsPackable>false</IsPackable>
 
-		<Version>0.0.8</Version>
-		<AssemblyVersion>0.0.8</AssemblyVersion>
-		<AssemblyFileVersion>0.0.8</AssemblyFileVersion>
+		<Version>0.0.9</Version>
+		<AssemblyVersion>0.0.9</AssemblyVersion>
+		<AssemblyFileVersion>0.0.9</AssemblyFileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -30,8 +30,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\Gapi.Targets\Gapi.Targets.csproj" />
-		<ProjectReference Include="..\..\src\Gapi\Gapi.csproj" />
+		<ProjectReference Include="..\..\src\Genoapi.MSBuild\Genoapi.MSBuild.csproj" />
+		<ProjectReference Include="..\..\src\Genoapi\Genoapi.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Tests\" />
 	</ItemGroup>
 
 	<Target Name="TransformOpenApiSpecification">
@@ -40,12 +44,8 @@
 		</ItemGroup>
 
 		<GenerateCsharpApiClient SourceFile="@(OpenSpec1)" DestinationFile="GeneratedClient.cs" RootNamespace="GeneratedCode" />
-		<GenerateCsharpApiClientTestSuite SourceFile="@(OpenSpec1)"
-																			DestinationFile="Tests\GeneratedClientTest.cs"
-																			ServiceUrl="https://petstore3.swagger.io/api/v3"
-																			RootNamespace="GeneratedCode"
-																			ClientClassName="GeneratedClient" />
+		<GenerateCsharpApiClientTestSuite SourceFile="@(OpenSpec1)" DestinationFile="Tests\GeneratedClientTest.cs" ServiceUrl="https://petstore3.swagger.io/api/v3" RootNamespace="GeneratedCode" ClientClassName="GeneratedClient" />
 	</Target>
 
-	<Import Project="..\..\artifacts\msbuild\msbuild\Gapi.Targets.targets" Condition="Exists('..\..\artifacts\msbuild\msbuild\Gapi.Targets.targets')" />
+	<Import Project="..\..\artifacts\msbuild\build\Genoapi.MSBuild.targets" Condition="Exists('..\..\artifacts\msbuild\build\Genoapi.MSBuild.targets')" />
 </Project>
