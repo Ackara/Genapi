@@ -1,5 +1,7 @@
-using System.Collections.Generic;
-namespace {{rootnamespace}}
+﻿== Response.cs
+==================================================
+
+namespace Tekcari.Gapi
 {
 	[System.Diagnostics.DebuggerDisplay("{" + nameof(Format) + "(),nq}")]
 	/// <summary>
@@ -64,27 +66,6 @@ namespace {{rootnamespace}}
 		/// A <see cref="System.String" /> that represents this instance.
 		/// </returns>
 		public override string ToString() => Message;
-
-		/// <summary>
-        /// Returns a list of errors returned by the server.
-        /// </summary>
-		public IEnumerable<ResponseError> GetErrors() => ParseErrors(Message);
-
-        internal static IEnumerable<ResponseError> ParseErrors(string message)
-		{
-			if (string.IsNullOrEmpty(message)) yield break;
-
-			string[] errors = message.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-			foreach (string err in errors)
-	        {
-				if (err.Length > 5 && err[4] == ':')
-				{
-					int.TryParse(err.Substring(0, 4), out int code);
-					yield return new ResponseError(err.Substring(5), code);
-				}
-				else yield return new ResponseError(err, 0);
-		    }
-		}
 
 		internal string Format() => $"({StatusCode}): {Message}".Trim(' ', ':');
 
@@ -169,11 +150,6 @@ namespace {{rootnamespace}}
 		/// </returns>
 		public override string ToString() => Message;
 
-		/// <summary>
-		/// Returns a list of errors returned by the server.
-		/// </summary>
-		public IEnumerable<ResponseError> GetErrors() => Response.ParseErrors(Message);
-
 		internal string Format() => $"({StatusCode}): {Message}".Trim(' ', ':');
 
 		#region operators
@@ -186,31 +162,6 @@ namespace {{rootnamespace}}
 
 		#endregion operators
 	}
-
-	/// <summary>
-	/// Represents an error returned by a server.
-	/// </summary>
-	public readonly struct ResponseError
-	{
-		/// <summary>
-		/// /// Initializes a new instance of the <see cref="ResponseError"/> struct.
-		/// </summary>
-		/// <param name="message">The error message.</param>
-		/// <param name="code">The error code.</param>
-		public ResponseError(string message, int code)
-		{
-			ErrorCode = code;
-			Message = message;
-		}
-
-		/// <summary>
-		/// The error code.
-		/// </summary>
-		public int ErrorCode { get; }
-
-		/// <summary>
-		/// The error message.
-		/// </summary>
-		public string Message { get; }
-	}
 }
+
+

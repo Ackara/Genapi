@@ -1,0 +1,23 @@
+﻿== Customer.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class Customer
+	{
+		[JsonPropertyName("id")]
+		public long Id { get; set; }
+
+		[JsonPropertyName("username")]
+		public string Username { get; set; }
+
+		[JsonPropertyName("gender")]
+		public Gender Gender { get; set; }
+
+	}
+}
+
+

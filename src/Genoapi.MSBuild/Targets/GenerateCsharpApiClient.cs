@@ -17,6 +17,12 @@ namespace Tekcari.Gapi.Targets
 
 		public string RootNamespace { get; set; }
 
+		public string ClientClassName { get; set; }
+
+		public string References { get; set; }
+
+		public string ClassesToExludeFromComponents { get; set; }
+
 		public bool Execute()
 		{
 			// STEP: De-serialize arguments.
@@ -27,7 +33,9 @@ namespace Tekcari.Gapi.Targets
 			var settings = new Generators.Csharp.CsharpClientGeneratorSettings
 			{
 				OutputFolder = Path.GetDirectoryName(destination),
-				ClientClassName = Path.GetFileNameWithoutExtension(destination)
+				ClientClassName = ClientClassName ?? Path.GetFileNameWithoutExtension(destination),
+				References = References?.Split(new char[] { ';', ',', ' ' }, System.StringSplitOptions.RemoveEmptyEntries),
+				ClassesToExludeFromComponents = ClassesToExludeFromComponents?.Split(new char[] { ';', ',', ' ' }, System.StringSplitOptions.RemoveEmptyEntries)
 			};
 
 			if (!string.IsNullOrEmpty(RootNamespace)) settings.RootNamespace = RootNamespace;

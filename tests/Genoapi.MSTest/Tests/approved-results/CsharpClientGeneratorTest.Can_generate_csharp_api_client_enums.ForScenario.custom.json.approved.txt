@@ -1,0 +1,17 @@
+﻿== Gender.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public enum Gender
+	{
+		Value0 = 0,
+		Value1 = 1,
+		Value2 = 2,
+	}
+}
+
+

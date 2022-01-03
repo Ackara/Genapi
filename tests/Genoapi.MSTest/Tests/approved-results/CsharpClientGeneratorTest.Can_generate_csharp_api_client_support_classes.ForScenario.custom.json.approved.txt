@@ -1,5 +1,8 @@
+﻿== Response.cs
+==================================================
+
 using System.Collections.Generic;
-namespace {{rootnamespace}}
+namespace Tekcari.Gapi
 {
 	[System.Diagnostics.DebuggerDisplay("{" + nameof(Format) + "(),nq}")]
 	/// <summary>
@@ -214,3 +217,5 @@ namespace {{rootnamespace}}
 		public string Message { get; }
 	}
 }
+
+

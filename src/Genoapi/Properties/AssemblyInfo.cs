@@ -1,1 +1,1 @@
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Genapi.MSTest")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Genoapi.MSTest")]

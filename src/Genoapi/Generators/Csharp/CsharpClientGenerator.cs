@@ -1,3 +1,4 @@
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
@@ -65,9 +66,10 @@ namespace Tekcari.Gapi.Generators.Csharp
 
 		private void BuildGlobalModel()
 		{
+			_globalModel.Add("base_url", _settings.BaseUrl);
+			_globalModel.Add("references", _settings.References);
 			_globalModel.Add("rootnamespace", _settings.RootNamespace);
 			_globalModel.Add("client_class_name", _settings.ClientClassName);
-			_globalModel.Add("base_url", _settings.BaseUrl);
 		}
 
 		private void GenerateSupportClasses()
@@ -80,15 +82,23 @@ namespace Tekcari.Gapi.Generators.Csharp
 
 		private void GenerateComponents()
 		{
-			DotLiquid.Template template = CreateTemplate(EmbeddedResourceName.components);
-
 			foreach (KeyValuePair<string, OpenApiSchema> schema in _document.Components.Schemas)
-				if (string.Equals(schema.Value.Type, "object", StringComparison.InvariantCultureIgnoreCase))
+				if (_settings.ClassesToExludeFromComponents?.Contains(schema.Key) ?? false) continue;
+				else if (string.Equals(schema.Value.Type, "object", StringComparison.InvariantCultureIgnoreCase))
 				{
-					DotLiquid.Hash model = DotLiquid.Hash.FromAnonymousObject(GetApiEntity(schema.Key, schema.Value));
+					DotLiquid.Hash model = DotLiquid.Hash.FromAnonymousObject(GetClassProperties(schema.Key, schema.Value));
 					model.Merge(_globalModel);
 
+					DotLiquid.Template template = CreateTemplate(EmbeddedResourceName.components);
 					_fileList.Add(new FileResult($"{CsharpFilters.SafeName(schema.Key)}.cs", template.Render(model)?.Trim(), "component"));
+				}
+				else if (schema.Value.Enum.Any())
+				{
+					DotLiquid.Hash model = DotLiquid.Hash.FromAnonymousObject(GetEnumValues(schema.Key, schema.Value));
+					model.Merge(_globalModel);
+
+					DotLiquid.Template template = CreateTemplate(EmbeddedResourceName.enumeration);
+					_fileList.Add(new FileResult($"{CsharpFilters.SafeName(schema.Key)}.cs", template.Render(model)?.Trim(), "enum"));
 				}
 		}
 
@@ -112,13 +122,29 @@ namespace Tekcari.Gapi.Generators.Csharp
 			_fileList.Add(new FileResult($"{_settings.ClientClassName}.cs", content, "client"));
 		}
 
-		private object GetApiEntity(string className, OpenApiSchema schema)
+		private object GetClassProperties(string className, OpenApiSchema schema)
 		{
 			var properties = new List<object>();
 			foreach (KeyValuePair<string, OpenApiSchema> member in schema.Properties)
 			{
 				properties.Add(GetEntityProperty(member.Key, member.Value));
 			}
+
+			return new { className, properties };
+		}
+
+		private object GetEnumValues(string className, OpenApiSchema schema)
+		{
+			var properties = new List<object>();
+			foreach (IOpenApiAny member in schema.Enum)
+				if (member is OpenApiInteger integer)
+				{
+					bool numeric = (schema?.Type ?? string.Empty).StartsWith("int", StringComparison.InvariantCultureIgnoreCase);
+					string value = Convert.ToString(integer.Value);
+					string name = numeric ? $"Value{value}" : value;
+
+					properties.Add(new { name, value });
+				}
 
 			return new { className, properties };
 		}

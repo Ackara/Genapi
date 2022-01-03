@@ -42,11 +42,35 @@ namespace Tekcari.Gapi.Tests
 
 		[TestMethod]
 		[DynamicData(nameof(GetClientGeneratorCases), DynamicDataSourceType.Method)]
-		public void Can_generate_csharp_api_client_endpoints(string documentPath, string serviceUrl)
+		public void Can_exclude_csharp_api_client_components(string documentPath, string serviceUrl)
+		{
+			var settings = new CsharpClientGeneratorSettings
+			{
+				BaseUrl = serviceUrl,
+				ClassesToExludeFromComponents = new string[] { "Customer" }
+			};
+			RunGeneratorTest(new CsharpClientGenerator(settings), documentPath, (x) => x.Tag == "component");
+		}
+
+		[TestMethod]
+		[DynamicData(nameof(GetClientGeneratorCases), DynamicDataSourceType.Method)]
+		public void Can_generate_csharp_api_client_enums(string documentPath, string serviceUrl)
 		{
 			var settings = new CsharpClientGeneratorSettings
 			{
 				BaseUrl = serviceUrl
+			};
+			RunGeneratorTest(new CsharpClientGenerator(settings), documentPath, (x) => x.Tag == "enum");
+		}
+
+		[TestMethod]
+		[DynamicData(nameof(GetClientGeneratorCases), DynamicDataSourceType.Method)]
+		public void Can_generate_csharp_api_client_endpoints(string documentPath, string serviceUrl)
+		{
+			var settings = new CsharpClientGeneratorSettings
+			{
+				BaseUrl = serviceUrl,
+				References = new string[] { "System.Text" }
 			};
 			RunGeneratorTest(new CsharpClientGenerator(settings), documentPath, (x) => x.Tag == "client");
 		}
@@ -177,7 +201,7 @@ namespace bar
 
 		public static IEnumerable<object[]> GetClientGeneratorCases()
 		{
-			yield return new object[] { TestData.GetFilePath("openapi.json"), "" };
+			yield return new object[] { TestData.GetFilePath("custom.json"), "https://localhost/api/v3" };
 			//yield return new object[] { TestData.GetFilePath("petstore.json"), "https://petstore3.swagger.io/api/v3" };
 			//yield return new object[] { TestData.GetFilePath("plaid.yml") };
 		}

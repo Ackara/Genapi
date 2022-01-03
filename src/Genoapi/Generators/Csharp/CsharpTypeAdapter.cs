@@ -8,6 +8,8 @@ namespace Tekcari.Gapi.Generators.Csharp
 		{
 			if (!string.IsNullOrEmpty(typeInfo.Reference?.Id))
 				return typeInfo.Reference.Id;
+			else if (typeInfo.Enum.Count > 0)
+				return Map(typeInfo.Type, null);
 			else if (string.Equals(typeInfo.Type, "array", System.StringComparison.InvariantCultureIgnoreCase))
 				if (string.IsNullOrEmpty(typeInfo.Items.Reference?.Id))
 					return string.Format(settings.CollectionTypeFormat, typeInfo.Items.Type);

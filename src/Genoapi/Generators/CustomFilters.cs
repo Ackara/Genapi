@@ -10,12 +10,22 @@ namespace Tekcari.Gapi.Generators
 
 		public static string PascalCase(string input)
 		{
-			return input;
+			if (string.IsNullOrEmpty(input))
+				return input;
+			else if (input.Length >= 2)
+				return string.Concat(char.ToUpperInvariant(input[0]), input.Substring(1));
+			else
+				return input;
 		}
 
 		public static string CamelCase(string input)
 		{
-			return input?.ToLowerInvariant();
+			if (string.IsNullOrEmpty(input))
+				return input;
+			else if (input.Length >= 2)
+				return string.Concat(char.ToLowerInvariant(input[0]), input.Substring(1));
+			else
+				return input;
 		}
 	}
 }

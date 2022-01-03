@@ -20,5 +20,9 @@ namespace Tekcari.Gapi.Generators.Csharp
 		public string CollectionTypeFormat { get; set; }
 
 		public string BaseUrl { get; set; }
+
+		public string[] References { get; set; }
+
+		public string[] ClassesToExludeFromComponents { get; set; }
 	}
 }

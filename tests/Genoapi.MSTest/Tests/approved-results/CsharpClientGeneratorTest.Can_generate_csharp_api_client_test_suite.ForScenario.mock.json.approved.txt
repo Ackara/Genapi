@@ -1,0 +1,32 @@
+﻿== GeneratedApiClientTest.cs
+==================================================
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
+namespace Tekcari.Gapi
+{
+	[TestClass]
+	public partial class GeneratedApiClientTest
+	{
+		[TestMethod]
+		public async Task Can_addCustomer()
+		{
+			var sut = new GeneratedApiClient("https://petstore3.swagger.io/api/v3");
+			var customer = AutoBogus.AutoFaker.Generate<Customer>();
+
+			var response = await sut.addCustomerAsync(customer: customer);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+	}
+}
+
+
+

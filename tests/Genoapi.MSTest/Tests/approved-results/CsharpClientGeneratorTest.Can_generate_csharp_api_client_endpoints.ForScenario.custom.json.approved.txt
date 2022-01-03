@@ -1,3 +1,6 @@
+﻿== GeneratedApiClient.cs
+==================================================
+
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -5,15 +8,13 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-{%- for item in references -%}
-using {{item}};
-{%- endfor -%}
+using System.Text;
 
-namespace {{rootnamespace}}
+namespace Tekcari.Gapi
 {
-	public partial class {{client_class_name}}
+	public partial class GeneratedApiClient
 	{
-		public {{client_class_name}}(string baseUrl, JsonSerializerOptions jsonSerializerOptions = default, IHttpClientFactory httpClientFactory = default)
+		public GeneratedApiClient(string baseUrl, JsonSerializerOptions jsonSerializerOptions = default, IHttpClientFactory httpClientFactory = default)
 		{
 			_baseUrl = baseUrl?.Trim('/');
 			_httpClientFactory = httpClientFactory ?? GetHttpClientFactory() ?? throw new ArgumentNullException(nameof(httpClientFactory));
@@ -26,37 +27,17 @@ namespace {{rootnamespace}}
 			Initialize();
 		}
 		
-{%- for endpoint in endpoints -%}
-{%- assign arguments = endpoint.parameters | map: "value" -%}
-	{%- if endpoint.summary -%}
-		/// <summary>{{endpoint.summary | end_with_period}}</summary>
-	{%- endif -%}
-	{%- if endpoint.remarks -%}
-		/// <remarks>{{endpoint.remarks | end_with_period}}</remarks>
-	{%- endif -%}
-	{%- for param in endpoint.parameters -%}
-	{%- if endpoint.summary -%}
-		/// <param name="{{param.name}}">{{param.description | end_with_period}}</param>
-	{%- endif -%}
-	{%- endfor -%}
-		public Task<Response{{endpoint.returnType | as_type_param}}> {{endpoint.operationName | safe_name | pascal_case}}Async({{arguments | join: ", "}})
+		/// <summary>Add a new pet to the store.</summary>
+		/// <remarks>Add a new pet to the store.</remarks>
+		/// <param name="customer"></param>
+		/// <param name="gender"></param>
+		public Task<Response<Customer>> AddCustomerAsync(Customer customer, Gender gender = default)
 		{
-			var request = new HttpRequestMessage(HttpMethod.{{endpoint.method}}, Url($"{{endpoint.path}}"));
-		{%- assign headers = endpoint.parameters | where: "kind", "Header" -%}
-		{%- for header in headers -%}
-			request.Headers.Add("{{header.name}}", {{header.name}});
-		{%- endfor -%}
-		{%- assign body = endpoint.parameters | where: "kind", "body" | first -%}
-		{%- if body -%}
-		{%- case body.mimeType -%}
-			{%- when "application/json" -%}
-			request.Content = ToJson({{body.name}});
-		{%- endcase -%}
-		{%- endif -%}
-			return SendRequestAsync{{endpoint.returnType | as_type_param}}(request);
+			var request = new HttpRequestMessage(HttpMethod.Post, Url($"/customer?gender={gender}"));
+			request.Content = ToJson(customer);
+			return SendRequestAsync<Customer>(request);
 		}
 
-{%- endfor -%}
 
 		internal async Task<Response> SendRequestAsync(HttpRequestMessage request)
 		{
@@ -159,3 +140,5 @@ namespace {{rootnamespace}}
 		#endregion Backing Members
 	}
 }
+
+

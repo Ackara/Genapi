@@ -13,6 +13,7 @@ namespace Tekcari.Gapi
 			Configuration = null;
 		}
 
+		public static readonly string Directory = Path.Combine(AppContext.BaseDirectory, "test-data");
 		internal static readonly IConfiguration Configuration;
 
 		public static IEnumerable<object[]> GetSpecifications2()
@@ -38,8 +39,6 @@ namespace Tekcari.Gapi
 			foreach (var file in GetFilePaths("specs/*.json"))
 				yield return file;
 		}
-
-		public static readonly string Directory = Path.Combine(AppContext.BaseDirectory, "test-data");
 
 		public static string GetFilePath(string pattern)
 		{
