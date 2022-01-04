@@ -33,10 +33,13 @@ namespace Tekcari.Gapi.Generators.Csharp
 			{
 				case "int64": return "long";
 				case "int32": return "int";
+				case "double": return "double";
+				case "money": return "decimal";
 				case "boolean": return "bool";
 				case "binary": return "byte[]";
 				case "date-time": return nameof(System.DateTime);
 
+				case "decimal": return "decimal";
 				case "integer": return "int";
 				default: return "string";
 			}
