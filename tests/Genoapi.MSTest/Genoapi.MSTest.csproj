@@ -8,10 +8,10 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.0.12</Version>
+		<Version>0.0.13</Version>
 		<Title>Genapi</Title>
-		<AssemblyVersion>0.0.12</AssemblyVersion>
-		<AssemblyFileVersion>0.0.12</AssemblyFileVersion>
+		<AssemblyVersion>0.0.13</AssemblyVersion>
+		<AssemblyFileVersion>0.0.13</AssemblyFileVersion>
 		<PackageIcon>icon.png</PackageIcon>
 		<RepositoryUrl>https://github.com//Genapi.git</RepositoryUrl>
 		<PackageProjectUrl>https://github.com//Genapi</PackageProjectUrl>

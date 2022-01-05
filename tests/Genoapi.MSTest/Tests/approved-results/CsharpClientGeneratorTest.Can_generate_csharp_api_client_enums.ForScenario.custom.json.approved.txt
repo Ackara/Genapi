@@ -15,3 +15,37 @@ namespace Tekcari.Gapi
 }
 
 
+== PaymentType.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public enum PaymentType
+	{
+		Card = 1,
+		BTC = 2,
+		Cash = 4,
+	}
+}
+
+
+== Shape.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public enum Shape
+	{
+		Circle,
+		Square,
+		Triangle,
+	}
+}
+
+

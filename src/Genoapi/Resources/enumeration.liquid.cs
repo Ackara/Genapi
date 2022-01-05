@@ -9,7 +9,7 @@ namespace {{rootnamespace}}
 	{%- if member.summary -%}
 		/// <summary>{{member.summary}}</summary>
 	{%- endif -%}
-		{{member.name | safe_name | pascal_case}} = {{member.value}},
+		{{member.name | safe_name | pascal_case}}{% if member.value %} = {{member.value}}{% endif %},
 	{%- endfor -%}
 	}
 }

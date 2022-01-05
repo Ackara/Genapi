@@ -158,6 +158,27 @@
 				],
 				"type": "integer",
 				"format": "int32"
+			},
+			"PaymentType":
+			{
+				"enum":
+				[
+					"Card",
+					"BTC",
+					"Cash"
+				],
+				"type": "string",
+				"format": "1;2;4"
+			},
+			"Shape":
+			{
+				"enum":
+				[
+					"Circle",
+					"Square",
+					"Triangle"
+				],
+				"type": "string"
 			}
 		}
 	}

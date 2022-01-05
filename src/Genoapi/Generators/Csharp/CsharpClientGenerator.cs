@@ -136,15 +136,25 @@ namespace Tekcari.Gapi.Generators.Csharp
 		private object GetEnumValues(string className, OpenApiSchema schema)
 		{
 			var properties = new List<object>();
-			foreach (IOpenApiAny member in schema.Enum)
+			var seperators = new char[] { ';', ',', ' ' };
+			bool hasMap = schema.Format?.IndexOfAny(seperators) > -1;
+			string[] map = hasMap ? schema.Format.Split(seperators, StringSplitOptions.RemoveEmptyEntries) : new string[0];
+
+			for (int i = 0; i < schema.Enum.Count; i++)
+			{
+				IOpenApiAny member = schema.Enum[i];
+
 				if (member is OpenApiInteger integer)
 				{
-					bool numeric = (schema?.Type ?? string.Empty).StartsWith("int", StringComparison.InvariantCultureIgnoreCase);
 					string value = Convert.ToString(integer.Value);
-					string name = numeric ? $"Value{value}" : value;
-
-					properties.Add(new { name, value });
+					properties.Add(new { name = $"Value{value}", value });
 				}
+				else if (member is OpenApiString text)
+				{
+					string value = hasMap ? map[i] : null;
+					properties.Add(new { name = text.Value, value });
+				}
+			}
 
 			return new { className, properties };
 		}
