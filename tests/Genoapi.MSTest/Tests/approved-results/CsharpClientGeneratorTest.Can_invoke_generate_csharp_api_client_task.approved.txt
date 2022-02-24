@@ -245,10 +245,13 @@ namespace Tekcari.Gapi
 
 				if (response.IsSuccessStatusCode)
 				{
-					return new Response<T>(
-						JsonSerializer.Deserialize<T>(json, _serializerOptions),
-						(int)response.StatusCode,
-						response.ReasonPhrase
+					if (typeof(IConvertible).IsAssignableFrom(typeof(T)))
+						return new Response<T>((T)Convert.ChangeType(json, typeof(T)), (int)response.StatusCode);
+					else
+						return new Response<T>(
+							JsonSerializer.Deserialize<T>(json, _serializerOptions),
+							(int)response.StatusCode,
+							response.ReasonPhrase
 						);
 				}
 				else
@@ -532,11 +535,11 @@ namespace Tekcari.Gapi
 		public override string ToString() => Message;
 
 		/// <summary>
-        /// Returns a list of errors returned by the server.
-        /// </summary>
+		/// Returns a list of errors returned by the server.
+		/// </summary>
 		public IEnumerable<ResponseError> GetErrors() => ParseErrors(Message);
 
-        internal static IEnumerable<ResponseError> ParseErrors(string message)
+		internal static IEnumerable<ResponseError> ParseErrors(string message)
 		{
 			if (string.IsNullOrEmpty(message)) yield break;
 

@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<RootNamespace>Tekcari.Gapi</RootNamespace>
 		<LangVersion>latest</LangVersion>
-		<Version>0.0.13</Version>
-		<AssemblyVersion>0.0.13</AssemblyVersion>
-		<AssemblyFileVersion>0.0.13</AssemblyFileVersion>
+		<Version>0.0.15</Version>
+		<AssemblyVersion>0.0.15</AssemblyVersion>
+		<AssemblyFileVersion>0.0.15</AssemblyFileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DotLiquid" Version="2.2.585" />
+		<PackageReference Include="DotLiquid" Version="2.2.595" />
 		<PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" />
 	</ItemGroup>
 

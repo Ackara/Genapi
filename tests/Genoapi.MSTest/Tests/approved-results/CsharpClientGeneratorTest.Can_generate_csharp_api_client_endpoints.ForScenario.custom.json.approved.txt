@@ -82,10 +82,13 @@ namespace Tekcari.Gapi
 
 				if (response.IsSuccessStatusCode)
 				{
-					return new Response<T>(
-						JsonSerializer.Deserialize<T>(json, _serializerOptions),
-						(int)response.StatusCode,
-						response.ReasonPhrase
+					if (typeof(IConvertible).IsAssignableFrom(typeof(T)))
+						return new Response<T>((T)Convert.ChangeType(json, typeof(T)), (int)response.StatusCode);
+					else
+						return new Response<T>(
+							JsonSerializer.Deserialize<T>(json, _serializerOptions),
+							(int)response.StatusCode,
+							response.ReasonPhrase
 						);
 				}
 				else

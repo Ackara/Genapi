@@ -31,55 +31,6 @@ namespace Tekcari.Gapi
 }
 
 
-== Customer.cs
-==================================================
-
-using System;
-using System.Text.Json.Serialization;
-
-namespace Tekcari.Gapi
-{
-	public partial class Customer
-	{
-		[JsonPropertyName("id")]
-		public long Id { get; set; }
-
-		[JsonPropertyName("username")]
-		public string Username { get; set; }
-
-		[JsonPropertyName("address")]
-		public Address[] Address { get; set; }
-
-	}
-}
-
-
-== Address.cs
-==================================================
-
-using System;
-using System.Text.Json.Serialization;
-
-namespace Tekcari.Gapi
-{
-	public partial class Address
-	{
-		[JsonPropertyName("street")]
-		public string Street { get; set; }
-
-		[JsonPropertyName("city")]
-		public string City { get; set; }
-
-		[JsonPropertyName("state")]
-		public string State { get; set; }
-
-		[JsonPropertyName("zip")]
-		public string Zip { get; set; }
-
-	}
-}
-
-
 == Category.cs
 ==================================================
 

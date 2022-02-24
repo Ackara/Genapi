@@ -47,7 +47,7 @@ namespace Tekcari.Gapi.Tests
 			var settings = new CsharpClientGeneratorSettings
 			{
 				BaseUrl = serviceUrl,
-				ClassesToExludeFromComponents = new string[] { "Customer" }
+				ClassesToExludeFromComponents = new string[] { "Customer", "Address" }
 			};
 			RunGeneratorTest(new CsharpClientGenerator(settings), documentPath, (x) => x.Tag == "component");
 		}
@@ -203,7 +203,7 @@ namespace bar
 		{
 			//yield return new object[] { TestData.GetFilePath("openapi.json"), "https://localhost/api/v3" };
 			yield return new object[] { TestData.GetFilePath("custom.json"), "https://localhost/api/v3" };
-			//yield return new object[] { TestData.GetFilePath("petstore.json"), "https://petstore3.swagger.io/api/v3" };
+			yield return new object[] { TestData.GetFilePath("petstore.json"), "https://petstore3.swagger.io/api/v3" };
 			//yield return new object[] { TestData.GetFilePath("plaid.yml") };
 		}
 

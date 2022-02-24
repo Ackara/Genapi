@@ -41,7 +41,7 @@ namespace {{rootnamespace}}
 	{%- endfor -%}
 		public Task<Response{{endpoint.returnType | as_type_param}}> {{endpoint.operationName | safe_name | pascal_case}}Async({{arguments | join: ", "}})
 		{
-			var request = new HttpRequestMessage(HttpMethod.{{endpoint.method}}, Url($"{{endpoint.path}}"));
+			var request = new HttpRequestMessage(new HttpMethod("{{endpoint.method | upcase}}"), Url($"{{endpoint.path}}"));
 		{%- assign headers = endpoint.parameters | where: "kind", "Header" -%}
 		{%- for header in headers -%}
 			request.Headers.Add("{{header.name}}", {{header.name}});
@@ -101,10 +101,13 @@ namespace {{rootnamespace}}
 
 				if (response.IsSuccessStatusCode)
 				{
-					return new Response<T>(
-						JsonSerializer.Deserialize<T>(json, _serializerOptions),
-						(int)response.StatusCode,
-						response.ReasonPhrase
+					if (typeof(IConvertible).IsAssignableFrom(typeof(T)))
+						return new Response<T>((T)Convert.ChangeType(json, typeof(T)), (int)response.StatusCode);
+					else
+						return new Response<T>(
+							JsonSerializer.Deserialize<T>(json, _serializerOptions),
+							(int)response.StatusCode,
+							response.ReasonPhrase
 						);
 				}
 				else
@@ -128,7 +131,7 @@ namespace {{rootnamespace}}
 		private readonly IHttpClientFactory _httpClientFactory;
 		private JsonSerializerOptions _serializerOptions;
 
-		private string Url(string path) => string.Concat(_baseUrl, path);
+		private Uri Url(string path) => new Uri(string.Concat(_baseUrl, path));
 		private static IHttpClientFactory GetHttpClientFactory() => new ServiceCollection().AddHttpClient().BuildServiceProvider().GetService<IHttpClientFactory>();
 
 		private static string GetQueryList(string name, object[] args) => string.Join("&", from x in args select $"{name}={args}");
