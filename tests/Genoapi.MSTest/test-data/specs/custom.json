@@ -120,6 +120,50 @@
 					}
 				]
 			}
+		},
+		"/product":
+		{
+			"post":
+			{
+				"tags": [ "Product" ],
+				"summary": "Creates a new product listing.",
+				"operationId": "CreateProduct",
+				"requestBody":
+				{
+					"content":
+					{
+						"multipart/form-data":
+						{
+							"schema":
+							{
+								"type": "object",
+								"properties":
+								{
+									"manifest":
+									{
+										"type": "string",
+										"format": "binary"
+									}
+								}
+							},
+							"encoding":
+							{
+								"manifest":
+								{
+									"style": "form"
+								}
+							}
+						}
+					}
+				},
+				"responses":
+				{
+					"200":
+					{
+						"description": "Success"
+					}
+				}
+			}
 		}
 	},
 	"components":
