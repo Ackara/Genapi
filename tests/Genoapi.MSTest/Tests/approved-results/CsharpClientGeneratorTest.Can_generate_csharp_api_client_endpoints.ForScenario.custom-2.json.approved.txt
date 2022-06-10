@@ -27,15 +27,32 @@ namespace Tekcari.Gapi
 			Initialize();
 		}
 		
-		/// <summary>Add a new pet to the store.</summary>
-		/// <remarks>Add a new pet to the store.</remarks>
-		/// <param name="customer"></param>
-		/// <param name="gender"></param>
-		public Task<Response<Customer>> AddCustomerAsync(Customer customer, Gender gender = default)
+		/// <summary>Creates a new product listing.</summary>
+		public Task<Response> CreateProductAsync()
 		{
-			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/customer?gender={gender}"));
-			request.Content = ToJson(customer);
-			return SendRequestAsync<Customer>(request);
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/Product"));
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response<Product[]>> GetProductByKeywordsAsync(string keywords = default, int take = default, int skip = default)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/Product?keywords={keywords}&take={take}&skip={skip}"));
+			return SendRequestAsync<Product[]>(request);
+		}
+
+		/// <summary>Get a list of products that match the search criteria.</summary>
+		/// <param name="productSearchRequest"></param>
+		public Task<Response<Product[]>> GetProductsAsync(ProductSearchRequest productSearchRequest)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/Product/listing"));
+			request.Content = ToJson(productSearchRequest);
+			return SendRequestAsync<Product[]>(request);
+		}
+
+		public Task<Response<MediaFile>> GetProductBannerAsync(string productId)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/Product/banner"));
+			return SendRequestAsync<MediaFile>(request);
 		}
 
 

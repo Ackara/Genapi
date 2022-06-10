@@ -1,0 +1,306 @@
+{
+	"openapi": "3.0.1",
+	"info":
+	{
+		"title": "Salzap API",
+		"description": ".",
+		"contact":
+		{
+			"name": "Help Desk",
+			"email": "support@tekcari.com"
+		},
+		"license":
+		{
+			"name": "MIT",
+			"url": "http://localhost/license.txt"
+		},
+		"version": "0.0.40"
+	},
+	"servers":
+	[
+		{
+			"url": "https://sales.tekcari.com",
+			"description": "Production"
+		}
+	],
+	"paths":
+	{
+		"/api/Product":
+		{
+			"post":
+			{
+				"tags":
+				[
+					"Product"
+				],
+				"summary": "Creates a new product listing.",
+				"operationId": "CreateProduct",
+				"requestBody":
+				{
+					"description":  "The file to upload",
+					"content":
+					{
+						"multipart/form-data":
+						{
+							"schema":
+							{
+								"type": "object",
+								"properties":
+								{
+									"manifest":
+									{
+										"type": "string",
+										"format": "binary"
+									}
+								}
+							},
+							"encoding":
+							{
+								"manifest":
+								{
+									"style": "form"
+								}
+							}
+						}
+					}
+				},
+				"responses":
+				{
+					"500":
+					{
+						"description": "Server Error",
+						"content":
+						{
+							"text/plain":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							},
+							"application/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							},
+							"text/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					},
+					"200":
+					{
+						"description": "Success"
+					},
+					"400":
+					{
+						"description": "Bad Request",
+						"content":
+						{
+							"text/plain":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							},
+							"application/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							},
+							"text/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components":
+	{
+		"schemas":
+		{
+			"MediaFile":
+			{
+				"type": "object",
+				"properties":
+				{
+					"path":
+					{
+						"type": "string",
+						"nullable": true
+					},
+					"intent":
+					{
+						"$ref": "#/components/schemas/MediaFileIntent"
+					}
+				},
+				"additionalProperties": false
+			},
+			"MediaFileIntent":
+			{
+				"enum":
+				[
+					"Icon",
+					"Thumbnail",
+					"Banner",
+					"Screenshot",
+					"Promotion"
+				],
+				"type": "string",
+				"format": "0;1;2;3;4;"
+			},
+			"ProblemDetails":
+			{
+				"type": "object",
+				"properties":
+				{
+					"type":
+					{
+						"type": "string",
+						"nullable": true
+					},
+					"title":
+					{
+						"type": "string",
+						"nullable": true
+					},
+					"status":
+					{
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					},
+					"detail":
+					{
+						"type": "string",
+						"nullable": true
+					},
+					"instance":
+					{
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"additionalProperties":
+				{
+				}
+			},
+			"Product":
+			{
+				"type": "object",
+				"properties":
+				{
+					"id":
+					{
+						"type": "string",
+						"nullable": true
+					},
+					"title":
+					{
+						"type": "string",
+						"nullable": true
+					},
+					"summary":
+					{
+						"type": "string",
+						"nullable": true
+					},
+					"description":
+					{
+						"type": "string",
+						"nullable": true
+					},
+					"category":
+					{
+						"type": "string"
+					},
+					"ordinal":
+					{
+						"type": "integer",
+						"format": "int32"
+					},
+					"visibility":
+					{
+						"$ref": "#/components/schemas/ProductAvailability"
+					},
+					"variantId":
+					{
+						"type": "string",
+						"nullable": true
+					},
+					"classId":
+					{
+						"type": "string",
+						"nullable": true
+					},
+					"isPrimary":
+					{
+						"type": "boolean",
+						"readOnly": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"ProductAvailability":
+			{
+				"enum":
+				[
+					"UnListed",
+					"Listed",
+					"Private",
+					"Preview"
+				],
+				"type": "string",
+				"format": "0;1;2;4;"
+			},
+			"ProductSearchRequest":
+			{
+				"type": "object",
+				"properties":
+				{
+					"keywords":
+					{
+						"type": "string",
+						"nullable": true
+					},
+					"category":
+					{
+						"type": "string",
+						"nullable": true
+					},
+					"featuredOnly":
+					{
+						"type": "boolean"
+					},
+					"take":
+					{
+						"type": "integer",
+						"format": "int32"
+					},
+					"skip":
+					{
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"additionalProperties": false,
+				"description": "Defines the search criteria for a product search."
+			}
+		}
+	}
+}

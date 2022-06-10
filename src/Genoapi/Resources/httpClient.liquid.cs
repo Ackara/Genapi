@@ -51,7 +51,18 @@ namespace {{rootnamespace}}
 		{%- case body.mimeType -%}
 			{%- when "application/json" -%}
 			request.Content = ToJson({{body.name}});
-		{%- endcase -%}
+			{%- when "multipart/form-data" -%}
+			var form = new MultipartFormDataContent();
+			{%- assign formFields = endpoint.parameters | where: "kind", "body" -%}
+			{%- for field in formFields -%}
+			{%- if field.type == "byte[]" -%}
+			form.Add(new StreamContent({{field.name | safe_name}}), nameof({{field.name | safe_name}}), "{{field.name}}.file");
+			{%- else -%}
+			form.Add(new StringContent({{field.name}}));
+			{%- endif -%}
+			{%- endfor -%}
+			request.Content = form;
+	{%- endcase -%}
 		{%- endif -%}
 			return SendRequestAsync{{endpoint.returnType | as_type_param}}(request);
 		}
@@ -131,7 +142,7 @@ namespace {{rootnamespace}}
 		private readonly IHttpClientFactory _httpClientFactory;
 		private JsonSerializerOptions _serializerOptions;
 
-		private Uri Url(string path) => new Uri(string.Concat(_baseUrl, path));
+		private Uri Url(string path) => new Uri(string.Concat(_baseUrl, path), UriKind.RelativeOrAbsolute);
 		private static IHttpClientFactory GetHttpClientFactory() => new ServiceCollection().AddHttpClient().BuildServiceProvider().GetService<IHttpClientFactory>();
 
 		private static string GetQueryList(string name, object[] args) => string.Join("&", from x in args select $"{name}={args}");

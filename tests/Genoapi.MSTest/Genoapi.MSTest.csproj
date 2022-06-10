@@ -8,10 +8,10 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.0.15</Version>
+		<Version>0.0.18</Version>
 		<Title>Genapi</Title>
-		<AssemblyVersion>0.0.15</AssemblyVersion>
-		<AssemblyFileVersion>0.0.15</AssemblyFileVersion>
+		<AssemblyVersion>0.0.18</AssemblyVersion>
+		<AssemblyFileVersion>0.0.18</AssemblyFileVersion>
 		<PackageIcon>icon.png</PackageIcon>
 		<RepositoryUrl>https://github.com//Genapi.git</RepositoryUrl>
 		<PackageProjectUrl>https://github.com//Genapi</PackageProjectUrl>
@@ -53,9 +53,5 @@
 		<Content Include="test-data\**">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="test-data\specs\custom.json" />
 	</ItemGroup>
 </Project>

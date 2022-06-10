@@ -27,15 +27,15 @@ namespace Tekcari.Gapi
 			Initialize();
 		}
 		
-		/// <summary>Add a new pet to the store.</summary>
-		/// <remarks>Add a new pet to the store.</remarks>
-		/// <param name="customer"></param>
-		/// <param name="gender"></param>
-		public Task<Response<Customer>> AddCustomerAsync(Customer customer, Gender gender = default)
+		/// <summary>Creates a new product listing.</summary>
+		/// <param name="manifest">The file to upload.</param>
+		public Task<Response> CreateProductAsync(FileStream manifest)
 		{
-			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/customer?gender={gender}"));
-			request.Content = ToJson(customer);
-			return SendRequestAsync<Customer>(request);
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/Product"));
+			var form = new MultipartFormDataContent();
+			form.Add(new StreamContent(manifest), nameof(manifest), "manifest.file");
+			request.Content = form;
+			return SendRequestAsync(request);
 		}
 
 

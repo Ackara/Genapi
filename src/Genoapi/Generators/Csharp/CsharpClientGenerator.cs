@@ -195,10 +195,10 @@ namespace Tekcari.Gapi.Generators.Csharp
 
 			if (operation.RequestBody != null)
 			{
-				KeyValuePair<string, OpenApiMediaType> first = operation.RequestBody.Content.FirstOrDefault();
-				string mimeType = first.Key.ToLowerInvariant();
-				OpenApiMediaType mediaType = first.Value;
-				string name, kind = "body", type = _mapper.Map(mediaType.Schema, _settings);
+				KeyValuePair<string, OpenApiMediaType> content = operation.RequestBody.Content.FirstOrDefault();
+				string mimeType = content.Key.ToLowerInvariant();
+				OpenApiMediaType mediaType = content.Value;
+				string name, kind = "body", description = operation.RequestBody.Description, type = _mapper.Map(mediaType.Schema, _settings);
 
 				switch (mimeType)
 				{
@@ -206,12 +206,21 @@ namespace Tekcari.Gapi.Generators.Csharp
 					case "application/json":
 					case "application/x-www-form-urlencoded":
 						name = safeName(type);
-						parameters.Add(new { kind, type, name, value = $"{type} {name}", mimeType });
+						parameters.Add(new { kind, type, name, value = $"{type} {name}", mimeType, description });
 						break;
 
 					case "application/octet-stream":
 						name = operation.Parameters.Any(x => x.Name == "data") ? "data1" : "data";
-						parameters.Add(new { kind, type, name, value = $"{type} {name}", mimeType });
+						parameters.Add(new { kind, type, name, value = $"{type} {name}", mimeType, description });
+						break;
+
+					case "multipart/form-data":
+						foreach (KeyValuePair<string, OpenApiSchema> item in content.Value.Schema.Properties)
+						{
+							name = item.Key;
+							type = _mapper.Map(item.Value, _settings);
+							parameters.Add(new { kind, type, mimeType, name, value = $"FileStream {name}", description });
+						}
 						break;
 				}
 			}

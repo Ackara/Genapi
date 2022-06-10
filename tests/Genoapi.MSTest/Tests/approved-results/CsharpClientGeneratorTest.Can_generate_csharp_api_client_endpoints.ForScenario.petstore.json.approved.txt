@@ -32,7 +32,7 @@ namespace Tekcari.Gapi
 		/// <param name="pet"></param>
 		public Task<Response<Pet>> UpdatePetAsync(Pet pet)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Put, Url($"/pet"));
+			var request = new HttpRequestMessage(new HttpMethod("PUT"), Url($"/pet"));
 			request.Content = ToJson(pet);
 			return SendRequestAsync<Pet>(request);
 		}
@@ -42,7 +42,7 @@ namespace Tekcari.Gapi
 		/// <param name="pet"></param>
 		public Task<Response<Pet>> AddPetAsync(Pet pet)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Post, Url($"/pet"));
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/pet"));
 			request.Content = ToJson(pet);
 			return SendRequestAsync<Pet>(request);
 		}
@@ -52,7 +52,7 @@ namespace Tekcari.Gapi
 		/// <param name="status">Status values that need to be considered for filter.</param>
 		public Task<Response<Pet[]>> FindPetsByStatusAsync(string status = default)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/pet/findByStatus?status={status}"));
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/pet/findByStatus?status={status}"));
 			return SendRequestAsync<Pet[]>(request);
 		}
 
@@ -61,7 +61,7 @@ namespace Tekcari.Gapi
 		/// <param name="tags">Tags to filter by.</param>
 		public Task<Response<Pet[]>> FindPetsByTagsAsync(params string[] tags)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/pet/findByTags?{GetQueryList("tags", tags)}"));
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/pet/findByTags?{GetQueryList("tags", tags)}"));
 			return SendRequestAsync<Pet[]>(request);
 		}
 
@@ -70,7 +70,7 @@ namespace Tekcari.Gapi
 		/// <param name="petId">ID of pet to return.</param>
 		public Task<Response<Pet>> GetPetByIdAsync(long petId)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/pet/{petId}"));
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/pet/{petId}"));
 			return SendRequestAsync<Pet>(request);
 		}
 
@@ -80,7 +80,7 @@ namespace Tekcari.Gapi
 		/// <param name="status">Status of pet that needs to be updated.</param>
 		public Task<Response> UpdatePetWithFormAsync(long petId, string name = default, string status = default)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Post, Url($"/pet/{petId}?name={name}&status={status}"));
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/pet/{petId}?name={name}&status={status}"));
 			return SendRequestAsync(request);
 		}
 
@@ -89,7 +89,7 @@ namespace Tekcari.Gapi
 		/// <param name="api_key"></param>
 		public Task<Response> DeletePetAsync(long petId, string api_key = default)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Delete, Url($"/pet/{petId}"));
+			var request = new HttpRequestMessage(new HttpMethod("DELETE"), Url($"/pet/{petId}"));
 			request.Headers.Add("api_key", api_key);
 			return SendRequestAsync(request);
 		}
@@ -100,7 +100,7 @@ namespace Tekcari.Gapi
 		/// <param name="additionalMetadata">Additional Metadata.</param>
 		public Task<Response<ApiResponse>> UploadFileAsync(byte[] data, long petId, string additionalMetadata = default)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Post, Url($"/pet/{petId}/uploadImage?additionalMetadata={additionalMetadata}"));
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/pet/{petId}/uploadImage?additionalMetadata={additionalMetadata}"));
 			return SendRequestAsync<ApiResponse>(request);
 		}
 
@@ -108,7 +108,7 @@ namespace Tekcari.Gapi
 		/// <remarks>Returns a map of status codes to quantities.</remarks>
 		public Task<Response<string>> GetInventoryAsync()
 		{
-			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/store/inventory"));
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/store/inventory"));
 			return SendRequestAsync<string>(request);
 		}
 
@@ -117,7 +117,7 @@ namespace Tekcari.Gapi
 		/// <param name="order"></param>
 		public Task<Response<Order>> PlaceOrderAsync(Order order)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Post, Url($"/store/order"));
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/store/order"));
 			request.Content = ToJson(order);
 			return SendRequestAsync<Order>(request);
 		}
@@ -127,7 +127,7 @@ namespace Tekcari.Gapi
 		/// <param name="orderId">ID of order that needs to be fetched.</param>
 		public Task<Response<Order>> GetOrderByIdAsync(long orderId)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/store/order/{orderId}"));
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/store/order/{orderId}"));
 			return SendRequestAsync<Order>(request);
 		}
 
@@ -136,7 +136,7 @@ namespace Tekcari.Gapi
 		/// <param name="orderId">ID of the order that needs to be deleted.</param>
 		public Task<Response> DeleteOrderAsync(long orderId)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Delete, Url($"/store/order/{orderId}"));
+			var request = new HttpRequestMessage(new HttpMethod("DELETE"), Url($"/store/order/{orderId}"));
 			return SendRequestAsync(request);
 		}
 
@@ -145,7 +145,7 @@ namespace Tekcari.Gapi
 		/// <param name="user"></param>
 		public Task<Response> CreateUserAsync(User user)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Post, Url($"/user"));
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/user"));
 			request.Content = ToJson(user);
 			return SendRequestAsync(request);
 		}
@@ -155,7 +155,7 @@ namespace Tekcari.Gapi
 		/// <param name="user"></param>
 		public Task<Response<User>> CreateUsersWithListInputAsync(User[] user)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Post, Url($"/user/createWithList"));
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/user/createWithList"));
 			request.Content = ToJson(user);
 			return SendRequestAsync<User>(request);
 		}
@@ -165,14 +165,14 @@ namespace Tekcari.Gapi
 		/// <param name="password">The password for login in clear text.</param>
 		public Task<Response<string>> LoginUserAsync(string username = default, string password = default)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/user/login?username={username}&password={password}"));
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/user/login?username={username}&password={password}"));
 			return SendRequestAsync<string>(request);
 		}
 
 		/// <summary>Logs out current logged in user session.</summary>
 		public Task<Response> LogoutUserAsync()
 		{
-			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/user/logout"));
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/user/logout"));
 			return SendRequestAsync(request);
 		}
 
@@ -180,7 +180,7 @@ namespace Tekcari.Gapi
 		/// <param name="username">The name that needs to be fetched. Use user1 for testing. .</param>
 		public Task<Response<User>> GetUserByNameAsync(string username)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Get, Url($"/user/{username}"));
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/user/{username}"));
 			return SendRequestAsync<User>(request);
 		}
 
@@ -190,7 +190,7 @@ namespace Tekcari.Gapi
 		/// <param name="username">name that need to be deleted.</param>
 		public Task<Response> UpdateUserAsync(User user, string username)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Put, Url($"/user/{username}"));
+			var request = new HttpRequestMessage(new HttpMethod("PUT"), Url($"/user/{username}"));
 			request.Content = ToJson(user);
 			return SendRequestAsync(request);
 		}
@@ -200,7 +200,7 @@ namespace Tekcari.Gapi
 		/// <param name="username">The name that needs to be deleted.</param>
 		public Task<Response> DeleteUserAsync(string username)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Delete, Url($"/user/{username}"));
+			var request = new HttpRequestMessage(new HttpMethod("DELETE"), Url($"/user/{username}"));
 			return SendRequestAsync(request);
 		}
 
@@ -278,7 +278,7 @@ namespace Tekcari.Gapi
 		private readonly IHttpClientFactory _httpClientFactory;
 		private JsonSerializerOptions _serializerOptions;
 
-		private string Url(string path) => string.Concat(_baseUrl, path);
+		private Uri Url(string path) => new Uri(string.Concat(_baseUrl, path), UriKind.RelativeOrAbsolute);
 		private static IHttpClientFactory GetHttpClientFactory() => new ServiceCollection().AddHttpClient().BuildServiceProvider().GetService<IHttpClientFactory>();
 
 		private static string GetQueryList(string name, object[] args) => string.Join("&", from x in args select $"{name}={args}");

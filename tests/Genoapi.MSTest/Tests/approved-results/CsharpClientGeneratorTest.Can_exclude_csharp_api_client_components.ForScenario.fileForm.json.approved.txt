@@ -1,0 +1,122 @@
+﻿== MediaFile.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class MediaFile
+	{
+		[JsonPropertyName("path")]
+		public string Path { get; set; }
+
+		[JsonPropertyName("intent")]
+		public MediaFileIntent Intent { get; set; }
+
+	}
+}
+
+
+== ProblemDetails.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class ProblemDetails
+	{
+		[JsonPropertyName("type")]
+		public string Type { get; set; }
+
+		[JsonPropertyName("title")]
+		public string Title { get; set; }
+
+		[JsonPropertyName("status")]
+		public int Status { get; set; }
+
+		[JsonPropertyName("detail")]
+		public string Detail { get; set; }
+
+		[JsonPropertyName("instance")]
+		public string Instance { get; set; }
+
+	}
+}
+
+
+== Product.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class Product
+	{
+		[JsonPropertyName("id")]
+		public string Id { get; set; }
+
+		[JsonPropertyName("title")]
+		public string Title { get; set; }
+
+		[JsonPropertyName("summary")]
+		public string Summary { get; set; }
+
+		[JsonPropertyName("description")]
+		public string Description { get; set; }
+
+		[JsonPropertyName("category")]
+		public string Category { get; set; }
+
+		[JsonPropertyName("ordinal")]
+		public int Ordinal { get; set; }
+
+		[JsonPropertyName("visibility")]
+		public ProductAvailability Visibility { get; set; }
+
+		[JsonPropertyName("variantId")]
+		public string VariantId { get; set; }
+
+		[JsonPropertyName("classId")]
+		public string ClassId { get; set; }
+
+		[JsonPropertyName("isPrimary")]
+		public bool IsPrimary { get; set; }
+
+	}
+}
+
+
+== ProductSearchRequest.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class ProductSearchRequest
+	{
+		[JsonPropertyName("keywords")]
+		public string Keywords { get; set; }
+
+		[JsonPropertyName("category")]
+		public string Category { get; set; }
+
+		[JsonPropertyName("featuredOnly")]
+		public bool FeaturedOnly { get; set; }
+
+		[JsonPropertyName("take")]
+		public int Take { get; set; }
+
+		[JsonPropertyName("skip")]
+		public int Skip { get; set; }
+
+	}
+}
+
+
