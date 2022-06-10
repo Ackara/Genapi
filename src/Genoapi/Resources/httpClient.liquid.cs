@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -56,7 +57,7 @@ namespace {{rootnamespace}}
 			{%- assign formFields = endpoint.parameters | where: "kind", "body" -%}
 			{%- for field in formFields -%}
 			{%- if field.type == "byte[]" -%}
-			form.Add(new StreamContent({{field.name | safe_name}}), nameof({{field.name | safe_name}}), "{{field.name}}.file");
+			form.Add(new StreamContent(new FileStream({{field.name | safe_name}}, FileMode.Open, FileAccess.Read, FileShare.Read)), nameof({{field.name | safe_name}}), Path.GetFileName({{field.name | safe_name}}));
 			{%- else -%}
 			form.Add(new StringContent({{field.name}}));
 			{%- endif -%}

@@ -26,7 +26,7 @@ namespace Tekcari.Gapi.Serialization
 					return DownloadFile(uri.AbsoluteUri);
 
 				default:
-					using (Stream stream = File.OpenRead(uri.LocalPath))
+					using (Stream stream = new FileStream(uri.LocalPath, FileMode.Open, FileAccess.Read, FileShare.Read))
 					{
 						return ReadFile(stream, null);
 					}

@@ -217,9 +217,9 @@ namespace Tekcari.Gapi.Generators.Csharp
 					case "multipart/form-data":
 						foreach (KeyValuePair<string, OpenApiSchema> item in content.Value.Schema.Properties)
 						{
-							name = item.Key;
+							name = $"{item.Key}Path";
 							type = _mapper.Map(item.Value, _settings);
-							parameters.Add(new { kind, type, mimeType, name, value = $"FileStream {name}", description });
+							parameters.Add(new { kind, type, mimeType, name, value = $"string {name}", description });
 						}
 						break;
 				}
