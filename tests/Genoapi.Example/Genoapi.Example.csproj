@@ -4,9 +4,9 @@
 		<TargetFramework>net5.0</TargetFramework>
 		<IsPackable>false</IsPackable>
 
-		<Version>0.0.20</Version>
-		<AssemblyVersion>0.0.20</AssemblyVersion>
-		<AssemblyFileVersion>0.0.20</AssemblyFileVersion>
+		<Version>0.0.21</Version>
+		<AssemblyVersion>0.0.21</AssemblyVersion>
+		<AssemblyFileVersion>0.0.21</AssemblyFileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
