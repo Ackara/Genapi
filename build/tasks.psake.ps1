@@ -130,10 +130,12 @@ Task "Clean" -description "This task removes all generated files and folders fro
 
 Task "Increment-Version-Number" -alias "version" -description "This task increments all of the projects version number." `
 -depends @("restore") -action {
+	Assert ((&git status | Out-String) -match 'nothing to commit') "You must commit changes before running this task.";
+	
 	$manifest = $ManifestFilePath | Step-NcrementVersionNumber -Major:$Major -Minor:$Minor -Patch | Edit-NcrementManifest $ManifestFilePath;
-	$newVersion = $ManifestFilePath | Select-NcrementVersionNumber $EnvironmentName;
-
-	foreach ($item in @("*/*/*.*proj", "src/*/*.vsixmanifest"))
+	$newVersion = $ManifestFilePath | Select-NcrementVersionNumber -Format "C";
+	
+	foreach ($item in @("*/*/*.*proj", "src/*/*.vsixmanifest", "src/*/*.psd1"))
 	{
 		$itemPath = Join-Path $SolutionFolder $item;
 		if (Test-Path $itemPath)
@@ -142,6 +144,15 @@ Task "Increment-Version-Number" -alias "version" -description "This task increme
 				| Write-Value "  * incremented '{0}' version number to '$newVersion'.";
 		}
 	}
+
+	try
+	{
+		Push-Location $SolutionFolder;
+		Exec { &git add .;}
+		Exec { &git commit --message "increment version to '$newVersion'."; }
+		Exec { &git tag --annotate "v$newVersion" --message "version $newVersion."; }
+	}
+	finally { Pop-Location; }
 }
 
 Task "Build-Solution" -alias "compile" -description "This task compiles projects in the solution." `

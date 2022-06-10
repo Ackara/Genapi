@@ -34,7 +34,7 @@ namespace Tekcari.Gapi
 		{
 			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/Product"));
 			var form = new MultipartFormDataContent();
-			form.Add(new StreamContent(new FileStream(manifestPath, FileMode.Open, FileAccess.Read, FileShare.Read)), nameof(manifestPath), Path.GetFileName(manifestPath));
+			form.Add(new StreamContent(new FileStream(manifestPath, FileMode.Open, FileAccess.Read, FileShare.Read)), "manifest", Path.GetFileName(manifestPath));
 			request.Content = form;
 			return SendRequestAsync(request);
 		}

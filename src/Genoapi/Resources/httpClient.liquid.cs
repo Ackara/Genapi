@@ -57,7 +57,7 @@ namespace {{rootnamespace}}
 			{%- assign formFields = endpoint.parameters | where: "kind", "body" -%}
 			{%- for field in formFields -%}
 			{%- if field.type == "byte[]" -%}
-			form.Add(new StreamContent(new FileStream({{field.name | safe_name}}, FileMode.Open, FileAccess.Read, FileShare.Read)), nameof({{field.name | safe_name}}), Path.GetFileName({{field.name | safe_name}}));
+			form.Add(new StreamContent(new FileStream({{field.name | safe_name}}, FileMode.Open, FileAccess.Read, FileShare.Read)), "{{field.name | remove: 'Path'}}", Path.GetFileName({{field.name | safe_name}}));
 			{%- else -%}
 			form.Add(new StringContent({{field.name}}));
 			{%- endif -%}
