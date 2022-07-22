@@ -1,1 +1,426 @@
-﻿
+﻿== Contact.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class Contact
+	{
+		[JsonPropertyName("name")]
+		public string Name { get; set; }
+
+		[JsonPropertyName("mailingAddress")]
+		public Address MailingAddress { get; set; }
+
+		[JsonPropertyName("email")]
+		public string Email { get; set; }
+
+		[JsonPropertyName("phone")]
+		public string Phone { get; set; }
+
+	}
+}
+
+
+== Error.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class Error
+	{
+		[JsonPropertyName("code")]
+		public string Code { get; set; }
+
+		[JsonPropertyName("message")]
+		public string Message { get; set; }
+
+	}
+}
+
+
+== Fault.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class Fault
+	{
+		[JsonPropertyName("code")]
+		public int Code { get; set; }
+
+		[JsonPropertyName("message")]
+		public string Message { get; set; }
+
+	}
+}
+
+
+== FullName.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class FullName
+	{
+		[JsonPropertyName("firstName")]
+		public string FirstName { get; set; }
+
+		[JsonPropertyName("middleName")]
+		public string MiddleName { get; set; }
+
+		[JsonPropertyName("lastName")]
+		public string LastName { get; set; }
+
+		[JsonPropertyName("suffix")]
+		public string Suffix { get; set; }
+
+	}
+}
+
+
+== Invoice.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class Invoice
+	{
+		[JsonPropertyName("id")]
+		public string Id { get; set; }
+
+		[JsonPropertyName("billingDate")]
+		public DateTime BillingDate { get; set; }
+
+		[JsonPropertyName("merchant")]
+		public Contact Merchant { get; set; }
+
+		[JsonPropertyName("buyer")]
+		public Contact Buyer { get; set; }
+
+		[JsonPropertyName("recipient")]
+		public Contact Recipient { get; set; }
+
+		[JsonPropertyName("customerId")]
+		public string CustomerId { get; set; }
+
+		[JsonPropertyName("registarId")]
+		public string RegistarId { get; set; }
+
+		[JsonPropertyName("paymentToken")]
+		public string PaymentToken { get; set; }
+
+		[JsonPropertyName("items")]
+		public LineItem[] Items { get; set; }
+
+		[JsonPropertyName("promoCode")]
+		public string PromoCode { get; set; }
+
+		[JsonPropertyName("total")]
+		public double Total { get; set; }
+
+		[JsonPropertyName("isEmpty")]
+		public bool IsEmpty { get; set; }
+
+		[JsonPropertyName("paymentScheme")]
+		public BillingScheme PaymentScheme { get; set; }
+
+	}
+}
+
+
+== License.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class License
+	{
+		[JsonPropertyName("id")]
+		public string Id { get; set; }
+
+		[JsonPropertyName("status")]
+		public SubscriptionStatus Status { get; set; }
+
+		[JsonPropertyName("invoiceId")]
+		public string InvoiceId { get; set; }
+
+		[JsonPropertyName("ownerId")]
+		public string OwnerId { get; set; }
+
+		[JsonPropertyName("userId")]
+		public string UserId { get; set; }
+
+		[JsonPropertyName("productId")]
+		public string ProductId { get; set; }
+
+		[JsonPropertyName("version")]
+		public string Version { get; set; }
+
+		[JsonPropertyName("isActive")]
+		public bool IsActive { get; set; }
+
+	}
+}
+
+
+== LineItem.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class LineItem
+	{
+		[JsonPropertyName("id")]
+		public string Id { get; set; }
+
+		[JsonPropertyName("sku")]
+		public string Sku { get; set; }
+
+		[JsonPropertyName("description")]
+		public string Description { get; set; }
+
+		[JsonPropertyName("unitPrice")]
+		public double UnitPrice { get; set; }
+
+		[JsonPropertyName("quantity")]
+		public int Quantity { get; set; }
+
+		[JsonPropertyName("total")]
+		public double Total { get; set; }
+
+		[JsonPropertyName("kind")]
+		public LineItemType Kind { get; set; }
+
+		[JsonPropertyName("packageKind")]
+		public PackageType PackageKind { get; set; }
+
+		[JsonPropertyName("paymentScheme")]
+		public BillingScheme PaymentScheme { get; set; }
+
+		[JsonPropertyName("invoiceId")]
+		public string InvoiceId { get; set; }
+
+		[JsonPropertyName("productId")]
+		public string ProductId { get; set; }
+
+		[JsonPropertyName("providerId")]
+		public string ProviderId { get; set; }
+
+	}
+}
+
+
+== Merchant.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class Merchant
+	{
+		[JsonPropertyName("id")]
+		public string Id { get; set; }
+
+		[JsonPropertyName("businessName")]
+		public string BusinessName { get; set; }
+
+		[JsonPropertyName("agent")]
+		public FullName Agent { get; set; }
+
+		[JsonPropertyName("email")]
+		public string Email { get; set; }
+
+		[JsonPropertyName("mailingAddress")]
+		public Address MailingAddress { get; set; }
+
+		[JsonPropertyName("phone")]
+		public string Phone { get; set; }
+
+		[JsonPropertyName("status")]
+		public MerchantStatus Status { get; set; }
+
+	}
+}
+
+
+== Product.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class Product
+	{
+		[JsonPropertyName("id")]
+		public string Id { get; set; }
+
+		[JsonPropertyName("sku")]
+		public string Sku { get; set; }
+
+		[JsonPropertyName("title")]
+		public string Title { get; set; }
+
+		[JsonPropertyName("unitPrice")]
+		public double UnitPrice { get; set; }
+
+		[JsonPropertyName("visibility")]
+		public ListingVisibility Visibility { get; set; }
+
+		[JsonPropertyName("kind")]
+		public PackageType Kind { get; set; }
+
+		[JsonPropertyName("paymentScheme")]
+		public BillingScheme PaymentScheme { get; set; }
+
+		[JsonPropertyName("description")]
+		public string Description { get; set; }
+
+		[JsonPropertyName("merchantId")]
+		public string MerchantId { get; set; }
+
+		[JsonPropertyName("groupId")]
+		public string GroupId { get; set; }
+
+		[JsonPropertyName("providerId")]
+		public string ProviderId { get; set; }
+
+		[JsonPropertyName("properties")]
+		public string Properties { get; set; }
+
+	}
+}
+
+
+== Receipt.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class Receipt
+	{
+		[JsonPropertyName("id")]
+		public string Id { get; set; }
+
+		[JsonPropertyName("transactionDate")]
+		public DateTime TransactionDate { get; set; }
+
+		[JsonPropertyName("amount")]
+		public double Amount { get; set; }
+
+		[JsonPropertyName("paymentDetails")]
+		public string PaymentDetails { get; set; }
+
+		[JsonPropertyName("method")]
+		public PaymentMethod Method { get; set; }
+
+		[JsonPropertyName("status")]
+		public PaymentStatus Status { get; set; }
+
+		[JsonPropertyName("network")]
+		public PaymentProvider Network { get; set; }
+
+		[JsonPropertyName("networkId")]
+		public string NetworkId { get; set; }
+
+		[JsonPropertyName("authorizationToken")]
+		public string AuthorizationToken { get; set; }
+
+		[JsonPropertyName("authExprationDate")]
+		public DateTime AuthExprationDate { get; set; }
+
+		[JsonPropertyName("invoiceId")]
+		public string InvoiceId { get; set; }
+
+		[JsonPropertyName("customerId")]
+		public string CustomerId { get; set; }
+
+		[JsonPropertyName("error")]
+		public Error Error { get; set; }
+
+	}
+}
+
+
+== RecordLink.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class RecordLink
+	{
+		[JsonPropertyName("recordId")]
+		public string RecordId { get; set; }
+
+		[JsonPropertyName("uri")]
+		public string Uri { get; set; }
+
+	}
+}
+
+
+== Registrar.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Gapi
+{
+	public partial class Registrar
+	{
+		[JsonPropertyName("id")]
+		public string Id { get; set; }
+
+		[JsonPropertyName("name")]
+		public string Name { get; set; }
+
+		[JsonPropertyName("descripiton")]
+		public string Descripiton { get; set; }
+
+		[JsonPropertyName("machineName")]
+		public string MachineName { get; set; }
+
+		[JsonPropertyName("physicalAddress")]
+		public Address PhysicalAddress { get; set; }
+
+		[JsonPropertyName("merchantId")]
+		public string MerchantId { get; set; }
+
+		[JsonPropertyName("status")]
+		public RegistrarStatus Status { get; set; }
+
+	}
+}
+
+

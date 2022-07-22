@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
 		<RootNamespace>Tekcari.Gapi</RootNamespace>
 	</PropertyGroup>
 
@@ -15,7 +16,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Build.Framework" Version="17.0.0" />
+		<PackageReference Include="Microsoft.Build.Framework" Version="17.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -42,8 +43,23 @@
 			<PackagePath>build\$(AssemblyName).targets</PackagePath>
 		</Content>
 
-		<Content Include="..\..\artifacts\temp\**" Condition="Exists('..\..\artifacts\temp\')">
-			<PackagePath>tools</PackagePath>
+		<Content Include="..\..\artifacts\netstandard2.0\**" Condition="Exists('..\..\artifacts\netstandard2.0\')">
+			<PackagePath>tools\</PackagePath>
+			<Visible>false</Visible>
+		</Content>
+
+		<Content Include="..\..\artifacts\netstandard2.0\**" Condition="Exists('..\..\artifacts\netstandard2.0\')">
+			<PackagePath>tools\netstandard2.0</PackagePath>
+			<Visible>false</Visible>
+		</Content>
+
+		<Content Include="..\..\artifacts\net5.0\**" Condition="Exists('..\..\artifacts\net5.0\')">
+			<PackagePath>tools\net5.0</PackagePath>
+			<Visible>false</Visible>
+		</Content>
+
+		<Content Include="..\..\artifacts\net6.0\**" Condition="Exists('..\..\artifacts\net6.0\')">
+			<PackagePath>tools\net6.0</PackagePath>
 			<Visible>false</Visible>
 		</Content>
 	</ItemGroup>

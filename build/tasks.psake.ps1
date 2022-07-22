@@ -65,14 +65,17 @@ Task "Package-Solution" -alias "pack" -description "This task generates all depl
 	# ---- Create Package ----
 
 	$project = Join-Path $SolutionFolder "src/*.MSBuild/*.*proj" | Get-Item;
-	$package = Join-Path $ArtifactsFolder "temp";
-	Write-Separator "dotnet publish $($project.BaseName)";
-	Exec { &dotnet publish $project.FullName --output $package --configuration $Configuration -p:EnvironmentName=$EnvironmentName; }
+	foreach ($tfm in @("netstandard2.0", "net5.0", "net6.0"))
+	{
+		$package = Join-Path $ArtifactsFolder $tfm;
+		Write-Separator "dotnet publish $($project.BaseName) $tfm";
+		Exec { &dotnet publish $project.FullName --output $package --configuration $Configuration -p:EnvironmentName=$EnvironmentName --framework $tfm; }
+	}
 
 	$project = Join-Path $SolutionFolder "src/*.MSBuild/*.*proj" | Get-Item;
 	Write-Separator "dotnet pack $($project.BaseName)";
 	Exec { &dotnet pack $project.FullName --output $ArtifactsFolder --configuration $Configuration -p:Version=$version; }
-	if (Test-Path $package) { Remove-Item $package -Recurse -Force; }
+	#if (Test-Path $package) { Remove-Item $package -Recurse -Force; }
 
 	# ---- Extract Package ----
 

@@ -201,11 +201,11 @@ namespace bar
 
 		public static IEnumerable<object[]> GetClientGeneratorCases()
 		{
-			//yield return new object[] { TestData.GetFilePath("openapi.json"), "https://localhost/api/v3" };
+			yield return new object[] { TestData.GetFilePath("openapi.json"), "https://localhost/api/v3" };
 			yield return new object[] { TestData.GetFilePath("fileForm.json"), "https://localhost/api/v3" };
-			//yield return new object[] { TestData.GetFilePath("custom.json"), "https://localhost/api/v3" };
-			//yield return new object[] { TestData.GetFilePath("petstore.json"), "https://petstore3.swagger.io/api/v3" };
-			//yield return new object[] { TestData.GetFilePath("plaid.yml") };
+			yield return new object[] { TestData.GetFilePath("custom.json"), "https://localhost/api/v3" };
+			yield return new object[] { TestData.GetFilePath("petstore.json"), "https://petstore3.swagger.io/api/v3" };
+			yield return new object[] { TestData.GetFilePath("plaid.yml") };
 		}
 
 		internal static string MergeAndAnalyze(IEnumerable<FileResult> fileList)

@@ -1,1 +1,495 @@
-﻿
+﻿== GeneratedApiClientTest.cs
+==================================================
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
+namespace Tekcari.Gapi
+{
+	[TestClass]
+	public partial class GeneratedApiClientTest
+	{
+		[TestMethod]
+		public async Task Can_AcceptPayment()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var receipt = AutoBogus.AutoFaker.Generate<Receipt>();
+
+			var response = await sut.AcceptPaymentAsync(receipt: receipt);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_AcceptInvoice()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var invoice = AutoBogus.AutoFaker.Generate<Invoice>();
+
+			var response = await sut.AcceptInvoiceAsync(invoice: invoice);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_CreateStripeSession()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var invoice = AutoBogus.AutoFaker.Generate<Invoice>();
+			var successUrl = AutoBogus.AutoFaker.Generate<string>();
+			var cancelUrl = AutoBogus.AutoFaker.Generate<string>();
+
+			var response = await sut.CreateStripeSessionAsync(invoice: invoice, successUrl: successUrl, cancelUrl: cancelUrl);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_CreateStripeIntent()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var invoice = AutoBogus.AutoFaker.Generate<Invoice>();
+
+			var response = await sut.CreateStripeIntentAsync(invoice: invoice);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_AcceptCustomer()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var customer = AutoBogus.AutoFaker.Generate<Customer>();
+
+			var response = await sut.AcceptCustomerAsync(customer: customer);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_UpdateCustomer()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var customer = AutoBogus.AutoFaker.Generate<Customer>();
+
+			var response = await sut.UpdateCustomerAsync(customer: customer);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetCustomerById()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var customerId = AutoBogus.AutoFaker.Generate<string>();
+
+			var response = await sut.GetCustomerByIdAsync(customerId: customerId);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetMerchantCustomers()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var merchantId = AutoBogus.AutoFaker.Generate<string>();
+			var take = AutoBogus.AutoFaker.Generate<int>();
+			var skip = AutoBogus.AutoFaker.Generate<int>();
+
+			var response = await sut.GetMerchantCustomersAsync(merchantId: merchantId, take: take, skip: skip);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_AcceptInvoice()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var invoice = AutoBogus.AutoFaker.Generate<Invoice>();
+
+			var response = await sut.AcceptInvoiceAsync(invoice: invoice);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_UpdateInvoice()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var invoice = AutoBogus.AutoFaker.Generate<Invoice>();
+
+			var response = await sut.UpdateInvoiceAsync(invoice: invoice);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetInvoiceById()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var id = AutoBogus.AutoFaker.Generate<string>();
+
+			var response = await sut.GetInvoiceByIdAsync(id: id);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetMerchantInvoices()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var merchantId = AutoBogus.AutoFaker.Generate<string>();
+			var take = AutoBogus.AutoFaker.Generate<int>();
+			var skip = AutoBogus.AutoFaker.Generate<int>();
+
+			var response = await sut.GetMerchantInvoicesAsync(merchantId: merchantId, take: take, skip: skip);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetRegistarInvoices()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var registarId = AutoBogus.AutoFaker.Generate<string>();
+			var take = AutoBogus.AutoFaker.Generate<int>();
+			var skip = AutoBogus.AutoFaker.Generate<int>();
+
+			var response = await sut.GetRegistarInvoicesAsync(registarId: registarId, take: take, skip: skip);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetCustomerInvoices()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var customerId = AutoBogus.AutoFaker.Generate<string>();
+			var take = AutoBogus.AutoFaker.Generate<int>();
+			var skip = AutoBogus.AutoFaker.Generate<int>();
+
+			var response = await sut.GetCustomerInvoicesAsync(customerId: customerId, take: take, skip: skip);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetInvoicePayments()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var invoiceId = AutoBogus.AutoFaker.Generate<string>();
+			var take = AutoBogus.AutoFaker.Generate<int>();
+			var skip = AutoBogus.AutoFaker.Generate<int>();
+
+			var response = await sut.GetInvoicePaymentsAsync(invoiceId: invoiceId, take: take, skip: skip);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetSessionProductKey()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var sessionId = AutoBogus.AutoFaker.Generate<string>();
+
+			var response = await sut.GetSessionProductKeyAsync(sessionId: sessionId);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetLicenseById()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var licenseId = AutoBogus.AutoFaker.Generate<string>();
+			var userId = AutoBogus.AutoFaker.Generate<string>();
+
+			var response = await sut.GetLicenseByIdAsync(licenseId: licenseId, userId: userId);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_AcceptMerchant()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var merchant = AutoBogus.AutoFaker.Generate<Merchant>();
+
+			var response = await sut.AcceptMerchantAsync(merchant: merchant);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_UpdateMerchant()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var merchant = AutoBogus.AutoFaker.Generate<Merchant>();
+
+			var response = await sut.UpdateMerchantAsync(merchant: merchant);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetMerchants()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var keywords = AutoBogus.AutoFaker.Generate<string>();
+			var take = AutoBogus.AutoFaker.Generate<int>();
+			var skip = AutoBogus.AutoFaker.Generate<int>();
+
+			var response = await sut.GetMerchantsAsync(keywords: keywords, take: take, skip: skip);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetMerchantById()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var id = AutoBogus.AutoFaker.Generate<string>();
+
+			var response = await sut.GetMerchantByIdAsync(id: id);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_AcceptProduct()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var product = AutoBogus.AutoFaker.Generate<Product>();
+
+			var response = await sut.AcceptProductAsync(product: product);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_UpdateProduct()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var product = AutoBogus.AutoFaker.Generate<Product>();
+
+			var response = await sut.UpdateProductAsync(product: product);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetProducts()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var merchantId = AutoBogus.AutoFaker.Generate<string>();
+			var keywords = AutoBogus.AutoFaker.Generate<string>();
+			var take = AutoBogus.AutoFaker.Generate<int>();
+			var skip = AutoBogus.AutoFaker.Generate<int>();
+
+			var response = await sut.GetProductsAsync(merchantId: merchantId, keywords: keywords, take: take, skip: skip);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetProductById()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var productId = AutoBogus.AutoFaker.Generate<string>();
+
+			var response = await sut.GetProductByIdAsync(productId: productId);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_CreateProductVariant()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var product = AutoBogus.AutoFaker.Generate<Product>();
+
+			var response = await sut.CreateProductVariantAsync(product: product);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_UpdateProductVariant()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var product = AutoBogus.AutoFaker.Generate<Product>();
+
+			var response = await sut.UpdateProductVariantAsync(product: product);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_AcceptPayment()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var receipt = AutoBogus.AutoFaker.Generate<Receipt>();
+
+			var response = await sut.AcceptPaymentAsync(receipt: receipt);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_UpdatePayment()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var receipt = AutoBogus.AutoFaker.Generate<Receipt>();
+
+			var response = await sut.UpdatePaymentAsync(receipt: receipt);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_AcceptPayment()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var receipt = AutoBogus.AutoFaker.Generate<Receipt>();
+
+			var response = await sut.AcceptPaymentAsync(receipt: receipt);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_UpdatePayment()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var receipt = AutoBogus.AutoFaker.Generate<Receipt>();
+
+			var response = await sut.UpdatePaymentAsync(receipt: receipt);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetPaymentById()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var paymentId = AutoBogus.AutoFaker.Generate<string>();
+
+			var response = await sut.GetPaymentByIdAsync(paymentId: paymentId);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetPaymentById()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var paymentId = AutoBogus.AutoFaker.Generate<string>();
+
+			var response = await sut.GetPaymentByIdAsync(paymentId: paymentId);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetInvoicePayments()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var invoiceId = AutoBogus.AutoFaker.Generate<string>();
+			var take = AutoBogus.AutoFaker.Generate<int>();
+			var skip = AutoBogus.AutoFaker.Generate<int>();
+
+			var response = await sut.GetInvoicePaymentsAsync(invoiceId: invoiceId, take: take, skip: skip);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetInvoicePayments()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var invoiceId = AutoBogus.AutoFaker.Generate<string>();
+			var take = AutoBogus.AutoFaker.Generate<int>();
+			var skip = AutoBogus.AutoFaker.Generate<int>();
+
+			var response = await sut.GetInvoicePaymentsAsync(invoiceId: invoiceId, take: take, skip: skip);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_AcceptRegistrar()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var registrar = AutoBogus.AutoFaker.Generate<Registrar>();
+
+			var response = await sut.AcceptRegistrarAsync(registrar: registrar);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_UpdateRegistrar()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var registrar = AutoBogus.AutoFaker.Generate<Registrar>();
+
+			var response = await sut.UpdateRegistrarAsync(registrar: registrar);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_RemoveRegistrar()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var registrarId = AutoBogus.AutoFaker.Generate<string>();
+
+			var response = await sut.RemoveRegistrarAsync(registrarId: registrarId);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetRegistrarById()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var registarId = AutoBogus.AutoFaker.Generate<string>();
+
+			var response = await sut.GetRegistrarByIdAsync(registarId: registarId);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_GetMerchantRegistrars()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+			var merchantId = AutoBogus.AutoFaker.Generate<string>();
+			var take = AutoBogus.AutoFaker.Generate<int>();
+			var skip = AutoBogus.AutoFaker.Generate<int>();
+
+			var response = await sut.GetMerchantRegistrarsAsync(merchantId: merchantId, take: take, skip: skip);
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+		[TestMethod]
+		public async Task Can_AcceptNotification()
+		{
+			var sut = new GeneratedApiClient("https://localhost/api/v3");
+
+			var response = await sut.AcceptNotificationAsync();
+
+			Assert.AreEqual(true, response.Succeeded, response.Message);
+		}
+
+	}
+}
+
+
+

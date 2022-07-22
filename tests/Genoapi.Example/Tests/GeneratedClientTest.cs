@@ -12,215 +12,68 @@ namespace GeneratedCode
 	public partial class GeneratedClientTest
 	{
 		[TestMethod]
-		public async Task Can_updatePet()
+		public async Task Can_Checkout()
 		{
 			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var pet = AutoBogus.AutoFaker.Generate<Pet>();
+			var shoppingCart = AutoBogus.AutoFaker.Generate<ShoppingCart>();
 
-			var response = await sut.updatePetAsync(pet: pet);
+			var response = await sut.CheckoutAsync(shoppingCart: shoppingCart);
 
 			Assert.AreEqual(true, response.Succeeded, response.Message);
 		}
 
 		[TestMethod]
-		public async Task Can_addPet()
+		public async Task Can_CreateProduct()
 		{
 			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var pet = AutoBogus.AutoFaker.Generate<Pet>();
+			var product = AutoBogus.AutoFaker.Generate<Product>();
 
-			var response = await sut.addPetAsync(pet: pet);
+			var response = await sut.CreateProductAsync(product: product);
 
 			Assert.AreEqual(true, response.Succeeded, response.Message);
 		}
 
 		[TestMethod]
-		public async Task Can_findPetsByStatus()
+		public async Task Can_GetProductByKeywords()
 		{
 			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var status = AutoBogus.AutoFaker.Generate<string>();
+			var keywords = AutoBogus.AutoFaker.Generate<string>();
+			var take = AutoBogus.AutoFaker.Generate<int>();
+			var skip = AutoBogus.AutoFaker.Generate<int>();
 
-			var response = await sut.findPetsByStatusAsync(status: status);
+			var response = await sut.GetProductByKeywordsAsync(keywords: keywords, take: take, skip: skip);
 
 			Assert.AreEqual(true, response.Succeeded, response.Message);
 		}
 
 		[TestMethod]
-		public async Task Can_findPetsByTags()
+		public async Task Can_CreateProductFromPackage()
 		{
 			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var tags = AutoBogus.AutoFaker.Generate<string[]>();
 
-			var response = await sut.findPetsByTagsAsync(tags: tags);
+			var response = await sut.CreateProductFromPackageAsync();
 
 			Assert.AreEqual(true, response.Succeeded, response.Message);
 		}
 
 		[TestMethod]
-		public async Task Can_getPetById()
+		public async Task Can_GetProducts()
 		{
 			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var petId = AutoBogus.AutoFaker.Generate<long>();
+			var productSearchRequest = AutoBogus.AutoFaker.Generate<ProductSearchRequest>();
 
-			var response = await sut.getPetByIdAsync(petId: petId);
+			var response = await sut.GetProductsAsync(productSearchRequest: productSearchRequest);
 
 			Assert.AreEqual(true, response.Succeeded, response.Message);
 		}
 
 		[TestMethod]
-		public async Task Can_updatePetWithForm()
+		public async Task Can_GetProductBanner()
 		{
 			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var petId = AutoBogus.AutoFaker.Generate<long>();
-			var name = AutoBogus.AutoFaker.Generate<string>();
-			var status = AutoBogus.AutoFaker.Generate<string>();
+			var productId = AutoBogus.AutoFaker.Generate<string>();
 
-			var response = await sut.updatePetWithFormAsync(petId: petId, name: name, status: status);
-
-			Assert.AreEqual(true, response.Succeeded, response.Message);
-		}
-
-		[TestMethod]
-		public async Task Can_deletePet()
-		{
-			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var petId = AutoBogus.AutoFaker.Generate<long>();
-			var api_key = AutoBogus.AutoFaker.Generate<string>();
-
-			var response = await sut.deletePetAsync(petId: petId, api_key: api_key);
-
-			Assert.AreEqual(true, response.Succeeded, response.Message);
-		}
-
-		[TestMethod]
-		public async Task Can_uploadFile()
-		{
-			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var data = AutoBogus.AutoFaker.Generate<byte[]>();
-			var petId = AutoBogus.AutoFaker.Generate<long>();
-			var additionalMetadata = AutoBogus.AutoFaker.Generate<string>();
-
-			var response = await sut.uploadFileAsync(data: data, petId: petId, additionalMetadata: additionalMetadata);
-
-			Assert.AreEqual(true, response.Succeeded, response.Message);
-		}
-
-		[TestMethod]
-		public async Task Can_getInventory()
-		{
-			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-
-			var response = await sut.getInventoryAsync();
-
-			Assert.AreEqual(true, response.Succeeded, response.Message);
-		}
-
-		[TestMethod]
-		public async Task Can_placeOrder()
-		{
-			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var order = AutoBogus.AutoFaker.Generate<Order>();
-
-			var response = await sut.placeOrderAsync(order: order);
-
-			Assert.AreEqual(true, response.Succeeded, response.Message);
-		}
-
-		[TestMethod]
-		public async Task Can_getOrderById()
-		{
-			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var orderId = AutoBogus.AutoFaker.Generate<long>();
-
-			var response = await sut.getOrderByIdAsync(orderId: orderId);
-
-			Assert.AreEqual(true, response.Succeeded, response.Message);
-		}
-
-		[TestMethod]
-		public async Task Can_deleteOrder()
-		{
-			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var orderId = AutoBogus.AutoFaker.Generate<long>();
-
-			var response = await sut.deleteOrderAsync(orderId: orderId);
-
-			Assert.AreEqual(true, response.Succeeded, response.Message);
-		}
-
-		[TestMethod]
-		public async Task Can_createUser()
-		{
-			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var user = AutoBogus.AutoFaker.Generate<User>();
-
-			var response = await sut.createUserAsync(user: user);
-
-			Assert.AreEqual(true, response.Succeeded, response.Message);
-		}
-
-		[TestMethod]
-		public async Task Can_createUsersWithListInput()
-		{
-			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var user = AutoBogus.AutoFaker.Generate<User[]>();
-
-			var response = await sut.createUsersWithListInputAsync(user: user);
-
-			Assert.AreEqual(true, response.Succeeded, response.Message);
-		}
-
-		[TestMethod]
-		public async Task Can_loginUser()
-		{
-			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var username = AutoBogus.AutoFaker.Generate<string>();
-			var password = AutoBogus.AutoFaker.Generate<string>();
-
-			var response = await sut.loginUserAsync(username: username, password: password);
-
-			Assert.AreEqual(true, response.Succeeded, response.Message);
-		}
-
-		[TestMethod]
-		public async Task Can_logoutUser()
-		{
-			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-
-			var response = await sut.logoutUserAsync();
-
-			Assert.AreEqual(true, response.Succeeded, response.Message);
-		}
-
-		[TestMethod]
-		public async Task Can_getUserByName()
-		{
-			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var username = AutoBogus.AutoFaker.Generate<string>();
-
-			var response = await sut.getUserByNameAsync(username: username);
-
-			Assert.AreEqual(true, response.Succeeded, response.Message);
-		}
-
-		[TestMethod]
-		public async Task Can_updateUser()
-		{
-			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var user = AutoBogus.AutoFaker.Generate<User>();
-			var username = AutoBogus.AutoFaker.Generate<string>();
-
-			var response = await sut.updateUserAsync(user: user, username: username);
-
-			Assert.AreEqual(true, response.Succeeded, response.Message);
-		}
-
-		[TestMethod]
-		public async Task Can_deleteUser()
-		{
-			var sut = new GeneratedClient("https://petstore3.swagger.io/api/v3");
-			var username = AutoBogus.AutoFaker.Generate<string>();
-
-			var response = await sut.deleteUserAsync(username: username);
+			var response = await sut.GetProductBannerAsync(productId: productId);
 
 			Assert.AreEqual(true, response.Succeeded, response.Message);
 		}

@@ -47,6 +47,7 @@
 	<Target Name="TransformOpenApiSpecification">
 		<ItemGroup>
 			<OpenSpec1 Include="..\*.MSTest\*\specs\petstore.json" />
+			<!--<OpenSpec1 Include="C:\\Users\\abaker\\Projects\\Salzap\\src\\Salzap.SDK\\openapi.json" />-->
 		</ItemGroup>
 
 		<GenerateCsharpApiClient SourceFile="@(OpenSpec1)" DestinationFile="GeneratedClient.cs" RootNamespace="GeneratedCode" />
