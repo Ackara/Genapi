@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".misc", ".misc", "{E144D6DD
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		commands.json = commands.json
+		Directory.Build.props = Directory.Build.props
 		README.md = README.md
 	EndProjectSection
 EndProject

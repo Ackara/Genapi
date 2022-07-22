@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<UsingTask AssemblyFile="..\tools\Genoapi.MSBuild.dll" TaskName="GenerateCsharpApiClient" />
-	<UsingTask AssemblyFile="..\tools\Genoapi.MSBuild.dll" TaskName="GenerateCsharpApiClientTestSuite" />
+	<PropertyGroup>
+		<!--<_Genoapi_FrameworkFolder Condition="'$(MSBuildRuntimeType)'!='Core' AND '$(_Genoapi_FrameworkFolder)'==''">net48</_Genoapi_FrameworkFolder>-->
+		<!--<_Genoapi_FrameworkFolder Condition="'$(MSBuildRuntimeType)'=='Core' AND '$(_Genoapi_FrameworkFolder)'==''">net6.0</_Genoapi_FrameworkFolder>-->
+		<_Genoapi_FrameworkFolder>net6.0</_Genoapi_FrameworkFolder>
+		<_Genoapi_TaskAssembly Condition=" '$(_Genoapi_TaskAssembly)'==''">..\tools\$(_Genoapi_FrameworkFolder)\Genoapi.MSBuild.dll</_Genoapi_TaskAssembly>
+	</PropertyGroup>
+
+	<UsingTask AssemblyFile="..\tools\$(_Genoapi_FrameworkFolder)\Genoapi.MSBuild.dll" TaskName="GenerateCsharpApiClient" />
+	<UsingTask AssemblyFile="..\tools\$(_Genoapi_FrameworkFolder)\Genoapi.MSBuild.dll" TaskName="GenerateCsharpApiClientTestSuite" />
 </Project>

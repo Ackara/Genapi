@@ -64,13 +64,20 @@ Task "Package-Solution" -alias "pack" -description "This task generates all depl
 	
 	# ---- Create Package ----
 
+	[xml]$props = Get-Content (Join-Path $SolutionFolder "*.props" | Resolve-Path);
+	$monikers = ($props.Project.PropertyGroup.TargetFrameworks | Out-String).Split(';');
+	
 	$project = Join-Path $SolutionFolder "src/*.MSBuild/*.*proj" | Get-Item;
-	foreach ($tfm in @("netstandard2.0", "net5.0", "net6.0"))
+	foreach ($item in $monikers)
 	{
+		$tfm = $item.Trim();
 		$package = Join-Path $ArtifactsFolder $tfm;
-		Write-Separator "dotnet publish $($project.BaseName) $tfm";
+		Write-Separator "dotnet publish $($project.BaseName) '$tfm'";
 		Exec { &dotnet publish $project.FullName --output $package --configuration $Configuration -p:EnvironmentName=$EnvironmentName --framework $tfm; }
 	}
+	#$package = Join-Path $ArtifactsFolder "netstandard2.0";
+	#Write-Separator "dotnet publish $($project.BaseName)";
+	#Exec { &dotnet publish $project.FullName --output $package --configuration $Configuration -p:EnvironmentName=$EnvironmentName; }
 
 	$project = Join-Path $SolutionFolder "src/*.MSBuild/*.*proj" | Get-Item;
 	Write-Separator "dotnet pack $($project.BaseName)";
