@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
@@ -7,9 +7,9 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.0.22</Version>
-		<AssemblyVersion>0.0.22</AssemblyVersion>
-		<AssemblyFileVersion>0.0.22</AssemblyFileVersion>
+		<Version>0.0.23</Version>
+		<AssemblyVersion>0.0.23</AssemblyVersion>
+		<AssemblyFileVersion>0.0.23</AssemblyFileVersion>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
 		<IsTool>true</IsTool>
