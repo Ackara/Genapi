@@ -1,7 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<RootNamespace>Tekcari.Gapi</RootNamespace>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<IsTool>true</IsTool>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -10,11 +12,11 @@
 		<AssemblyFileVersion>0.0.23</AssemblyFileVersion>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-		<IsTool>true</IsTool>
+		<TaskFolderName>tasks</TaskFolderName>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Build.Framework" Version="17.2.0" />
+		<PackageReference Include="Microsoft.Build.Framework" Version="17.2.0" PrivateAssets="all" ExcludeAssets="Runtime" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -42,29 +44,23 @@
 		</Content>
 
 		<Content Include="..\..\artifacts\netstandard2.0\**" Condition="Exists('..\..\artifacts\netstandard2.0\')">
-			<PackagePath>tools\</PackagePath>
-			<Visible>false</Visible>
-		</Content>
-
-		<Content Include="..\..\artifacts\netstandard2.0\**" Condition="Exists('..\..\artifacts\netstandard2.0\')">
-			<PackagePath>tools\netstandard2.0</PackagePath>
+			<PackagePath>$(TaskFolderName)\netstandard2.0</PackagePath>
 			<Visible>false</Visible>
 		</Content>
 
 		<Content Include="..\..\artifacts\net5.0\**" Condition="Exists('..\..\artifacts\net5.0\')">
-			<PackagePath>tools\net5.0</PackagePath>
+			<PackagePath>$(TaskFolderName)\net5.0</PackagePath>
 			<Visible>false</Visible>
 		</Content>
 
 		<Content Include="..\..\artifacts\net6.0\**" Condition="Exists('..\..\artifacts\net6.0\')">
-			<PackagePath>tools\net6.0</PackagePath>
+			<PackagePath>$(TaskFolderName)\net6.0</PackagePath>
 			<Visible>false</Visible>
 		</Content>
 
 		<Content Include="..\..\artifacts\net471\**" Condition="Exists('..\..\artifacts\net471\')">
-			<PackagePath>tools\net471</PackagePath>
+			<PackagePath>$(TaskFolderName)\net471</PackagePath>
 			<Visible>false</Visible>
 		</Content>
 	</ItemGroup>
-
 </Project>

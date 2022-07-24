@@ -2,7 +2,6 @@
 
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
-		<TargetFrameworks>net5.0</TargetFrameworks>
 		<IsPackable>false</IsPackable>
 
 		<Version>0.0.23</Version>
@@ -47,18 +46,12 @@
 
 	<Target Name="TransformOpenApiSpecification">
 		<ItemGroup>
-			<!--<OpenSpec1 Include="..\*.MSTest\*\specs\petstore.json" />-->
-			<OpenSpec1 Include="C:\\Users\\abaker\\Projects\\Salzap\\src\\Salzap.SDK\\openapi.json" />
+			<OpenSpec1 Include="..\*.MSTest\*\specs\petstore.json" />
 		</ItemGroup>
 
 		<GenerateCsharpApiClient SourceFile="@(OpenSpec1)" DestinationFile="GeneratedClient.cs" RootNamespace="GeneratedCode" />
 		<GenerateCsharpApiClientTestSuite SourceFile="@(OpenSpec1)" DestinationFile="Tests\GeneratedClientTest.cs" ServiceUrl="https://petstore3.swagger.io/api/v3" RootNamespace="GeneratedCode" ClientClassName="GeneratedClient" />
 	</Target>
-
-	<Target Name="PrintValues">
-		<Message Text="tfm: $(_Genoapi_FrameworkFolder)" />
-		<Message Text="type: $(MSBuildRuntimeType)" />
-	</Target>
-
+	
 	<Import Project="..\..\artifacts\msbuild\build\Genoapi.MSBuild.targets" Condition="Exists('..\..\artifacts\msbuild\build\Genoapi.MSBuild.targets')" />
 </Project>

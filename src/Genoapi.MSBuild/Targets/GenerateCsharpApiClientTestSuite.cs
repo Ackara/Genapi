@@ -44,12 +44,12 @@ namespace Tekcari.Gapi.Targets
 
 			// STEP: Generate source code.
 
-			WriteMessage($"input: '{source}'.");
+			WriteMessage($"source: '{source}'.");
 			OpenApiDocument document = Serialization.DocumentLoader.Load(source);
 
 			var generator = new Generators.Csharp.CsharpClientTestSuiteGenerator();
 			IEnumerable<FileResult> files = generator.Generate(document, settings);
-			foreach (FileResult file in files) WriteMessage($"output: '{file.Name}'");
+			foreach (FileResult file in files) WriteMessage($"found: '{file.Name}'");
 
 			byte[] data = Generators.Csharp.CsharpGenerator.Merge(files.Reverse());
 			using (var fileStrem = new FileStream(destination, FileMode.Create, FileAccess.Write, FileShare.Read))

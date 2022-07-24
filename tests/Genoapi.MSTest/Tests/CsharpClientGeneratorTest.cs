@@ -184,9 +184,9 @@ namespace bar
 			usings.Length.ShouldBe(3);
 		}
 
-		internal static void RunGeneratorTest(IGenerator generator, string documentPath, Func<FileResult, bool> filter = default)
+		private static void RunGeneratorTest(IGenerator generator, string documentPath, Func<FileResult, bool> filter = default)
 		{
-			var scenario = ApprovalTests.Namers.ApprovalResults.ForScenario(Path.GetFileName(documentPath));
+			using var scenario = ApprovalTests.Namers.ApprovalResults.ForScenario(Path.GetFileName(documentPath));
 			if (filter == default) filter = (x) => !string.IsNullOrEmpty(x.Name);
 
 			var spec = DocumentLoader.Load(documentPath);
@@ -201,11 +201,13 @@ namespace bar
 
 		public static IEnumerable<object[]> GetClientGeneratorCases()
 		{
-			yield return new object[] { TestData.GetFilePath("openapi.json"), "https://localhost/api/v3" };
-			yield return new object[] { TestData.GetFilePath("fileForm.json"), "https://localhost/api/v3" };
-			yield return new object[] { TestData.GetFilePath("custom.json"), "https://localhost/api/v3" };
+			const string localhost = "https://localhost/api/v3";
+
+			yield return new object[] { TestData.GetFilePath("openapi.json"), localhost };
+			yield return new object[] { TestData.GetFilePath("fileForm.json"), localhost };
+			yield return new object[] { TestData.GetFilePath("custom.json"), localhost };
 			yield return new object[] { TestData.GetFilePath("petstore.json"), "https://petstore3.swagger.io/api/v3" };
-			yield return new object[] { TestData.GetFilePath("plaid.yml") };
+			//yield return new object[] { TestData.GetFilePath("plaid.yml"), "" };
 		}
 
 		internal static string MergeAndAnalyze(IEnumerable<FileResult> fileList)

@@ -66,6 +66,7 @@ Task "Package-Solution" -alias "pack" -description "This task generates all depl
 
 	[xml]$props = Get-Content (Join-Path $SolutionFolder "*.props" | Resolve-Path);
 	$monikers = ($props.Project.PropertyGroup.TargetFrameworks | Out-String).Split(';');
+	#$monikers = @("netstandard2.0");
 	
 	$project = Join-Path $SolutionFolder "src/*.MSBuild/*.*proj" | Get-Item;
 	foreach ($item in $monikers)
@@ -75,15 +76,11 @@ Task "Package-Solution" -alias "pack" -description "This task generates all depl
 		Write-Separator "dotnet publish $($project.BaseName) '$tfm'";
 		Exec { &dotnet publish $project.FullName --output $package --configuration $Configuration -p:EnvironmentName=$EnvironmentName --framework $tfm; }
 	}
-	#$package = Join-Path $ArtifactsFolder "netstandard2.0";
-	#Write-Separator "dotnet publish $($project.BaseName)";
-	#Exec { &dotnet publish $project.FullName --output $package --configuration $Configuration -p:EnvironmentName=$EnvironmentName; }
 
 	$project = Join-Path $SolutionFolder "src/*.MSBuild/*.*proj" | Get-Item;
 	Write-Separator "dotnet pack $($project.BaseName)";
 	Exec { &dotnet pack $project.FullName --output $ArtifactsFolder --configuration $Configuration -p:Version=$version; }
-	#if (Test-Path $package) { Remove-Item $package -Recurse -Force; }
-
+	
 	# ---- Extract Package ----
 
 	$nupkg = Join-Path $ArtifactsFolder "*.nupkg" | Get-Item;
@@ -102,22 +99,6 @@ Task "Publish-NuGet-Packages" -alias "push-nuget" -description "This task publis
         Write-Separator "dotnet nuget push '$($nupkg.Name)'";
         Exec { &dotnet nuget push $nupkg.FullName --source "https://api.nuget.org/v3/index.json"; }
     }
-}
-
-Task "Add-GitReleaseTag" -alias "tag" -description "This task tags the lastest commit with the version number." `
--precondition { return ($InProduction -or $InPreview ) } `
--depends @("restore") -action {
-	$version = $ManifestFilePath | Select-NcrementVersionNumber $EnvironmentName -Format "C";
-
-	if (-not ((&git status | Out-String) -match 'nothing to commit'))
-	{
-		Exec { &git add .; }
-		Write-Separator "git commit";
-		Exec { &git commit -m "Increment version number to '$version'."; }
-	}
-
-	Write-Separator "git tag '$version'";
-	Exec { &git tag --annotate "v$version" --message "Version $version"; }
 }
 
 #endregion
@@ -169,7 +150,6 @@ Task "Build-Solution" -alias "compile" -description "This task compiles projects
 -action {
 	$solutionFile = Join-Path $SolutionFolder "*.sln" | Get-Item;
 	Write-Separator "msbuild '$($solutionFile.Name)'";
-	#Exec { &$MSBuildExe $solutionFile.FullName -property:Configuration=$Configuration -restore ; }
 	Exec { &dotnet build $solutionFile.FullName --configuration $Configuration -p:"EnvironmentName=$EnvironmentName"; }
 }
 

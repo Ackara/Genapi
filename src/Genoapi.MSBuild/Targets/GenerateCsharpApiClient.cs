@@ -26,7 +26,7 @@ namespace Tekcari.Gapi.Targets
 		public bool Execute()
 		{
 			// STEP: De-serialize arguments.
-
+			
 			string source = SourceFile.GetMetadata("FullPath");
 			string destination = DestinationFile.GetMetadata("FullPath");
 
@@ -41,14 +41,14 @@ namespace Tekcari.Gapi.Targets
 			if (!string.IsNullOrEmpty(RootNamespace)) settings.RootNamespace = RootNamespace;
 			if (!Directory.Exists(settings.OutputFolder)) Directory.CreateDirectory(settings.OutputFolder);
 
-			WriteMessage($"input: '{source}'.");
+			WriteMessage($"source: '{source}'.");
 			OpenApiDocument document = Serialization.DocumentLoader.Load(source);
 
 			// STEP: Generate source code.
 
 			var generator = new Generators.Csharp.CsharpClientGenerator();
 			IEnumerable<FileResult> files = generator.Generate(document, settings);
-			foreach (FileResult file in files) WriteMessage($"output: '{file.Name}'");
+			foreach (FileResult file in files) WriteMessage($"found: '{file.Name}'");
 
 			byte[] data = Generators.Csharp.CsharpGenerator.Merge(files.Reverse());
 			using (var fileStrem = new FileStream(destination, FileMode.Create, FileAccess.Write, FileShare.Read))

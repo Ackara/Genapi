@@ -30,7 +30,7 @@ namespace Tekcari.Gapi
 		
 		/// <summary>Update an existing pet.</summary>
 		/// <remarks>Update an existing pet by Id.</remarks>
-		/// <param name="pet"></param>
+		/// <param name="pet">Update an existent pet in the store.</param>
 		public Task<Response<Pet>> UpdatePetAsync(Pet pet)
 		{
 			var request = new HttpRequestMessage(new HttpMethod("PUT"), Url($"/pet"));
@@ -40,7 +40,7 @@ namespace Tekcari.Gapi
 
 		/// <summary>Add a new pet to the store.</summary>
 		/// <remarks>Add a new pet to the store.</remarks>
-		/// <param name="pet"></param>
+		/// <param name="pet">Create a new pet in the store.</param>
 		public Task<Response<Pet>> AddPetAsync(Pet pet)
 		{
 			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/pet"));
@@ -143,7 +143,7 @@ namespace Tekcari.Gapi
 
 		/// <summary>Create user.</summary>
 		/// <remarks>This can only be done by the logged in user.</remarks>
-		/// <param name="user"></param>
+		/// <param name="user">Created user object.</param>
 		public Task<Response> CreateUserAsync(User user)
 		{
 			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/user"));
@@ -187,7 +187,7 @@ namespace Tekcari.Gapi
 
 		/// <summary>Update user.</summary>
 		/// <remarks>This can only be done by the logged in user.</remarks>
-		/// <param name="user"></param>
+		/// <param name="user">Update an existent user in the store.</param>
 		/// <param name="username">name that need to be deleted.</param>
 		public Task<Response> UpdateUserAsync(User user, string username)
 		{
