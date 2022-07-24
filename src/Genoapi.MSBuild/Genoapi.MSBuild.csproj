@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<RootNamespace>Tekcari.Gapi</RootNamespace>
@@ -7,9 +7,9 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.0.23</Version>
-		<AssemblyVersion>0.0.23</AssemblyVersion>
-		<AssemblyFileVersion>0.0.23</AssemblyFileVersion>
+		<Version>0.0.24</Version>
+		<AssemblyVersion>0.0.24</AssemblyVersion>
+		<AssemblyFileVersion>0.0.24</AssemblyFileVersion>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
 		<TaskFolderName>tasks</TaskFolderName>
