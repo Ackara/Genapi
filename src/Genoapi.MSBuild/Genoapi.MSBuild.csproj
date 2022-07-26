@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<RootNamespace>Tekcari.Gapi</RootNamespace>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<IsTool>true</IsTool>
+		<!--<IsTool>true</IsTool>-->
 	</PropertyGroup>
 
 	<PropertyGroup>
