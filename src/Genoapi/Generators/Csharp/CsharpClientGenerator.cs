@@ -8,7 +8,7 @@ using Tekcari.Gapi.Serialization;
 
 namespace Tekcari.Gapi.Generators.Csharp
 {
-	public class CsharpClientGenerator : IGenerator<CsharpClientGeneratorSettings>
+	public class CsharpClientGenerator : ICodeGenerator<CsharpClientGeneratorSettings>
 	{
 		public CsharpClientGenerator()
 			: this(new CsharpClientGeneratorSettings(), new CsharpTypeAdapter()) { }
@@ -24,6 +24,8 @@ namespace Tekcari.Gapi.Generators.Csharp
 			DotLiquid.Template.RegisterFilter(typeof(CsharpFilters));
 			DotLiquid.Template.RegisterFilter(typeof(CustomFilters));
 		}
+
+		public string Id { get => "http-client"; }
 
 		public FileResult[] Generate(OpenApiDocument document) => Generate(document, _settings);
 

@@ -1,6 +1,6 @@
 namespace Tekcari.Gapi.Generators.Csharp
 {
-	public class CsharpClientGeneratorSettings : IGeneratorSettings
+	public class CsharpClientGeneratorSettings : ICodeGeneratorSettings
 	{
 		public CsharpClientGeneratorSettings()
 		{

@@ -6,7 +6,7 @@ using Tekcari.Gapi.Serialization;
 
 namespace Tekcari.Gapi.Generators.Csharp
 {
-	public class CsharpClientTestSuiteGenerator : IGenerator<CsharpClientTestSuiteGeneratorSettings>
+	public class CsharpClientTestSuiteGenerator : ICodeGenerator<CsharpClientTestSuiteGeneratorSettings>
 	{
 		public CsharpClientTestSuiteGenerator()
 			: this(new CsharpClientTestSuiteGeneratorSettings(), new CsharpTypeAdapter()) { }
@@ -22,6 +22,8 @@ namespace Tekcari.Gapi.Generators.Csharp
 			DotLiquid.Template.RegisterFilter(typeof(CsharpFilters));
 			DotLiquid.Template.RegisterFilter(typeof(CustomFilters));
 		}
+
+		public string Id { get => "http-client-test"; }
 
 		public FileResult[] Generate(OpenApiDocument document) => Generate(document, _settings);
 

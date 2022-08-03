@@ -184,7 +184,7 @@ namespace bar
 			usings.Length.ShouldBe(3);
 		}
 
-		private static void RunGeneratorTest(IGenerator generator, string documentPath, Func<FileResult, bool> filter = default)
+		private static void RunGeneratorTest(ICodeGenerator generator, string documentPath, Func<FileResult, bool> filter = default)
 		{
 			using var scenario = ApprovalTests.Namers.ApprovalResults.ForScenario(Path.GetFileName(documentPath));
 			if (filter == default) filter = (x) => !string.IsNullOrEmpty(x.Name);

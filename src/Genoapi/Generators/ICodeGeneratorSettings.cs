@@ -1,7 +1,6 @@
 namespace Tekcari.Gapi.Generators
 {
-	public interface IGeneratorSettings
+	public interface ICodeGeneratorSettings
 	{
-		
 	}
 }

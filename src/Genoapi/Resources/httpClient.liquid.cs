@@ -142,11 +142,23 @@ namespace {{rootnamespace}}
 		private readonly string _baseUrl;
 		private readonly IHttpClientFactory _httpClientFactory;
 		private JsonSerializerOptions _serializerOptions;
+		private string _authoriaztionToken;
 
 		private Uri Url(string path) => new Uri(string.Concat(_baseUrl, path), UriKind.RelativeOrAbsolute);
 		private static IHttpClientFactory GetHttpClientFactory() => new ServiceCollection().AddHttpClient().BuildServiceProvider().GetService<IHttpClientFactory>();
 
 		private static string GetQueryList(string name, object[] args) => string.Join("&", from x in args select $"{name}={args}");
+
+		private void Authenticate(HttpRequestMessage request)
+		{
+			if (string.IsNullOrEmpty(_authoriaztionToken))
+			{
+				var auth = new HttpRequestMessage(new HttpMethod("POST"), Url($""));
+				request.Content = ToJson();
+			}
+
+			request.Headers.Add("Authorization", $"Bearer {_authoriaztionToken}");
+		}
 
 		private void PrintToDebugWindow(HttpRequestMessage message)
 		{
