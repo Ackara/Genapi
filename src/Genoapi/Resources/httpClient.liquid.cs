@@ -72,6 +72,8 @@ namespace {{rootnamespace}}
 
 		internal async Task<Response> SendRequestAsync(HttpRequestMessage request)
 		{
+			Response auth = await Authenticate(request);
+			if (auth.Failed) return auth;
 #if DEBUG
 			PrintToDebugWindow(request);
 #endif
@@ -84,6 +86,12 @@ namespace {{rootnamespace}}
 				if (response.IsSuccessStatusCode)
 				{
 					return new Response((int)response.StatusCode, response.ReasonPhrase);
+				}
+				else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+				{
+					auth = await Authenticate(request, true);
+					if (auth.Failed) return auth;
+					return await SendRequestAsync(request);
 				}
 				else
 				{
@@ -99,6 +107,8 @@ namespace {{rootnamespace}}
 
 		internal async Task<Response<T>> SendRequestAsync<T>(HttpRequestMessage request)
 		{
+			Response auth = await Authenticate(request);
+			if (auth.Failed) return new Response<T>(default, auth.StatusCode, auth.Message);
 #if DEBUG
 			PrintToDebugWindow(request);
 #endif
@@ -122,6 +132,12 @@ namespace {{rootnamespace}}
 							response.ReasonPhrase
 						);
 				}
+				else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+				{
+					auth = await Authenticate(request, true);
+					if (auth.Failed) return new Response<T>(default, auth.StatusCode, auth.Message);
+					return await SendRequestAsync<T>(request);
+				}
 				else
 				{
 					return new Response<T>(default, (int)response.StatusCode, json);
@@ -137,28 +153,18 @@ namespace {{rootnamespace}}
 
 		partial void Initialize();
 
+		private partial Task<Response> Authenticate(HttpRequestMessage request, bool force = false);
+
 		#region Backing Members
 
 		private readonly string _baseUrl;
 		private readonly IHttpClientFactory _httpClientFactory;
 		private JsonSerializerOptions _serializerOptions;
-		private string _authoriaztionToken;
 
 		private Uri Url(string path) => new Uri(string.Concat(_baseUrl, path), UriKind.RelativeOrAbsolute);
 		private static IHttpClientFactory GetHttpClientFactory() => new ServiceCollection().AddHttpClient().BuildServiceProvider().GetService<IHttpClientFactory>();
 
 		private static string GetQueryList(string name, object[] args) => string.Join("&", from x in args select $"{name}={args}");
-
-		private void Authenticate(HttpRequestMessage request)
-		{
-			if (string.IsNullOrEmpty(_authoriaztionToken))
-			{
-				var auth = new HttpRequestMessage(new HttpMethod("POST"), Url($""));
-				request.Content = ToJson();
-			}
-
-			request.Headers.Add("Authorization", $"Bearer {_authoriaztionToken}");
-		}
 
 		private void PrintToDebugWindow(HttpRequestMessage message)
 		{

@@ -42,6 +42,8 @@ namespace Tekcari.Gapi
 
 		internal async Task<Response> SendRequestAsync(HttpRequestMessage request)
 		{
+			Response auth = await Authenticate(request);
+			if (auth.Failed) return auth;
 #if DEBUG
 			PrintToDebugWindow(request);
 #endif
@@ -54,6 +56,12 @@ namespace Tekcari.Gapi
 				if (response.IsSuccessStatusCode)
 				{
 					return new Response((int)response.StatusCode, response.ReasonPhrase);
+				}
+				else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+				{
+					auth = await Authenticate(request, true);
+					if (auth.Failed) return auth;
+					return await SendRequestAsync(request);
 				}
 				else
 				{
@@ -69,6 +77,8 @@ namespace Tekcari.Gapi
 
 		internal async Task<Response<T>> SendRequestAsync<T>(HttpRequestMessage request)
 		{
+			Response auth = await Authenticate(request);
+			if (auth.Failed) return new Response<T>(default, auth.StatusCode, auth.Message);
 #if DEBUG
 			PrintToDebugWindow(request);
 #endif
@@ -92,6 +102,12 @@ namespace Tekcari.Gapi
 							response.ReasonPhrase
 						);
 				}
+				else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+				{
+					auth = await Authenticate(request, true);
+					if (auth.Failed) return new Response<T>(default, auth.StatusCode, auth.Message);
+					return await SendRequestAsync<T>(request);
+				}
 				else
 				{
 					return new Response<T>(default, (int)response.StatusCode, json);
@@ -106,6 +122,8 @@ namespace Tekcari.Gapi
 		}
 
 		partial void Initialize();
+
+		private partial Task<Response> Authenticate(HttpRequestMessage request, bool force = false);
 
 		#region Backing Members
 
