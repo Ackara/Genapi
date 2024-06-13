@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<RootNamespace>Tekcari.Gapi</RootNamespace>
@@ -10,8 +10,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DotLiquid" Version="2.2.656" />
-		<PackageReference Include="Microsoft.OpenApi.Readers" Version="1.3.2" />
+		<PackageReference Include="DotLiquid" Version="2.2.692" />
+		<PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.14" />
 	</ItemGroup>
 
 	<ItemGroup>
