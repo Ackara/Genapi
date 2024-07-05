@@ -22,7 +22,7 @@ namespace Tekcari.Gapi.Tests
 
 		#region Backing Members
 
-		private static IEnumerable<object[]> GetSpecifications() => TestData.GetSpecifications2();
+		private static IEnumerable<object[]> GetSpecifications() => TestData.GetSpecifications();
 
 		public static string GetTestDisplayName(MethodInfo method, object[] args)
 		{

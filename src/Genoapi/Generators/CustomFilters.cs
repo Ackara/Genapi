@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Tekcari.Gapi.Generators
 {
 	internal static class CustomFilters
@@ -13,9 +15,18 @@ namespace Tekcari.Gapi.Generators
 			if (string.IsNullOrEmpty(input))
 				return input;
 			else if (input.Length >= 2)
-				return string.Concat(char.ToUpperInvariant(input[0]), input.Substring(1));
-			else
-				return input;
+			{
+				var builder = new StringBuilder();
+				for (int i = 0; i < input.Length; i++)
+				{
+					char c = input[i];
+					if (i == 0) builder.Append(char.ToUpperInvariant(c));
+					else if (c == '_' || c == ' ') builder.Append(char.ToUpperInvariant(input[++i]));
+					else builder.Append(input[i]);
+				}
+				return builder.ToString();
+			}
+			else return input;
 		}
 
 		public static string CamelCase(string input)
@@ -23,9 +34,18 @@ namespace Tekcari.Gapi.Generators
 			if (string.IsNullOrEmpty(input))
 				return input;
 			else if (input.Length >= 2)
-				return string.Concat(char.ToLowerInvariant(input[0]), input.Substring(1));
-			else
-				return input;
+			{
+				var builder = new StringBuilder();
+				for (int i = 0; i < input.Length; i++)
+				{
+					char c = input[i];
+					if (i == 0) builder.Append(char.ToLowerInvariant(c));
+					else if (c == '_' || c == ' ') builder.Append(char.ToUpperInvariant(input[++i]));
+					else builder.Append(input[i]);
+				}
+				return builder.ToString();
+			}
+			else return input;
 		}
 	}
 }

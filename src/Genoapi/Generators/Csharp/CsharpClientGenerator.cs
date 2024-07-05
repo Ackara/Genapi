@@ -34,7 +34,7 @@ namespace Tekcari.Gapi.Generators.Csharp
 			_document = document ?? throw new ArgumentNullException(nameof(document));
 			_settings = settings;
 
-			BuildGlobalModel();
+			BuildDotLiquidModel();
 			GenerateSupportClasses();
 			GenerateComponents();
 			GenerateClientClass();
@@ -66,18 +66,18 @@ namespace Tekcari.Gapi.Generators.Csharp
 			return url.ToString();
 		}
 
-		private void BuildGlobalModel()
+		private void BuildDotLiquidModel()
 		{
-			_globalModel.Add("base_url", _settings.BaseUrl);
-			_globalModel.Add("references", _settings.References);
-			_globalModel.Add("rootnamespace", _settings.RootNamespace);
-			_globalModel.Add("client_class_name", _settings.ClientClassName);
+			_dotLiquidModel.Add("base_url", _settings.BaseUrl);
+			_dotLiquidModel.Add("references", _settings.References);
+			_dotLiquidModel.Add("rootnamespace", _settings.RootNamespace);
+			_dotLiquidModel.Add("client_class_name", _settings.ClientClassName);
 		}
 
 		private void GenerateSupportClasses()
 		{
 			var template = CreateTemplate(EmbeddedResourceName.Response);
-			string content = template.Render(_globalModel);
+			string content = template.Render(_dotLiquidModel);
 
 			_fileList.Add(new FileResult("Response.cs", content, "native"));
 		}
@@ -89,7 +89,7 @@ namespace Tekcari.Gapi.Generators.Csharp
 				else if (string.Equals(schema.Value.Type, "object", StringComparison.InvariantCultureIgnoreCase))
 				{
 					DotLiquid.Hash model = DotLiquid.Hash.FromAnonymousObject(GetClassProperties(schema.Key, schema.Value));
-					model.Merge(_globalModel);
+					model.Merge(_dotLiquidModel);
 
 					DotLiquid.Template template = CreateTemplate(EmbeddedResourceName.components);
 					_fileList.Add(new FileResult($"{CsharpFilters.SafeName(schema.Key)}.cs", template.Render(model)?.Trim(), "component"));
@@ -97,7 +97,7 @@ namespace Tekcari.Gapi.Generators.Csharp
 				else if (schema.Value.Enum.Any())
 				{
 					DotLiquid.Hash model = DotLiquid.Hash.FromAnonymousObject(GetEnumValues(schema.Key, schema.Value));
-					model.Merge(_globalModel);
+					model.Merge(_dotLiquidModel);
 
 					DotLiquid.Template template = CreateTemplate(EmbeddedResourceName.enumeration);
 					_fileList.Add(new FileResult($"{CsharpFilters.SafeName(schema.Key)}.cs", template.Render(model)?.Trim(), "enum"));
@@ -118,7 +118,7 @@ namespace Tekcari.Gapi.Generators.Csharp
 				}
 
 			model.Add("endpoints", endpoints);
-			model.Merge(_globalModel);
+			model.Merge(_dotLiquidModel);
 
 			string content = template.Render(model);
 			_fileList.Add(new FileResult($"{_settings.ClientClassName}.cs", content, "client"));
@@ -269,7 +269,7 @@ namespace Tekcari.Gapi.Generators.Csharp
 
 		#region Backing Members
 
-		private readonly DotLiquid.Hash _globalModel = new DotLiquid.Hash();
+		private readonly DotLiquid.Hash _dotLiquidModel = new DotLiquid.Hash();
 		private readonly ITypeNameAdapter<CsharpClientGeneratorSettings> _mapper = new CsharpTypeAdapter();
 
 		private OpenApiDocument _document;

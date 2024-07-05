@@ -207,7 +207,7 @@ namespace bar
 			yield return new object[] { TestData.GetFilePath("fileForm.json"), localhost };
 			yield return new object[] { TestData.GetFilePath("custom.json"), localhost };
 			yield return new object[] { TestData.GetFilePath("petstore.json"), "https://petstore3.swagger.io/api/v3" };
-			//yield return new object[] { TestData.GetFilePath("plaid.yml"), "" };
+			yield return new object[] { TestData.GetFilePath("paypal.json"), localhost };
 		}
 
 		internal static string MergeAndAnalyze(IEnumerable<FileResult> fileList)
