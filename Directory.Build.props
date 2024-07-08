@@ -2,11 +2,15 @@
 
 <Project>
 	<PropertyGroup>
+		<RootNamespace>Tekcari.Genapi</RootNamespace>
+	</PropertyGroup>
+	
+	<PropertyGroup>
 		<Title>Genapi</Title>
 		<Description><![CDATA[]]></Description>
 		
 		<Authors>Ackara</Authors>
-		<Company>Tekcari</Company>
+		<Company>Ackara</Company>
 		
 
 		<Copyright>Copyright 2021 $(Company), All Rights Reserved.</Copyright>

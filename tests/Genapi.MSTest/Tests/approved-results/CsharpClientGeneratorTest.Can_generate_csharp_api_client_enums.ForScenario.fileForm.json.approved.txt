@@ -1,0 +1,37 @@
+﻿== MediaFileIntent.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Genapi
+{
+	public enum MediaFileIntent
+	{
+		Icon = 0,
+		Thumbnail = 1,
+		Banner = 2,
+		Screenshot = 3,
+		Promotion = 4,
+	}
+}
+
+
+== ProductAvailability.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Genapi
+{
+	public enum ProductAvailability
+	{
+		UnListed = 0,
+		Listed = 1,
+		Private = 2,
+		Preview = 4,
+	}
+}
+
+

@@ -1,0 +1,177 @@
+﻿== GeneratedApiClient.cs
+==================================================
+
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
+using System.Text;
+
+namespace Tekcari.Genapi
+{
+	public partial class GeneratedApiClient
+	{
+		public GeneratedApiClient(string baseUrl, JsonSerializerOptions jsonSerializerOptions = default, IHttpClientFactory httpClientFactory = default)
+		{
+			_baseUrl = baseUrl?.Trim('/');
+			_httpClientFactory = httpClientFactory ?? GetHttpClientFactory() ?? throw new ArgumentNullException(nameof(httpClientFactory));
+			_serializerOptions = jsonSerializerOptions ?? new JsonSerializerOptions
+			{
+				PropertyNameCaseInsensitive = true,
+				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+			};
+			Initialize();
+		}
+		
+		/// <summary>Add a new pet to the store.</summary>
+		/// <remarks>Add a new pet to the store.</remarks>
+		/// <param name="customer">Create a new pet in the store.</param>
+		/// <param name="gender"></param>
+		public Task<Response<Customer>> AddCustomerAsync(Customer customer, Gender gender = default)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/customer?gender={gender}"));
+			request.Content = ToJson(customer);
+			return SendRequestAsync<Customer>(request);
+		}
+
+		/// <summary>Creates a new product listing.</summary>
+		/// <param name="manifestPath"></param>
+		public Task<Response> CreateProductAsync(string manifestPath)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/product"));
+			var form = new MultipartFormDataContent();
+			form.Add(new StreamContent(new FileStream(manifestPath, FileMode.Open, FileAccess.Read, FileShare.Read)), "manifest", Path.GetFileName(manifestPath));
+			request.Content = form;
+			return SendRequestAsync(request);
+		}
+
+
+		internal async Task<Response> SendRequestAsync(HttpRequestMessage request)
+		{
+			Response auth = await Authenticate(request);
+			if (auth.Failed) return auth;
+#if DEBUG
+			PrintToDebugWindow(request);
+#endif
+			HttpClient client = _httpClientFactory.CreateClient();
+			using (HttpResponseMessage response = await client.SendAsync(request))
+			{
+#if DEBUG
+				PrintToDebugWindow(response);
+#endif
+				if (response.IsSuccessStatusCode)
+				{
+					return new Response((int)response.StatusCode, response.ReasonPhrase);
+				}
+				else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+				{
+					auth = await Authenticate(request, true);
+					if (auth.Failed) return auth;
+					return await SendRequestAsync(request);
+				}
+				else
+				{
+					string text = await response.Content.ReadAsStringAsync();
+					if (text.Length == 0) return new Response((int)response.StatusCode, response.ReasonPhrase);
+					else
+					{
+						return new Response((int)response.StatusCode, text);
+					}
+				}
+			}
+		}
+
+		internal async Task<Response<T>> SendRequestAsync<T>(HttpRequestMessage request)
+		{
+			Response auth = await Authenticate(request);
+			if (auth.Failed) return new Response<T>(default, auth.StatusCode, auth.Message);
+#if DEBUG
+			PrintToDebugWindow(request);
+#endif
+			HttpClient client = _httpClientFactory.CreateClient();
+			using (HttpResponseMessage response = await client.SendAsync(request))
+			{
+#if DEBUG
+				PrintToDebugWindow(response);
+#endif
+				string json = await response.Content.ReadAsStringAsync();
+				if (string.IsNullOrEmpty(json)) return new Response<T>(default, (int)response.StatusCode, response.ReasonPhrase);
+
+				if (response.IsSuccessStatusCode)
+				{
+					if (typeof(IConvertible).IsAssignableFrom(typeof(T)))
+						return new Response<T>((T)Convert.ChangeType(json, typeof(T)), (int)response.StatusCode);
+					else
+						return new Response<T>(
+							JsonSerializer.Deserialize<T>(json, _serializerOptions),
+							(int)response.StatusCode,
+							response.ReasonPhrase
+						);
+				}
+				else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+				{
+					auth = await Authenticate(request, true);
+					if (auth.Failed) return new Response<T>(default, auth.StatusCode, auth.Message);
+					return await SendRequestAsync<T>(request);
+				}
+				else
+				{
+					return new Response<T>(default, (int)response.StatusCode, json);
+				}
+			}
+		}
+
+		internal StringContent ToJson(object obj)
+		{
+			string json = System.Text.Json.JsonSerializer.Serialize(obj, _serializerOptions);
+			return new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+		}
+
+		partial void Initialize();
+
+		private partial Task<Response> Authenticate(HttpRequestMessage request, bool force = false);
+
+		#region Backing Members
+
+		private readonly string _baseUrl;
+		private readonly IHttpClientFactory _httpClientFactory;
+		private JsonSerializerOptions _serializerOptions;
+
+		private Uri Url(string path) => new Uri(string.Concat(_baseUrl, path), UriKind.RelativeOrAbsolute);
+		private static IHttpClientFactory GetHttpClientFactory() => new ServiceCollection().AddHttpClient().BuildServiceProvider().GetService<IHttpClientFactory>();
+
+		private static string GetQueryList(string name, object[] args) => string.Join("&", from x in args select $"{name}={args}");
+
+		private void PrintToDebugWindow(HttpRequestMessage message)
+		{
+#if DEBUG
+			System.Diagnostics.Debug.Write("===== HTTP Request ");
+			System.Diagnostics.Debug.WriteLine(string.Concat(Enumerable.Repeat('=', 50)));
+			System.Diagnostics.Debug.WriteLine($"{message.Method.Method}: {message.RequestUri}");
+			System.Diagnostics.Debug.WriteLine(message.Content?.ReadAsStringAsync().Result);
+			System.Diagnostics.Debug.WriteLine(string.Empty);
+#endif
+		}
+
+		private void PrintToDebugWindow(HttpResponseMessage message)
+		{
+#if DEBUG
+			System.Diagnostics.Debug.Write($"===== HTTP Response ({(int)message.StatusCode}) ");
+			System.Diagnostics.Debug.WriteLine(string.Concat(Enumerable.Repeat('=', 50)));
+			System.Diagnostics.Debug.WriteLine($"{message.RequestMessage.Method.Method}: {message.RequestMessage.RequestUri}");
+			System.Diagnostics.Debug.WriteLine($"Status: {message.ReasonPhrase} ({(int)message.StatusCode})");
+			System.Diagnostics.Debug.WriteLine(message.Content?.ReadAsStringAsync().Result);
+			System.Diagnostics.Debug.WriteLine(string.Empty);
+#endif
+		}
+
+		#endregion Backing Members
+	}
+}
+
+

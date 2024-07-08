@@ -1,0 +1,427 @@
+﻿== GeneratedApiClient.cs
+==================================================
+
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
+using System.Text;
+
+namespace Tekcari.Genapi
+{
+	public partial class GeneratedApiClient
+	{
+		public GeneratedApiClient(string baseUrl, JsonSerializerOptions jsonSerializerOptions = default, IHttpClientFactory httpClientFactory = default)
+		{
+			_baseUrl = baseUrl?.Trim('/');
+			_httpClientFactory = httpClientFactory ?? GetHttpClientFactory() ?? throw new ArgumentNullException(nameof(httpClientFactory));
+			_serializerOptions = jsonSerializerOptions ?? new JsonSerializerOptions
+			{
+				PropertyNameCaseInsensitive = true,
+				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+			};
+			Initialize();
+		}
+		
+		public Task<Response> AcceptPaymentAsync(Receipt receipt)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/Checkout"));
+			request.Content = ToJson(receipt);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> AcceptInvoiceAsync(Invoice invoice)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/Checkout/invoice"));
+			request.Content = ToJson(invoice);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> CreateStripeSessionAsync(Invoice invoice, string successUrl = default, string cancelUrl = default)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/Checkout/stripe-prebuilt-session"));
+			request.Headers.Add("successUrl", successUrl);
+			request.Headers.Add("cancelUrl", cancelUrl);
+			request.Content = ToJson(invoice);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> CreateStripeIntentAsync(Invoice invoice)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/Checkout/stripe-custom-session"));
+			request.Content = ToJson(invoice);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> AcceptCustomerAsync(Customer customer)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/Customer"));
+			request.Content = ToJson(customer);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> UpdateCustomerAsync(Customer customer)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("PATCH"), Url($"/api/Customer"));
+			request.Content = ToJson(customer);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> GetCustomerByIdAsync(string customerId)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/Customer/{customerId}"));
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> GetMerchantCustomersAsync(string merchantId, int take = default, int skip = default)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/Customer/merchant/{merchantId}?take={take}&skip={skip}"));
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response<RecordLink>> AcceptInvoiceAsync(Invoice invoice)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/Invoice"));
+			request.Content = ToJson(invoice);
+			return SendRequestAsync<RecordLink>(request);
+		}
+
+		public Task<Response> UpdateInvoiceAsync(Invoice invoice)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("PATCH"), Url($"/api/Invoice"));
+			request.Content = ToJson(invoice);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response<Invoice>> GetInvoiceByIdAsync(string id)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/Invoice/{id}"));
+			return SendRequestAsync<Invoice>(request);
+		}
+
+		public Task<Response<Invoice[]>> GetMerchantInvoicesAsync(string merchantId, int take = default, int skip = default)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/Invoice/merchant/{merchantId}?take={take}&skip={skip}"));
+			return SendRequestAsync<Invoice[]>(request);
+		}
+
+		public Task<Response<Invoice[]>> GetRegistarInvoicesAsync(string registarId, int take = default, int skip = default)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/Invoice/registar/{registarId}?take={take}&skip={skip}"));
+			return SendRequestAsync<Invoice[]>(request);
+		}
+
+		public Task<Response<Invoice[]>> GetCustomerInvoicesAsync(string customerId, int take = default, int skip = default)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/Invoice/customer/{customerId}?take={take}&skip={skip}"));
+			return SendRequestAsync<Invoice[]>(request);
+		}
+
+		public Task<Response<Receipt[]>> GetInvoicePaymentsAsync(string invoiceId, int take = default, int skip = default)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/Invoice/payment/{invoiceId}?take={take}&skip={skip}"));
+			return SendRequestAsync<Receipt[]>(request);
+		}
+
+		public Task<Response> GetSessionProductKeyAsync(string sessionId)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/License/session/{sessionId}"));
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response<License>> GetLicenseByIdAsync(string licenseId, string userId)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/License/{licenseId}/{userId}"));
+			return SendRequestAsync<License>(request);
+		}
+
+		public Task<Response> AcceptMerchantAsync(Merchant merchant)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/Merchant"));
+			request.Content = ToJson(merchant);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> UpdateMerchantAsync(Merchant merchant)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("PATCH"), Url($"/api/Merchant"));
+			request.Content = ToJson(merchant);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> GetMerchantsAsync(string keywords = default, int take = default, int skip = default)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/Merchant?keywords={keywords}&take={take}&skip={skip}"));
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> GetMerchantByIdAsync(string id)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/Merchant/{id}"));
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> AcceptProductAsync(Product product)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/Product"));
+			request.Content = ToJson(product);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> UpdateProductAsync(Product product)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("PATCH"), Url($"/api/Product"));
+			request.Content = ToJson(product);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> GetProductsAsync(string merchantId, string keywords = default, int take = default, int skip = default)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/Product?keywords={keywords}&take={take}&skip={skip}"));
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> GetProductByIdAsync(string productId)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/Product/{productId}"));
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> CreateProductVariantAsync(Product product)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/Product/variant"));
+			request.Content = ToJson(product);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> UpdateProductVariantAsync(Product product)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("PATCH"), Url($"/api/Product/variant"));
+			request.Content = ToJson(product);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> AcceptPaymentAsync(Receipt receipt)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/payment"));
+			request.Content = ToJson(receipt);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> UpdatePaymentAsync(Receipt receipt)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("PATCH"), Url($"/api/payment"));
+			request.Content = ToJson(receipt);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> AcceptPaymentAsync(Receipt receipt)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/receipt"));
+			request.Content = ToJson(receipt);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> UpdatePaymentAsync(Receipt receipt)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("PATCH"), Url($"/api/receipt"));
+			request.Content = ToJson(receipt);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> GetPaymentByIdAsync(string paymentId)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/payment/{paymentId}"));
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> GetPaymentByIdAsync(string paymentId)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/receipt/{paymentId}"));
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> GetInvoicePaymentsAsync(string invoiceId, int take, int skip)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/payment/invoice/{invoiceId}"));
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> GetInvoicePaymentsAsync(string invoiceId, int take, int skip)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/receipt/invoice/{invoiceId}"));
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> AcceptRegistrarAsync(Registrar registrar)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/Registar"));
+			request.Content = ToJson(registrar);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> UpdateRegistrarAsync(Registrar registrar)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("PATCH"), Url($"/api/Registar"));
+			request.Content = ToJson(registrar);
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> RemoveRegistrarAsync(string registrarId)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("DELETE"), Url($"/api/Registar"));
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> GetRegistrarByIdAsync(string registarId)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/Registar/{registarId}"));
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> GetMerchantRegistrarsAsync(string merchantId, int take = default, int skip = default)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("GET"), Url($"/api/Registar/merchant/{merchantId}?take={take}&skip={skip}"));
+			return SendRequestAsync(request);
+		}
+
+		public Task<Response> AcceptNotificationAsync(string bt_payload, string bt_signature)
+		{
+			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/api/Webhook"));
+			var form = new MultipartFormDataContent();
+			form.Add(new StringContent(bt_payload));
+			form.Add(new StringContent(bt_signature));
+			request.Content = form;
+			return SendRequestAsync(request);
+		}
+
+
+		internal async Task<Response> SendRequestAsync(HttpRequestMessage request)
+		{
+			Response auth = await Authenticate(request);
+			if (auth.Failed) return auth;
+#if DEBUG
+			PrintToDebugWindow(request);
+#endif
+			HttpClient client = _httpClientFactory.CreateClient();
+			using (HttpResponseMessage response = await client.SendAsync(request))
+			{
+#if DEBUG
+				PrintToDebugWindow(response);
+#endif
+				if (response.IsSuccessStatusCode)
+				{
+					return new Response((int)response.StatusCode, response.ReasonPhrase);
+				}
+				else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+				{
+					auth = await Authenticate(request, true);
+					if (auth.Failed) return auth;
+					return await SendRequestAsync(request);
+				}
+				else
+				{
+					string text = await response.Content.ReadAsStringAsync();
+					if (text.Length == 0) return new Response((int)response.StatusCode, response.ReasonPhrase);
+					else
+					{
+						return new Response((int)response.StatusCode, text);
+					}
+				}
+			}
+		}
+
+		internal async Task<Response<T>> SendRequestAsync<T>(HttpRequestMessage request)
+		{
+			Response auth = await Authenticate(request);
+			if (auth.Failed) return new Response<T>(default, auth.StatusCode, auth.Message);
+#if DEBUG
+			PrintToDebugWindow(request);
+#endif
+			HttpClient client = _httpClientFactory.CreateClient();
+			using (HttpResponseMessage response = await client.SendAsync(request))
+			{
+#if DEBUG
+				PrintToDebugWindow(response);
+#endif
+				string json = await response.Content.ReadAsStringAsync();
+				if (string.IsNullOrEmpty(json)) return new Response<T>(default, (int)response.StatusCode, response.ReasonPhrase);
+
+				if (response.IsSuccessStatusCode)
+				{
+					if (typeof(IConvertible).IsAssignableFrom(typeof(T)))
+						return new Response<T>((T)Convert.ChangeType(json, typeof(T)), (int)response.StatusCode);
+					else
+						return new Response<T>(
+							JsonSerializer.Deserialize<T>(json, _serializerOptions),
+							(int)response.StatusCode,
+							response.ReasonPhrase
+						);
+				}
+				else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+				{
+					auth = await Authenticate(request, true);
+					if (auth.Failed) return new Response<T>(default, auth.StatusCode, auth.Message);
+					return await SendRequestAsync<T>(request);
+				}
+				else
+				{
+					return new Response<T>(default, (int)response.StatusCode, json);
+				}
+			}
+		}
+
+		internal StringContent ToJson(object obj)
+		{
+			string json = System.Text.Json.JsonSerializer.Serialize(obj, _serializerOptions);
+			return new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+		}
+
+		partial void Initialize();
+
+		private partial Task<Response> Authenticate(HttpRequestMessage request, bool force = false);
+
+		#region Backing Members
+
+		private readonly string _baseUrl;
+		private readonly IHttpClientFactory _httpClientFactory;
+		private JsonSerializerOptions _serializerOptions;
+
+		private Uri Url(string path) => new Uri(string.Concat(_baseUrl, path), UriKind.RelativeOrAbsolute);
+		private static IHttpClientFactory GetHttpClientFactory() => new ServiceCollection().AddHttpClient().BuildServiceProvider().GetService<IHttpClientFactory>();
+
+		private static string GetQueryList(string name, object[] args) => string.Join("&", from x in args select $"{name}={args}");
+
+		private void PrintToDebugWindow(HttpRequestMessage message)
+		{
+#if DEBUG
+			System.Diagnostics.Debug.Write("===== HTTP Request ");
+			System.Diagnostics.Debug.WriteLine(string.Concat(Enumerable.Repeat('=', 50)));
+			System.Diagnostics.Debug.WriteLine($"{message.Method.Method}: {message.RequestUri}");
+			System.Diagnostics.Debug.WriteLine(message.Content?.ReadAsStringAsync().Result);
+			System.Diagnostics.Debug.WriteLine(string.Empty);
+#endif
+		}
+
+		private void PrintToDebugWindow(HttpResponseMessage message)
+		{
+#if DEBUG
+			System.Diagnostics.Debug.Write($"===== HTTP Response ({(int)message.StatusCode}) ");
+			System.Diagnostics.Debug.WriteLine(string.Concat(Enumerable.Repeat('=', 50)));
+			System.Diagnostics.Debug.WriteLine($"{message.RequestMessage.Method.Method}: {message.RequestMessage.RequestUri}");
+			System.Diagnostics.Debug.WriteLine($"Status: {message.ReasonPhrase} ({(int)message.StatusCode})");
+			System.Diagnostics.Debug.WriteLine(message.Content?.ReadAsStringAsync().Result);
+			System.Diagnostics.Debug.WriteLine(string.Empty);
+#endif
+		}
+
+		#endregion Backing Members
+	}
+}
+
+

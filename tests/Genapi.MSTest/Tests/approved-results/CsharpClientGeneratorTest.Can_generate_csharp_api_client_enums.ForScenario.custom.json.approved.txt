@@ -1,0 +1,51 @@
+﻿== Gender.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Genapi
+{
+	public enum Gender
+	{
+		Value0 = 0,
+		Value1 = 1,
+		Value2 = 2,
+	}
+}
+
+
+== PaymentType.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Genapi
+{
+	public enum PaymentType
+	{
+		Card = 1,
+		BTC = 2,
+		Cash = 4,
+	}
+}
+
+
+== Shape.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Genapi
+{
+	public enum Shape
+	{
+		Circle,
+		Square,
+		Triangle,
+	}
+}
+
+

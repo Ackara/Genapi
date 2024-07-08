@@ -1,0 +1,217 @@
+﻿== Order.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Genapi
+{
+	public partial class Order
+	{
+		[JsonPropertyName("id")]
+		public long Id { get; set; }
+
+		[JsonPropertyName("petId")]
+		public long PetId { get; set; }
+
+		[JsonPropertyName("quantity")]
+		public int Quantity { get; set; }
+
+		[JsonPropertyName("shipDate")]
+		public DateTime ShipDate { get; set; }
+
+		/// <summary>Order Status</summary>
+		[JsonPropertyName("status")]
+		public string Status { get; set; }
+
+		[JsonPropertyName("complete")]
+		public bool Complete { get; set; }
+
+	}
+}
+
+
+== Customer.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Genapi
+{
+	public partial class Customer
+	{
+		[JsonPropertyName("id")]
+		public long Id { get; set; }
+
+		[JsonPropertyName("username")]
+		public string Username { get; set; }
+
+		[JsonPropertyName("address")]
+		public Address[] Address { get; set; }
+
+	}
+}
+
+
+== Address.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Genapi
+{
+	public partial class Address
+	{
+		[JsonPropertyName("street")]
+		public string Street { get; set; }
+
+		[JsonPropertyName("city")]
+		public string City { get; set; }
+
+		[JsonPropertyName("state")]
+		public string State { get; set; }
+
+		[JsonPropertyName("zip")]
+		public string Zip { get; set; }
+
+	}
+}
+
+
+== Category.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Genapi
+{
+	public partial class Category
+	{
+		[JsonPropertyName("id")]
+		public long Id { get; set; }
+
+		[JsonPropertyName("name")]
+		public string Name { get; set; }
+
+	}
+}
+
+
+== User.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Genapi
+{
+	public partial class User
+	{
+		[JsonPropertyName("id")]
+		public long Id { get; set; }
+
+		[JsonPropertyName("username")]
+		public string Username { get; set; }
+
+		[JsonPropertyName("firstName")]
+		public string FirstName { get; set; }
+
+		[JsonPropertyName("lastName")]
+		public string LastName { get; set; }
+
+		[JsonPropertyName("email")]
+		public string Email { get; set; }
+
+		[JsonPropertyName("password")]
+		public string Password { get; set; }
+
+		[JsonPropertyName("phone")]
+		public string Phone { get; set; }
+
+		/// <summary>User Status</summary>
+		[JsonPropertyName("userStatus")]
+		public int UserStatus { get; set; }
+
+	}
+}
+
+
+== Tag.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Genapi
+{
+	public partial class Tag
+	{
+		[JsonPropertyName("id")]
+		public long Id { get; set; }
+
+		[JsonPropertyName("name")]
+		public string Name { get; set; }
+
+	}
+}
+
+
+== Pet.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Genapi
+{
+	public partial class Pet
+	{
+		[JsonPropertyName("id")]
+		public long Id { get; set; }
+
+		[JsonPropertyName("name")]
+		public string Name { get; set; }
+
+		[JsonPropertyName("category")]
+		public Category Category { get; set; }
+
+		[JsonPropertyName("photoUrls")]
+		public string[] PhotoUrls { get; set; }
+
+		[JsonPropertyName("tags")]
+		public Tag[] Tags { get; set; }
+
+		/// <summary>pet status in the store</summary>
+		[JsonPropertyName("status")]
+		public string Status { get; set; }
+
+	}
+}
+
+
+== ApiResponse.cs
+==================================================
+
+using System;
+using System.Text.Json.Serialization;
+
+namespace Tekcari.Genapi
+{
+	public partial class ApiResponse
+	{
+		[JsonPropertyName("code")]
+		public int Code { get; set; }
+
+		[JsonPropertyName("type")]
+		public string Type { get; set; }
+
+		[JsonPropertyName("message")]
+		public string Message { get; set; }
+
+	}
+}
+
+
