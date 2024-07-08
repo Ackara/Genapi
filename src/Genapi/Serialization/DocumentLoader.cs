@@ -23,7 +23,7 @@ namespace Tekcari.Genapi.Serialization
 			{
 				case "http":
 				case "https":
-					return DownloadFile(uri.AbsoluteUri);
+					return DownloadFileAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result;
 
 				default:
 					using (Stream stream = new FileStream(uri.LocalPath, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -31,20 +31,6 @@ namespace Tekcari.Genapi.Serialization
 						return ReadFile(stream, null);
 					}
 			}
-		}
-
-		public static OpenApiDocument ReadFile(Stream stream, OpenApiReaderSettings settings)
-		{
-			if (stream == null) throw new ArgumentNullException(nameof(stream));
-			var reader = new OpenApiStreamReader(settings);
-			OpenApiDocument document = reader.Read(stream, out OpenApiDiagnostic diagnostic);
-
-			foreach (var error in diagnostic.Errors)
-			{
-				System.Diagnostics.Debug.WriteLine($"{error.Pointer}: {error.Message}");
-			}
-
-			return document;
 		}
 
 		public static OpenApiDocument DownloadFile(string url)
@@ -64,6 +50,20 @@ namespace Tekcari.Genapi.Serialization
 			}
 
 			return default;
+		}
+
+		public static OpenApiDocument ReadFile(Stream stream, OpenApiReaderSettings settings)
+		{
+			if (stream == null) throw new ArgumentNullException(nameof(stream));
+			var reader = new OpenApiStreamReader(settings);
+			OpenApiDocument document = reader.Read(stream, out OpenApiDiagnostic diagnostic);
+
+			foreach (var error in diagnostic.Errors)
+			{
+				System.Diagnostics.Debug.WriteLine($"{error.Pointer}: {error.Message}");
+			}
+
+			return document;
 		}
 	}
 }
