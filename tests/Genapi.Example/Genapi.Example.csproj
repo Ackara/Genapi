@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<IsPackable>false</IsPackable>
-		<Version>0.0.28</Version>
-		<AssemblyVersion>0.0.28</AssemblyVersion>
-		<AssemblyFileVersion>0.0.28</AssemblyFileVersion>
+		<Version>0.0.29</Version>
+		<AssemblyVersion>0.0.29</AssemblyVersion>
+		<AssemblyFileVersion>0.0.29</AssemblyFileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

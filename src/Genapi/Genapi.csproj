@@ -1,12 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<RootNamespace>Tekcari.Genapi</RootNamespace>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<LangVersion>latest</LangVersion>
-		<Version>0.0.28</Version>
-		<AssemblyVersion>0.0.28</AssemblyVersion>
-		<AssemblyFileVersion>0.0.28</AssemblyFileVersion>
+		<Version>0.0.29</Version>
+		<AssemblyVersion>0.0.29</AssemblyVersion>
+		<AssemblyFileVersion>0.0.29</AssemblyFileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
