@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections.Generic;
 namespace {{rootnamespace}}
 {
@@ -10,24 +11,15 @@ namespace {{rootnamespace}}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Response"/> struct.
 		/// </summary>
-		/// <param name="statusCode">The status code.</param>
-		/// <param name="message">The message.</param>
-		public Response(int statusCode, string message = default)
-			: this(IsGood(statusCode), statusCode, message)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Response"/> struct.
-		/// </summary>
 		/// <param name="success">if set to <c>true</c> [success].</param>
 		/// <param name="statusCode">The status code.</param>
 		/// <param name="message">The message.</param>
-		public Response(bool success, int statusCode, string message)
+		public Response(object data, int statusCode, string message)
 		{
+			Data = data;
 			Message = message;
-			Succeeded = success;
 			StatusCode = statusCode;
+			Succeeded = statusCode >= 200 && statusCode <= 299;
 		}
 
 		/// <summary>
@@ -42,19 +34,20 @@ namespace {{rootnamespace}}
 		/// <value>The message.</value>
 		public string Message { get; }
 
+		public object Data { get; }
+
 		/// <summary>
 		/// Gets a value indicating whether the corresponding request is succeeded.
 		/// </summary>
 		/// <value><c>true</c> if succeeded; otherwise, <c>false</c>.</value>
 		public bool Succeeded { get; }
 
-		/// <summary>
-		/// Gets a value indicating whether the corresponding request is failed.
-		/// </summary>
-		/// <value><c>true</c> if failed; otherwise, <c>false</c>.</value>
-		public bool Failed
+		public T GetValue<T>()
 		{
-			get => Succeeded == false;
+			if (typeof(IConvertible).IsAssignableFrom(typeof(T)))
+				return (T)Convert.ChangeType(Data, typeof(T));
+			else
+				return JsonSerializer.Deserializer<T>(Data, )
 		}
 
 		/// <summary>
@@ -65,30 +58,8 @@ namespace {{rootnamespace}}
 		/// </returns>
 		public override string ToString() => Message;
 
-		/// <summary>
-		/// Returns a list of errors returned by the server.
-		/// </summary>
-		public IEnumerable<ResponseError> GetErrors() => ParseErrors(Message);
-
-		internal static IEnumerable<ResponseError> ParseErrors(string message)
-		{
-			if (string.IsNullOrEmpty(message)) yield break;
-
-			string[] errors = message.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-			foreach (string err in errors)
-	        {
-				if (err.Length > 5 && err[4] == ':')
-				{
-					int.TryParse(err.Substring(0, 4), out int code);
-					yield return new ResponseError(err.Substring(5), code);
-				}
-				else yield return new ResponseError(err, 0);
-		    }
-		}
-
 		internal string Format() => $"({StatusCode}): {Message}".Trim(' ', ':');
 
-		internal static bool IsGood(int code) => code >= 200 && code < 300;
 
 		#region operators
 

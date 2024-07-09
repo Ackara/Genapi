@@ -208,7 +208,7 @@ namespace Tekcari.Genapi.Generators.Csharp
 					case "application/json":
 					case "application/x-www-form-urlencoded":
 						name = safeName(type);
-						parameters.Add(new { kind, type, name, value = $"{type} {name}", mimeType, description });
+						parameters.Add(new { kind, type, name, value = $"{CustomFilters.PascalCase(CsharpFilters.SafeName(type))} {name}", mimeType, description });
 						break;
 
 					case "application/octet-stream":
@@ -242,7 +242,7 @@ namespace Tekcari.Genapi.Generators.Csharp
 
 			string name = parameter.Name;
 			string type = _mapper.Map(parameter.Schema, _settings);
-			string value = $"{type} {name}";
+			string value = $"{CsharpFilters.SafeName(type)} {CustomFilters.CamelCase(CsharpFilters.SafeName(name))}";
 			string kind = Enum.GetName(typeof(ParameterLocation), parameter.In);
 
 			if (islastItem && isArrary(parameter.Schema) && parameter.Required == false) value = string.Concat("params ", value);
