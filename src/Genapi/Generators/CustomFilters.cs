@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text;
 
 namespace Tekcari.Genapi.Generators
@@ -12,6 +13,8 @@ namespace Tekcari.Genapi.Generators
 
 		public static string PascalCase(string input)
 		{
+			char[] separators = ['_', ' ', '-', '.', ',', '\t'];
+
 			if (string.IsNullOrEmpty(input))
 				return input;
 			else if (input.Length >= 2)
@@ -21,7 +24,7 @@ namespace Tekcari.Genapi.Generators
 				{
 					char c = input[i];
 					if (i == 0) builder.Append(char.ToUpperInvariant(c));
-					else if (c == '_' || c == ' ') builder.Append(char.ToUpperInvariant(input[++i]));
+					else if (separators.Contains(c)) builder.Append(char.ToUpperInvariant(input[++i]));
 					else builder.Append(input[i]);
 				}
 				return builder.ToString();

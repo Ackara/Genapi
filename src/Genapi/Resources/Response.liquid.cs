@@ -60,7 +60,6 @@ namespace {{rootnamespace}}
 
 		internal string Format() => $"({StatusCode}): {Message}".Trim(' ', ':');
 
-
 		#region operators
 
 		public static implicit operator bool(Response x) => x.Succeeded;

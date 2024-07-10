@@ -52,7 +52,7 @@ namespace Tekcari.Genapi
 		/// <summary>Cancel order.</summary>
 		/// <remarks>Cancels an order, by ID, and deletes the order. To call this method, the order status must be  `CREATED` or `APPROVED`.</remarks>
 		/// <param name="order_id">The ID of the order for which to execute a payment.</param>
-		public Task<Response> OrderscancelAsync(string order_id)
+		public Task<Response> OrderscancelAsync(string orderId)
 		{
 			var request = new HttpRequestMessage(new HttpMethod("DELETE"), Url($"/v1/checkout/orders/{order_id}"));
 			return SendRequestAsync(request);
@@ -64,11 +64,11 @@ namespace Tekcari.Genapi
 		/// <param name="order_id">The ID of the order for which to execute a payment.</param>
 		/// <param name="PayPal-Partner-Attribution-Id"></param>
 		/// <param name="PayPal-Request-Id">The server stores keys forever.</param>
-		public Task<Response<pay_order_response>> OrderspayAsync(pay_order_request payOrderRequest, string order_id, string PayPal-Partner-Attribution-Id = default, string PayPal-Request-Id = default)
+		public Task<Response<PayOrderResponse>> OrderspayAsync(PayOrderRequest payOrderRequest, string orderId, string payPalPartnerAttributionId = default, string payPalRequestId = default)
 		{
 			var request = new HttpRequestMessage(new HttpMethod("POST"), Url($"/v1/checkout/orders/{order_id}/pay"));
-			request.Headers.Add("PayPal-Partner-Attribution-Id", PayPal-Partner-Attribution-Id);
-			request.Headers.Add("PayPal-Request-Id", PayPal-Request-Id);
+			request.Headers.Add("PayPal-Partner-Attribution-Id", payPalPartnerAttributionId);
+			request.Headers.Add("PayPal-Request-Id", payPalRequestId);
 			request.Content = ToJson(payOrderRequest);
 			return SendRequestAsync<pay_order_response>(request);
 		}

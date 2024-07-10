@@ -13,6 +13,7 @@ namespace Tekcari.Genapi.Tests
 		[DataRow("snake_case", "SnakeCase")]
 		[DataRow("Title Case", "TitleCase")]
 		[DataRow("PascalCase", "PascalCase")]
+		[DataRow("order.cancel", "OrderCancel")]
 		public void Can_convert_text_pascal_case(string original, string expected)
 		{
 			CustomFilters.PascalCase(original).ShouldBe(expected);

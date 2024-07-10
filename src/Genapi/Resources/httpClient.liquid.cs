@@ -40,7 +40,7 @@ namespace {{rootnamespace}}
 		/// <param name="{{param.name}}">{{param.description | end_with_period}}</param>
 	{%- endif -%}
 	{%- endfor -%}
-		public Task<Response<{{endpoint.returnType | as_type_param | safe_name | pascal_case}}>> {{endpoint.operationName | safe_name | pascal_case}}Async({{arguments | join: ", "}})
+		public Task<Response{% if endpoint.returnType %}{{endpoint.returnType | pascal_case | safe_name | as_type_param}}{% endif %}> {{endpoint.operationName | pascal_case | safe_name}}Async({{arguments | join: ", "}})
 		{
 			var request = new HttpRequestMessage(new HttpMethod("{{endpoint.method | upcase}}"), Url($"{{endpoint.path}}"));
 		{%- assign headers = endpoint.parameters | where: "kind", "Header" -%}
@@ -65,7 +65,7 @@ namespace {{rootnamespace}}
 			request.Content = form;
 		{%- endcase -%}
 		{%- endif -%}
-			return SendRequestAsync<{{endpoint.returnType | as_type_param | safe_name | pascal_case}}>(request);
+			return SendRequestAsync{% if endpoint.returnType %}<{{endpoint.returnType | pascal_case | safe_name}}>{% endif %}(request);
 		}
 
 {%- endfor -%}

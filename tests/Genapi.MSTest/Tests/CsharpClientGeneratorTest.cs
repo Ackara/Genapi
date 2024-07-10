@@ -186,6 +186,13 @@ namespace bar
 			usings.Length.ShouldBe(3);
 		}
 
+		public void Foo()
+		{
+			HttpResponseMessage res;
+
+			res.IsSuccessStatusCode
+		}
+
 		private static void RunGeneratorTest(ICodeGenerator generator, string documentPath, Func<FileResult, bool> filter = default)
 		{
 			using var scenario = ApprovalTests.Namers.ApprovalResults.ForScenario(Path.GetFileName(documentPath));
