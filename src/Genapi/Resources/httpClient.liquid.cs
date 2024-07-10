@@ -70,7 +70,7 @@ namespace {{rootnamespace}}
 
 {%- endfor -%}
 
-		internal async Task<Response> SendRequestAsync(HttpRequestMessage request)
+		internal async Task<Response> SendRequestAsync(HttpRequestMessage request, Type responseType = null)
 		{
 			Response auth = await Authenticate(request);
 			if (auth.Failed) return auth;
@@ -105,10 +105,10 @@ namespace {{rootnamespace}}
 			}
 		}
 
-		internal async Task<Response<T>> SendRequestAsync<T>(HttpRequestMessage request)
+		internal async Task<Response<T>> SendRequestAsync<T>(HttpRequestMessage request, bool foo)
 		{
-			Response auth = await Authenticate(request);
-			if (auth.Failed) return new Response<T>(default, auth.StatusCode, auth.Message);
+			HttpResponseMessage authentication = await Authenticate(request);
+			if (authentication.IsSuccessStatusCode == false) return new Response(authentication.StatusCode, authentication.Message);
 #if DEBUG
 			PrintToDebugWindow(request);
 #endif

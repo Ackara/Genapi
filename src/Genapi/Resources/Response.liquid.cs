@@ -8,6 +8,8 @@ namespace {{rootnamespace}}
 	/// </summary>
 	public readonly struct Response
 	{
+		public Response(int statusCode, string message) : this(null, statusCode, message) { }
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Response"/> struct.
 		/// </summary>
