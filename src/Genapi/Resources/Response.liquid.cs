@@ -44,13 +44,7 @@ namespace {{rootnamespace}}
 		/// <value><c>true</c> if succeeded; otherwise, <c>false</c>.</value>
 		public bool Succeeded { get; }
 
-		public T GetValue<T>()
-		{
-			if (typeof(IConvertible).IsAssignableFrom(typeof(T)))
-				return (T)Convert.ChangeType(Data, typeof(T));
-			else
-				return JsonSerializer.Deserializer<T>(Data, )
-		}
+		public T GetValue<T>() => (T)Data;
 
 		/// <summary>
 		/// Convert the value of this instance to a <see cref="System.String"/>.

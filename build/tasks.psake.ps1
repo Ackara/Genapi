@@ -66,7 +66,7 @@ Task "Package-Solution" -alias "pack" -description "This task generates all depl
 
 	[xml]$props = Get-Content (Join-Path $SolutionFolder "*.props" | Resolve-Path);
 	$monikers = ($props.Project.PropertyGroup.TargetFrameworks | Out-String).Split(';');
-	#$monikers = @("netstandard2.0");
+	$monikers = @("netstandard2.0");
 	
 	$project = Join-Path $SolutionFolder "src/*.MSBuild/*.*proj" | Get-Item;
 	foreach ($item in $monikers)
@@ -74,7 +74,8 @@ Task "Package-Solution" -alias "pack" -description "This task generates all depl
 		$tfm = $item.Trim();
 		$package = Join-Path $ArtifactsFolder $tfm;
 		Write-Separator "dotnet publish $($project.BaseName) '$tfm'";
-		Exec { &dotnet publish $project.FullName --output $package --configuration $Configuration -p:EnvironmentName=$EnvironmentName --framework $tfm; }
+		#Exec { &dotnet publish $project.FullName --output $package --configuration $Configuration -p:EnvironmentName=$EnvironmentName --framework $tfm; }
+		Exec { &dotnet publish $project.FullName --output $package --configuration $Configuration -p:EnvironmentName=$EnvironmentName; }
 	}
 
 	$project = Join-Path $SolutionFolder "src/*.MSBuild/*.*proj" | Get-Item;

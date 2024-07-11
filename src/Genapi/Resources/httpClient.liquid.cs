@@ -65,15 +65,15 @@ namespace {{rootnamespace}}
 			request.Content = form;
 		{%- endcase -%}
 		{%- endif -%}
-			return SendRequestAsync{% if endpoint.returnType %}<{{endpoint.returnType | pascal_case | safe_name}}>{% endif %}(request);
+			return SendRequestAsync(request, {% if endpoint.returnType %}{{ endpoint.returnType | pascal_case | safe_name}}{% endif %});
 		}
 
 {%- endfor -%}
 
-		internal async Task<Response> SendRequestAsync(HttpRequestMessage request, Type responseType = null)
+		public async Task<Response> SendRequestAsync(HttpRequestMessage request, Type responseType = null)
 		{
-			Response auth = await Authenticate(request);
-			if (auth.Failed) return auth;
+			Response authentication = await Authenticate(request);
+			if (authentication.Failed) return authentication;
 #if DEBUG
 			PrintToDebugWindow(request);
 #endif
@@ -85,7 +85,17 @@ namespace {{rootnamespace}}
 #endif
 				if (response.IsSuccessStatusCode)
 				{
-					return new Response((int)response.StatusCode, response.ReasonPhrase);
+					if (responseType != null)
+					{
+						if (typeof(IConvertible).IsAssignableFrom(typeof(T)))
+							return new Response((T)Convert.ChangeType(json, typeof(T)), (int)response.StatusCode, null);
+						else
+							return new Response(
+								JsonSerializer.Deserialize(response.Content.ReadAsStream(), responseType, _serializerOptions),
+								(int)response.StatusCode,
+								response.ReasonPhrase
+							);
+					}
 				}
 				else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
 				{
@@ -101,46 +111,6 @@ namespace {{rootnamespace}}
 					{
 						return new Response((int)response.StatusCode, text);
 					}
-				}
-			}
-		}
-
-		internal async Task<Response<T>> SendRequestAsync<T>(HttpRequestMessage request, bool foo)
-		{
-			HttpResponseMessage authentication = await Authenticate(request);
-			if (authentication.IsSuccessStatusCode == false) return new Response(authentication.StatusCode, authentication.Message);
-#if DEBUG
-			PrintToDebugWindow(request);
-#endif
-			HttpClient client = _httpClientFactory.CreateClient();
-			using (HttpResponseMessage response = await client.SendAsync(request))
-			{
-#if DEBUG
-				PrintToDebugWindow(response);
-#endif
-				string json = await response.Content.ReadAsStringAsync();
-				if (string.IsNullOrEmpty(json)) return new Response<T>(default, (int)response.StatusCode, response.ReasonPhrase);
-
-				if (response.IsSuccessStatusCode)
-				{
-					if (typeof(IConvertible).IsAssignableFrom(typeof(T)))
-						return new Response<T>((T)Convert.ChangeType(json, typeof(T)), (int)response.StatusCode);
-					else
-						return new Response<T>(
-							JsonSerializer.Deserialize<T>(json, _serializerOptions),
-							(int)response.StatusCode,
-							response.ReasonPhrase
-						);
-				}
-				else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-				{
-					auth = await Authenticate(request, true);
-					if (auth.Failed) return new Response<T>(default, auth.StatusCode, auth.Message);
-					return await SendRequestAsync<T>(request);
-				}
-				else
-				{
-					return new Response<T>(default, (int)response.StatusCode, json);
 				}
 			}
 		}

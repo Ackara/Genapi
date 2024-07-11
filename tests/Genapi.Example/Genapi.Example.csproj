@@ -55,5 +55,5 @@
 		<GenerateCsharpApiClientTestSuite SourceFile="@(OpenSpec1)" DestinationFile="Tests\GeneratedClientTest.cs" ServiceUrl="https://petstore3.swagger.io/api/v3" RootNamespace="GeneratedCode" ClientClassName="GeneratedClient" />
 	</Target>
 	
-	<Import Project="..\..\artifacts\msbuild\build\Genoapi.MSBuild.targets" Condition="Exists('..\..\artifacts\msbuild\build\Genoapi.MSBuild.targets')" />
+	<Import Project="..\..\artifacts\msbuild\build\Genapi.MSBuild.targets" Condition="Exists('..\..\artifacts\msbuild\build\Genapi.MSBuild.targets')" />
 </Project>

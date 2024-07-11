@@ -18,6 +18,7 @@ using Telerik.JustMock.Helpers;
 namespace Tekcari.Genapi.Tests
 {
 	[TestClass]
+	[ApprovalTests.Reporters.UseReporter(typeof(ApprovalTests.Reporters.FileLauncherReporter))]
 	public class CsharpClientGeneratorTest
 	{
 		[TestMethod]
@@ -188,9 +189,9 @@ namespace bar
 
 		public void Foo()
 		{
-			HttpResponseMessage res;
-
-			res.IsSuccessStatusCode
+			HttpResponseMessage res = null;
+			JsonSerializer.Deserialize(res.Content.ReadAsStream(), typeof(SdkResultItem));
+			
 		}
 
 		private static void RunGeneratorTest(ICodeGenerator generator, string documentPath, Func<FileResult, bool> filter = default)

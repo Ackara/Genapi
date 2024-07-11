@@ -2,10 +2,10 @@
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<GenoapiFramework Condition="$(GenoapiFramework)==''">netstandard2.0</GenoapiFramework>
-		<GenoapiTasksAssemblyFile>..\tasks\$(GenoapiFramework)\Genoapi.MSBuild.dll</GenoapiTasksAssemblyFile>
+		<GenapiFramework Condition="$(GenapiFramework)==''">netstandard2.0</GenapiFramework>
+		<GenapiTasksAssemblyFile>..\tasks\$(GenapiFramework)\Genapi.MSBuild.dll</GenapiTasksAssemblyFile>
 	</PropertyGroup>
 
-	<UsingTask AssemblyFile="$(GenoapiTasksAssemblyFile)" TaskName="GenerateCsharpApiClient" />
-	<UsingTask AssemblyFile="$(GenoapiTasksAssemblyFile)" TaskName="GenerateCsharpApiClientTestSuite" />
+	<UsingTask AssemblyFile="$(GenapiTasksAssemblyFile)" TaskName="GenerateCsharpApiClient" />
+	<UsingTask AssemblyFile="$(GenapiTasksAssemblyFile)" TaskName="GenerateCsharpApiClientTestSuite" />
 </Project>
