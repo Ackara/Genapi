@@ -3,6 +3,7 @@
 <Project>
 	<PropertyGroup>
 		<RootNamespace>Tekcari.Genapi</RootNamespace>
+		<TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
 	</PropertyGroup>
 	
 	<PropertyGroup>
@@ -23,9 +24,5 @@
 		<RepositoryUrl>https://github.com/$(Company)/$(Title).git</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/$(Company)/$(Title)</PackageProjectUrl>
 		<PackageReleaseNotes>https://github.com/$(Company)/$(Title)/blob/master/changelog.md</PackageReleaseNotes>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<!--<TargetFrameworks>netstandard2.0;net6.0;net5.0;net461</TargetFrameworks>-->
 	</PropertyGroup>
 </Project>

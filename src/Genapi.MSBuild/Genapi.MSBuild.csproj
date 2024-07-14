@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<RootNamespace>Tekcari.Genapi</RootNamespace>
 		<TargetFramework>netstandard2.1</TargetFramework>
+		<TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -48,13 +49,13 @@
 			<Visible>false</Visible>
 		</Content>
 
-		<Content Include="..\..\artifacts\net5.0\**" Condition="Exists('..\..\artifacts\net5.0\')">
-			<PackagePath>$(TaskFolderName)\net5.0</PackagePath>
+		<Content Include="..\..\artifacts\netstandard2.1\**" Condition="Exists('..\..\artifacts\netstandard2.1\')">
+			<PackagePath>$(TaskFolderName)\netstandard2.1</PackagePath>
 			<Visible>false</Visible>
 		</Content>
 
-		<Content Include="..\..\artifacts\net6.0\**" Condition="Exists('..\..\artifacts\net6.0\')">
-			<PackagePath>$(TaskFolderName)\net6.0</PackagePath>
+		<Content Include="..\..\artifacts\net8.0\**" Condition="Exists('..\..\artifacts\net8.0\')">
+			<PackagePath>$(TaskFolderName)\net8.0</PackagePath>
 			<Visible>false</Visible>
 		</Content>
 

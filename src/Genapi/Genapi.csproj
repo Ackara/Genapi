@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<RootNamespace>Tekcari.Genapi</RootNamespace>
 		<TargetFramework>netstandard2.1</TargetFramework>
+		<TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
 		<Version>0.0.29</Version>
 		<AssemblyVersion>0.0.29</AssemblyVersion>
