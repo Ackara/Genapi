@@ -2,8 +2,7 @@
 
 	<PropertyGroup>
 		<RootNamespace>Tekcari.Genapi</RootNamespace>
-		<TargetFramework>netstandard2.1</TargetFramework>
-		<TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
+		<TargetFramework>net8.0</TargetFramework>
 	</PropertyGroup>
 
 	<PropertyGroup>

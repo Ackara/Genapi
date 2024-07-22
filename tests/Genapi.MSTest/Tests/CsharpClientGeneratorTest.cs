@@ -190,7 +190,7 @@ namespace bar
 		public void Foo()
 		{
 			HttpResponseMessage res = null;
-			JsonSerializer.Deserialize(res.Content.ReadAsStream(), typeof(SdkResultItem));
+			
 			
 		}
 

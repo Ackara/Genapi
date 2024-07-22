@@ -2,7 +2,7 @@
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<GenapiFramework Condition="$(GenapiFramework)==''">netstandard2.1</GenapiFramework>
+		<GenapiFramework Condition="$(GenapiFramework)==''">net8.0</GenapiFramework>
 		<GenapiTasksAssemblyFile>..\tasks\$(GenapiFramework)\Genapi.MSBuild.dll</GenapiTasksAssemblyFile>
 	</PropertyGroup>
 

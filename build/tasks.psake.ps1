@@ -68,14 +68,16 @@ Task "Package-Solution" -alias "pack" -description "This task generates all depl
 	$monikers = ($props.Project.PropertyGroup.TargetFrameworks | Out-String).Split(';');
 	$monikers = @("netstandard2.1", "net8.0");
 	
+	$package = Join-Path $ArtifactsFolder "net8.0";
 	$project = Join-Path $SolutionFolder "src/*.MSBuild/*.*proj" | Get-Item;
+	Exec { &dotnet publish $project.FullName --output $package --configuration $Configuration -p:EnvironmentName=$EnvironmentName; }
 	foreach ($item in $monikers)
 	{
 		$tfm = $item.Trim();
 		$package = Join-Path $ArtifactsFolder $tfm;
 		Write-Separator "dotnet publish $($project.BaseName) '$tfm'";
-		Exec { &dotnet publish $project.FullName --output $package --configuration $Configuration -p:EnvironmentName=$EnvironmentName --framework $tfm --self-contained; }
-		#Exec { &dotnet publish $project.FullName --output $package --configuration $Configuration -p:EnvironmentName=$EnvironmentName; }
+		#Exec { &dotnet publish $project.FullName --output $package --configuration $Configuration -p:EnvironmentName=$EnvironmentName --framework $tfm; }
+		#Exec { &dotnet publish $project.FullName --output $package --configuration $Configuration -p:EnvironmentName=$EnvironmentName --framework $tfm --self-contained; }
 	}
 
 	$project = Join-Path $SolutionFolder "src/*.MSBuild/*.*proj" | Get-Item;
@@ -98,7 +100,7 @@ Task "Publish-NuGet-Packages" -alias "push-nuget" -description "This task publis
     foreach ($nupkg in Get-ChildItem $ArtifactsFolder -Filter "*.nupkg")
     {
         Write-Separator "dotnet nuget push '$($nupkg.Name)'";
-        Exec { &dotnet nuget push $nupkg.FullName --source "https://api.nuget.org/v3/index.json"; }
+        Exec { &nuget push $nupkg.FullName -source "https://api.nuget.org/v3/index.json"; }
     }
 }
 

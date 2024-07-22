@@ -3,7 +3,7 @@
 <Project>
 	<PropertyGroup>
 		<RootNamespace>Tekcari.Genapi</RootNamespace>
-		<TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
+		<!--<TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>-->
 	</PropertyGroup>
 	
 	<PropertyGroup>
